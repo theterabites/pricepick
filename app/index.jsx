@@ -220,7 +220,9 @@ export default function App() {
                       {/* Letter Label */}
                       <View style={{ width: LAYOUT.labelWidth, alignItems:"center", justifyContent:"center", opacity: isDimmed ? 0.3 : 1 }}>
                         <View style={{
-                          width:26, height:26, borderRadius:7,
+                          width: LAYOUT.labelIconSize, 
+                          height: LAYOUT.labelIconSize, 
+                          borderRadius: LAYOUT.labelBorderRadius,
                           backgroundColor: dark ? col.accent+"28" : col.bg,
                           borderWidth:2, borderColor:col.accent+"55",
                           alignItems:"center", justifyContent:"center"

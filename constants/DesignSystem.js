@@ -16,6 +16,8 @@ export const LAYOUT = {
   borderWidth: 1.5,
   gap: 5,
   labelWidth: 30,
+  labelIconSize: 26,
+  labelBorderRadius: 7,
   fontSize: 18,
   headerFontSize: 10,
   
