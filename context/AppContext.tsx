@@ -143,7 +143,8 @@ export function AppProvider({ children }) {
       currency, setCurrency,
       items, setItems, nextId,
       showPercentage, setShowPercentage,
-      isLoaded
+      isLoaded,
+      originalItems, setOriginalItems
     }}>
       {children}
     </AppContext.Provider>
@@ -152,4 +153,6 @@ export function AppProvider({ children }) {
 
 export function useApp() {
   return useContext(AppContext);
+}
+ntext(AppContext);
 }

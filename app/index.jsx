@@ -62,7 +62,7 @@ const fmtDisplay = (unit, sym, decimals) => {
 };
 
 export default function App() {
-  const { T, dark, currency, items, setItems, nextId, showPercentage } = useApp();
+  const { T, dark, currency, items, setItems, nextId, showPercentage, originalItems, setOriginalItems } = useApp();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -155,16 +155,20 @@ export default function App() {
   };
 
   const sortItems = () => {
-    const sorted = [...items].sort((a, b) => {
-      const unitA = computeUnit(a.price, a.quantity);
-      const unitB = computeUnit(b.price, b.quantity);
-      if (unitA === null) return 1;
-      if (unitB === null) return -1;
-      return unitA - unitB;
-    });
-    setItems(sorted);
-    // Keep focus on first item price after sort
-    setActiveCell({ id: sorted[0].id, field: "price" });
+    if (originalItems) {
+      setItems(originalItems);
+      setOriginalItems(null);
+    } else {
+      setOriginalItems([...items]);
+      const sorted = [...items].sort((a, b) => {
+        const unitA = computeUnit(a.price, a.quantity);
+        const unitB = computeUnit(b.price, b.quantity);
+        if (unitA === null) return 1;
+        if (unitB === null) return -1;
+        return unitA - unitB;
+      });
+      setItems(sorted);
+    }
   };
 
   const reset = () => {
@@ -172,6 +176,7 @@ export default function App() {
       { id:1, quantity:"", price:"" },
       { id:2, quantity:"", price:"" },
     ]);
+    setOriginalItems(null);
     nextId.current = 3;
     setActiveCell({ id:1, field:"price" });
     setPendingOp(null);
