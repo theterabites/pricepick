@@ -359,7 +359,7 @@ function BestBar({ unitList, minU, maxU, valid, currency, T, dark }) {
     return (
       <View style={{ height:44, justifyContent:"center", paddingHorizontal:14 }}>
         <Text style={{ color:T.sub, fontSize:13, fontStyle:"italic" }}>
-          {valid.length >= 2 ? (valid.length > 1 && minU === maxU ? "All items equal" : "") : "Enter price and quantity to compare"}
+          {valid.length > 1 && minU === maxU ? "All items equal" : ""}
         </Text>
       </View>
     );
