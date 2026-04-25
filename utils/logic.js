@@ -48,5 +48,26 @@ export const FORMAT = {
       if (unitB === null) return -1;
       return unitA - unitB;
     });
-  }
+  },
+
+  // Returns the compact percentage label for non-best unit cells
+  pctLabel: (unit, minU) => {
+    const pct = Math.round((unit / minU - 1) * 100);
+    return pct > 999 ? `×${Math.round(unit / minU)}` : `+${pct}%`;
+  },
+
+  // Returns the max display length across price, quantity, and unit cells for a row
+  displayAllLen: (item, currency, qtyDecimals, unitDisplay) => {
+    const symLen = currency.symbol.length;
+    const pLen = symLen + (item.price
+      ? (() => { const n = parseFloat(item.price); return isNaN(n) ? item.price.length : n.toFixed(currency.noDecimal ? 0 : 2).replace(/\B(?=(\d{3})+(?!\d))/g, ",").length; })()
+      : (currency.noDecimal ? 1 : 4));
+    const qLen = item.quantity
+      ? (() => { const n = parseFloat(item.quantity); return isNaN(n) ? item.quantity.length : (qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n)).length; })()
+      : 1;
+    return Math.max(pLen, qLen, unitDisplay.length);
+  },
+
+  // Maps a max display length to a font size; all three boxes in a row use this
+  rowFontSize: (allLen) => allLen > 11 ? 10 : allLen > 9 ? 12 : allLen > 7 ? 15 : 18,
 };
