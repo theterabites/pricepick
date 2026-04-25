@@ -46,7 +46,8 @@ const resolveDecimals = (unitValues) => {
 
 const fmtDisplay = (unit, sym, decimals) => {
   if (unit === null) return `${sym}—`;
-  return `${sym}${unit.toFixed(decimals)}`;
+  const formatted = unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return `${sym}${formatted}`;
 };
 
 export default function App() {
@@ -326,10 +327,7 @@ function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myO
   const displayValue = (() => {
     if (empty) return null;
     if (!currencySymbol) return value;
-    if (value.endsWith(".")) return value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    const n = parseFloat(value);
-    if (isNaN(n)) return value;
-    const parts = n.toFixed(2).split(".");
+    const parts = value.split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
   })();
