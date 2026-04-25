@@ -418,7 +418,7 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
           onPress={() => onMove(-1)}
           style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text style={{ color: '#000', fontSize: 20, fontWeight: '700' }}>‹</Text>
+          <Text style={{ color: T.text, fontSize: 20, fontWeight: '700' }}>‹</Text>
         </TouchableOpacity>
         
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6 }}>
@@ -434,7 +434,7 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
           onPress={() => onMove(1)}
           style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text style={{ color: '#000', fontSize: 20, fontWeight: '700' }}>›</Text>
+          <Text style={{ color: T.text, fontSize: 20, fontWeight: '700' }}>›</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
