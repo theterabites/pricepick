@@ -233,22 +233,19 @@ export default function App() {
                   flex: 1, 
                   height:52, 
                   alignItems:"center", 
-                  justifyContent:"center",
-                  position: 'relative'
+                  justifyContent:"center"
                 }}>
-                  <View style={{ flexDirection:"row", alignItems:"center", justifyContent: "center", gap:3 }}>
-                    <Text style={{ fontSize:18, fontWeight:"600", color: unit === null ? T.sub+"55" : T.text, textAlign: "center" }}>
+                  <View style={{ flexDirection:"row", alignItems:"center", justifyContent: "center", gap:4 }}>
+                    <Text style={{ fontSize:18, fontWeight:"600", color: unit === null ? T.sub+"55" : T.text }}>
                       {unitDisplay}
                     </Text>
                     {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
-                  </View>
-                  {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                    <View style={{ position: 'absolute', bottom: 2, right: 6 }}>
+                    {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
                       <Text style={{ fontSize:11, fontWeight:"700", color:"#E53935" }}>
                         +{Math.round((unit/minU - 1)*100)}%
                       </Text>
-                    </View>
-                  )}
+                    )}
+                  </View>
                 </View>
               </View>
             );
