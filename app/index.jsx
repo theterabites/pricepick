@@ -231,7 +231,8 @@ export default function App() {
                   const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, decimals);
 
                   return (
-                    <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
+                    <SwipeableRow key={item.id} onDelete={() => removeItemById(item.id)} disabled={items.length <= 2}>
+                    <View style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
                       {/* Letter Label */}
                       <View style={{ width: LAYOUT.labelWidth, alignItems:"center", justifyContent:"center", opacity: isDimmed ? 0.3 : 1 }}>
                         <View style={{
@@ -297,6 +298,7 @@ export default function App() {
                         </Text>
                       </TouchableOpacity>
                     </View>
+                    </SwipeableRow>
                   );
                 });
               })()}
