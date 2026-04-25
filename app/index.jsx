@@ -233,11 +233,8 @@ export default function App() {
                   const qLen = item.quantity
                     ? (() => { const n = parseFloat(item.quantity); return isNaN(n) ? item.quantity.length : (qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n)).length; })()
                     : 1;
-                  const uLen = unitDisplay.length;
                   const pqLen = Math.max(pLen, qLen);
-                  const pqFontSize = pqLen > 10 ? 12 : pqLen > 7 ? 15 : LAYOUT.fontSize;
-                  const unitFontSize = uLen > 8 ? 12 : uLen > 5 ? 15 : LAYOUT.fontSize;
-                  const rowFontSize = Math.min(pqFontSize, unitFontSize);
+                  const rowFontSize = pqLen > 10 ? 12 : pqLen > 7 ? 15 : LAYOUT.fontSize;
 
                   return (
                     <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
