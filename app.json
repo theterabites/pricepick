@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "prickpick",
-    "slug": "prickpick",
+    "name": "pricepick",
+    "slug": "pricepick",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "prickpick",
+    "scheme": "pricepick",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -38,7 +38,8 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true,
