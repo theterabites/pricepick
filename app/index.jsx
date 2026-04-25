@@ -207,9 +207,8 @@ export default function App() {
                 const qtyDecimals = FORMAT.resolveQtyDecimals(items);
 
                 return items.map((item) => {
-                  const originalIndex = item.id - 1; 
-                  const col = ACCENTS[originalIndex % ACCENTS.length];
-                  const label = LABELS[originalIndex % LABELS.length];
+                  const col = ACCENTS[item.colorIndex % ACCENTS.length];
+                  const label = LABELS[item.colorIndex % LABELS.length];
                   const unit = FORMAT.computeUnit(item.price, item.quantity);
                   const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
                   const hasWinner = valid.length > 1 && minU !== maxU;
