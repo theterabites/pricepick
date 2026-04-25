@@ -55,6 +55,17 @@ const resolveDecimals = (unitValues) => {
   return hasTie ? 4 : 2;
 };
 
+const resolveQtyDecimals = (items) => {
+  let maxD = 0;
+  items.forEach(item => {
+    if (item.quantity && item.quantity.includes('.')) {
+      const decimals = item.quantity.split('.')[1].length;
+      if (decimals > maxD) maxD = decimals;
+    }
+  });
+  return Math.min(4, maxD);
+};
+
 const fmtDisplay = (unit, sym, decimals) => {
   if (unit === null) return `${sym}—`;
   const formatted = unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -244,9 +255,10 @@ export default function App() {
         {(() => {
           const allUnits = items.map(item => computeUnit(item.price, item.quantity));
           const decimals = resolveDecimals(allUnits);
+          const qtyDecimals = resolveQtyDecimals(items);
 
           return items.map((item) => {
-            const originalIndex = item.id - 1; // Assuming initial IDs are 1, 2, 3...
+            const originalIndex = item.id - 1; 
             const col = ACCENTS[originalIndex % ACCENTS.length];
             const label = LABELS[originalIndex % LABELS.length];
             const unit = computeUnit(item.price, item.quantity);
@@ -276,7 +288,8 @@ export default function App() {
                   value={item.price}
                   active={activeCell?.id===item.id && activeCell.field==="price"}
                   isBest={isBest}
-                  accent={col.accent} T={T}
+                  field="price"
+                  accent={col.accent} T={T} dark={dark}
                   currencySymbol={currency.symbol}
                   myOp={myPriceOp}
                   onTap={() => tapCell(item.id, "price")}
@@ -287,9 +300,11 @@ export default function App() {
                   value={item.quantity}
                   active={activeCell?.id===item.id && activeCell.field==="quantity"}
                   isBest={isBest}
-                  accent={col.accent} T={T}
+                  field="quantity"
+                  accent={col.accent} T={T} dark={dark}
                   myOp={myQtyOp}
                   onTap={() => tapCell(item.id, "quantity")}
+                  qtyDecimals={qtyDecimals}
                 />
 
                 {/* Per Unit (Background and border when best) */}
@@ -364,7 +379,7 @@ function ColHeader({ label, T, muted }) {
   );
 }
 
-function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myOp }) {
+function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbol, onTap, myOp, qtyDecimals }) {
   const empty = !value;
   const [blink, setBlink] = useState(true);
 
@@ -381,16 +396,27 @@ function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myO
 
   const displayValue = (() => {
     if (empty) return null;
-    if (!currencySymbol) return value;
-    
-    if (active) {
-      const parts = value.split(".");
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      return parts.join(".");
+
+    if (currencySymbol) {
+      // Price Logic
+      if (active) {
+        const parts = value.split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+      } else {
+        const n = parseFloat(value);
+        if (isNaN(n)) return value;
+        return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
     } else {
-      const n = parseFloat(value);
-      if (isNaN(n)) return value;
-      return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      // Quantity Logic
+      if (active) {
+        return value;
+      } else {
+        const n = parseFloat(value);
+        if (isNaN(n)) return value;
+        return qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n);
+      }
     }
   })();
 

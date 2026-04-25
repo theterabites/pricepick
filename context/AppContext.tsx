@@ -88,6 +88,7 @@ export function AppProvider({ children }) {
     { id: 1, quantity: "", price: "" },
     { id: 2, quantity: "", price: "" },
   ]);
+  const [originalItems, setOriginalItems] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const nextId = useRef(3);
@@ -153,6 +154,4 @@ export function AppProvider({ children }) {
 
 export function useApp() {
   return useContext(AppContext);
-}
-ntext(AppContext);
 }
