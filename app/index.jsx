@@ -455,20 +455,7 @@ function BestBar({ unitList, minU, maxU, valid, currency, T, dark, onSort, isSor
       <View style={{ width: LAYOUT.labelWidth }} />
       <View style={{ flex: 1 }} />
       <View style={{ flex: 1 }} />
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <TouchableOpacity onPress={onSort} style={{
-          backgroundColor: isSorted ? '#007AFF' : '#00C896',
-          borderRadius: 6,
-          height: LAYOUT.rowHeight / 2,
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <Text style={{ color: '#fff', fontSize: 10, fontWeight: '800' }}>
-            {isSorted ? 'UNSORT' : 'SORT'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <View style={{ flex: 1 }} />
     </View>
   );
 }
