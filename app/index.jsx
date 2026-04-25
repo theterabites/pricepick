@@ -264,17 +264,7 @@ export default function App() {
                           justifyContent:"center",
                         }}
                       >
-                        <View style={{
-                          ...LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark),
-                          borderWidth: isBest ? LAYOUT.borderWidth : 0,
-                          borderColor: isBest ? col.accent : 'transparent',
-                          backgroundColor: isBest ? col.accent+"18" : 'transparent',
-                          paddingHorizontal: 8,
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'flex-end',
-                          gap: 4
-                        }}>
+                        <View style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}>
                           {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
                           <View style={{ minWidth: 80, alignItems: 'flex-end' }}>
                             <Text style={{ 

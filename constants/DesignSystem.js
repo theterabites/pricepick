@@ -20,17 +20,18 @@ export const LAYOUT = {
   headerFontSize: 10,
   
   getBoxStyle: (active, isBest, accent, T, activeField, dark) => {
+    const isUnit = activeField === 'unit';
     return {
-      height: 44, // Using literal to avoid circular refs if needed, but LAYOUT.rowHeight is better
+      height: LAYOUT.rowHeight,
       flex: 1,
-      borderRadius: 12,
+      borderRadius: LAYOUT.borderRadius,
       alignItems: "center",
-      justifyContent: activeField === 'unit' ? "flex-end" : "center", 
+      justifyContent: isUnit ? "flex-end" : "center", 
       flexDirection: 'row',
       paddingHorizontal: 10,
-      borderWidth: active ? 1.5 : (isBest ? 1.5 : 0.5),
-      borderColor: active ? accent : (isBest ? accent : T.border),
-      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : T.surface),
+      borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : (isUnit ? 0 : 0.5)),
+      borderColor: active ? accent : (isBest ? accent : (isUnit ? 'transparent' : T.border)),
+      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : (isUnit ? 'transparent' : T.surface)),
     };
   }
 };
