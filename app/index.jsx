@@ -355,21 +355,29 @@ export default function App() {
                     borderWidth: isBest ? LAYOUT.borderWidth : 0,
                     borderColor: isBest ? col.accent : 'transparent',
                     backgroundColor: isBest ? col.accent+"18" : 'transparent',
+                    paddingHorizontal: 8,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between' // Space between checkmark and price
                   }}>
-                    {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
-                    <Text style={{ 
-                      fontSize: LAYOUT.fontSize, 
-                      fontWeight:"600", 
-                      color: unit === null ? T.sub+"55" : T.text,
-                      textAlign: 'right'
-                    }}>
-                      {unitDisplay}
-                    </Text>
-                    {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                      <Text style={{ fontSize:11, fontWeight:"700", color:"#E53935" }}>
-                        +{Math.round((unit/minU - 1)*100)}%
+                    <View style={{ width: 14 }}>
+                      {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
+                    </View>
+                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 3 }}>
+                      <Text style={{ 
+                        fontSize: LAYOUT.fontSize, 
+                        fontWeight:"600", 
+                        color: unit === null ? T.sub+"55" : T.text,
+                        textAlign: 'right'
+                      }}>
+                        {unitDisplay}
                       </Text>
-                    )}
+                      {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
+                        <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935" }}>
+                          +{Math.round((unit/minU - 1)*100)}%
+                        </Text>
+                      )}
+                    </View>
                   </View>
                 </TouchableOpacity>
                     </View>
