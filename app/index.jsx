@@ -38,8 +38,8 @@ const LAYOUT = {
       justifyContent: isUnit ? "flex-end" : "center", // Units are right aligned
       flexDirection: 'row',
       paddingHorizontal: 10,
-      borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : (isUnit ? 0 : 0.5)),
-      borderColor: active ? accent : (isBest ? accent : (isUnit ? 'transparent' : T.border)),
+      borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : 0.5),
+      borderColor: active ? accent : (isBest ? accent : T.border),
       backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : (isUnit ? 'transparent' : T.surface)),
     };
   }
