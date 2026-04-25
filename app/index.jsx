@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions, Toucha
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from "expo-router";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming, runOnJS } from "react-native-reanimated";
 import { useApp } from "../context/AppContext";
 
 // Refactored Modules
