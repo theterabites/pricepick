@@ -358,12 +358,11 @@ export default function App() {
                     paddingHorizontal: 8,
                     flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'space-between' // Space between checkmark and price
+                    justifyContent: 'flex-end', // All content to the right
+                    gap: 3
                   }}>
-                    <View style={{ width: 14 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                       {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
-                    </View>
-                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 3 }}>
                       <Text style={{ 
                         fontSize: LAYOUT.fontSize, 
                         fontWeight:"600", 
@@ -372,12 +371,12 @@ export default function App() {
                       }}>
                         {unitDisplay}
                       </Text>
-                      {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                        <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935" }}>
-                          +{Math.round((unit/minU - 1)*100)}%
-                        </Text>
-                      )}
                     </View>
+                    {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
+                      <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935" }}>
+                        +{Math.round((unit/minU - 1)*100)}%
+                      </Text>
+                    )}
                   </View>
                 </TouchableOpacity>
                     </View>
