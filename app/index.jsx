@@ -531,9 +531,32 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
     ["C","="],
   ];
 
+  if (!activeCell) {
+    return (
+      <View style={{ 
+        backgroundColor:T.keypadBg, 
+        paddingHorizontal:24, 
+        paddingTop: 4, 
+        paddingBottom: 16 + insets.bottom, 
+        marginTop:"auto", 
+        gap:4 
+      }}>
+        {/* Placeholder or just space for consistency */}
+        <View style={{ height: 44, marginBottom: 2 }} />
+        {rows.map((row, ri) => (
+          <View key={ri} style={{ flexDirection:"row", gap:4 }}>
+            {row.map((k, ki) => (
+              <View key={k+ki} style={{ flex:1, height:48, borderRadius:10, backgroundColor: T.keyBg, opacity: 0.5 }} />
+            ))}
+          </View>
+        ))}
+      </View>
+    );
+  }
+
   const activeIdx = items.findIndex(i => i.id === activeCell.id);
-  const currentLabel = LABELS[activeIdx];
-  const activeColor = ACCENTS[activeIdx % ACCENTS.length].accent;
+  const currentLabel = LABELS[activeIdx] || "?";
+  const activeColor = ACCENTS[activeIdx % ACCENTS.length]?.accent || T.sub;
 
   const fieldLabel = activeCell.field === "price" 
     ? `Price (${currency.code})` 
