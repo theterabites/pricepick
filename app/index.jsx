@@ -255,7 +255,7 @@ export default function App() {
                 {/* Per Unit (Background and border when best) */}
                 <View style={{ 
                   flex: 1, 
-                  height:52, 
+                  height:44, 
                   alignItems:"center", 
                   justifyContent:"center",
                 }}>
@@ -355,7 +355,7 @@ function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myO
 
   return (
     <TouchableOpacity onPress={onTap} style={{
-      height:52, flex:1, 
+      height:44, flex:1, 
       backgroundColor: active ? accent+"18" : (isBest ? accent+"18" : T.surface),
       borderWidth: 2, 
       borderColor: active ? accent : (isBest ? accent : T.border), 
