@@ -106,7 +106,10 @@ export default function App() {
 
   const addItem = () => {
     if (items.length >= maxItems) return;
-    setItems(p => [...p, { id:nextId.current++, quantity:"", price:"" }]);
+    const used = new Set(items.map(i => i.colorIndex));
+    let colorIndex = 0;
+    while (used.has(colorIndex)) colorIndex++;
+    setItems(p => [...p, { id:nextId.current++, colorIndex, quantity:"", price:"" }]);
   };
   const removeItem = () => {
     if (items.length <= 2) return;
@@ -128,8 +131,8 @@ export default function App() {
 
   const reset = () => {
     setItems([
-      { id:1, quantity:"", price:"" },
-      { id:2, quantity:"", price:"" },
+      { id:1, colorIndex:0, quantity:"", price:"" },
+      { id:2, colorIndex:1, quantity:"", price:"" },
     ]);
     setOriginalItems(null);
     nextId.current = 3;
