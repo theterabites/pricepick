@@ -288,7 +288,11 @@ export default function App() {
                         onPress={() => unit !== null && copyToClipboard(unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
                         style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}
                       >
-                        {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
+                        {unit !== null && (
+                          <Text style={{ fontSize: isBest ? 14 : 11, opacity: copyBlink ? 1 : 0.2, marginRight: 2 }}>
+                            {isBest ? "✅" : "📋"}
+                          </Text>
+                        )}
                         {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
                           <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935", marginRight: 4 }}>
                             +{Math.round((unit/minU - 1)*100)}%
