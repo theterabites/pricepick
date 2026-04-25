@@ -16,6 +16,17 @@ const ACCENTS = [
 ];
 const LABELS = ["A","B","C","D","E","F","G"];
 
+// ─── Design System ────────────────────────────────────────────────────────────
+const LAYOUT = {
+  rowHeight: 44,
+  borderRadius: 12,
+  borderWidth: 1.5,
+  gap: 5,
+  labelWidth: 30,
+  fontSize: 18,
+  headerFontSize: 10,
+};
+
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 const computeUnit = (price, quantity) => {
   const p = parseFloat(price), q = parseFloat(quantity);
@@ -193,15 +204,15 @@ export default function App() {
         scrollEnabled={false}
       >
       {/* Header Row */}
-      <View style={{ flexDirection:"row", gap:5, paddingHorizontal:6, paddingVertical:5, alignItems:"center" }}>
-        <View style={{ width:30 }} />
+      <View style={{ flexDirection:"row", gap: LAYOUT.gap, paddingHorizontal:8, paddingVertical:5, alignItems:"center" }}>
+        <View style={{ width: LAYOUT.labelWidth }} />
         <ColHeader label="price" T={T} />
         <ColHeader label="quantity" T={T} />
         <ColHeader label="per unit" T={T} muted />
       </View>
 
       {/* Item Rows */}
-      <View style={{ paddingHorizontal:6, gap:5 }}>
+      <View style={{ paddingHorizontal:8, gap: LAYOUT.gap }}>
         {(() => {
           const allUnits = items.map(item => computeUnit(item.price, item.quantity));
           const decimals = resolveDecimals(allUnits);
@@ -218,9 +229,9 @@ export default function App() {
             const unitDisplay = fmtDisplay(unit, currency.symbol, decimals);
 
             return (
-              <View key={item.id} style={{ flexDirection:"row", gap:5, alignItems:"center" }}>
+              <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
                 {/* Letter Label */}
-                <View style={{ width:30, alignItems:"center", justifyContent:"center", opacity: isDimmed ? 0.3 : 1 }}>
+                <View style={{ width: LAYOUT.labelWidth, alignItems:"center", justifyContent:"center", opacity: isDimmed ? 0.3 : 1 }}>
                   <View style={{
                     width:26, height:26, borderRadius:7,
                     backgroundColor: dark ? col.accent+"28" : col.bg,
@@ -255,7 +266,7 @@ export default function App() {
                 {/* Per Unit (Background and border when best) */}
                 <View style={{ 
                   flex: 1, 
-                  height:44, 
+                  height: LAYOUT.rowHeight, 
                   alignItems:"center", 
                   justifyContent:"center",
                 }}>
@@ -263,16 +274,16 @@ export default function App() {
                     flexDirection:"row", 
                     alignItems:"center", 
                     justifyContent: "center", 
-                    gap:4,
-                    borderWidth: isBest ? 2 : 0,
+                    gap: 3,
+                    borderWidth: isBest ? LAYOUT.borderWidth : 0,
                     borderColor: isBest ? col.accent : 'transparent',
                     backgroundColor: isBest ? col.accent+"18" : 'transparent',
-                    borderRadius: 12,
+                    borderRadius: LAYOUT.borderRadius,
                     width: '100%',
                     height: '100%'
                   }}>
                     <Text style={{ 
-                      fontSize:18, 
+                      fontSize: LAYOUT.fontSize, 
                       fontWeight:"600", 
                       color: unit === null ? T.sub+"55" : T.text 
                     }}>
@@ -355,11 +366,11 @@ function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myO
 
   return (
     <TouchableOpacity onPress={onTap} style={{
-      height:44, flex:1, 
+      height: LAYOUT.rowHeight, flex:1, 
       backgroundColor: active ? accent+"18" : (isBest ? accent+"18" : T.surface),
-      borderWidth: 2, 
+      borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : 0.5), 
       borderColor: active ? accent : (isBest ? accent : T.border), 
-      borderRadius:12,
+      borderRadius: LAYOUT.borderRadius,
       alignItems:"center", justifyContent:"center"
     }}>
       {myOp && (
@@ -369,15 +380,15 @@ function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myO
       )}
       <View style={{ flexDirection:"row", alignItems:"center", justifyContent: "center", width: "100%" }}>
         {currencySymbol && (
-          <Text style={{ fontSize:18, fontWeight:"600", color: empty ? T.sub+"55" : T.text }}>{currencySymbol}</Text>
+          <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text }}>{currencySymbol}</Text>
         )}
-        <Text style={{ fontSize:18, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "center" }}>
+        <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "center" }}>
           {empty ? (active ? "" : "0.00") : displayValue}
         </Text>
         {active && (
           <View style={{ 
             width: 2, 
-            height: 20, 
+            height: LAYOUT.fontSize + 2, 
             backgroundColor: accent, 
             opacity: blink ? 1 : 0, 
             marginLeft: 2 
