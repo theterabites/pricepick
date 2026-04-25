@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from "expo-router";
@@ -252,120 +252,126 @@ export default function App() {
       {/* Scrollable Content Area */}
       <ScrollView 
         style={{ flex:1 }} 
-        contentContainerStyle={{ paddingBottom: 10 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
         scrollEnabled={false}
       >
-      {/* Header Row */}
-      <View style={{ flexDirection:"row", gap: LAYOUT.gap, paddingHorizontal:8, paddingVertical:5, alignItems:"center" }}>
-        <View style={{ width: LAYOUT.labelWidth }} />
-        <ColHeader label="price" T={T} />
-        <ColHeader label="quantity" T={T} />
-        <ColHeader label="per unit" T={T} muted />
-      </View>
+        <TouchableWithoutFeedback onPress={() => setActiveCell(null)}>
+          <View style={{ flex: 1 }}>
+            {/* Header Row */}
+            <View style={{ flexDirection:"row", gap: LAYOUT.gap, paddingHorizontal:8, paddingVertical:5, alignItems:"center" }}>
+              <View style={{ width: LAYOUT.labelWidth }} />
+              <ColHeader label="price" T={T} />
+              <ColHeader label="quantity" T={T} />
+              <ColHeader label="per unit" T={T} muted />
+            </View>
 
-      {/* Item Rows */}
-      <View style={{ paddingHorizontal:8, gap: LAYOUT.gap }}>
-        {(() => {
-          const allUnits = items.map(item => computeUnit(item.price, item.quantity));
-          const decimals = resolveDecimals(allUnits);
-          const qtyDecimals = resolveQtyDecimals(items);
+            {/* Item Rows */}
+            <View style={{ paddingHorizontal:8, gap: LAYOUT.gap }}>
+              {(() => {
+                const allUnits = items.map(item => computeUnit(item.price, item.quantity));
+                const decimals = resolveDecimals(allUnits);
+                const qtyDecimals = resolveQtyDecimals(items);
 
-          return items.map((item) => {
-            const originalIndex = item.id - 1; 
-            const col = ACCENTS[originalIndex % ACCENTS.length];
-            const label = LABELS[originalIndex % LABELS.length];
-            const unit = computeUnit(item.price, item.quantity);
-            const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
-            const hasWinner = valid.length > 1 && minU !== maxU;
-            const isDimmed = hasWinner && !isBest;
-            const myPriceOp = pendingOp?.id===item.id && pendingOp?.field==="price" ? pendingOp : null;
-            const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
-            const unitDisplay = fmtDisplay(unit, currency.symbol, decimals);
+                return items.map((item) => {
+                  const originalIndex = item.id - 1; 
+                  const col = ACCENTS[originalIndex % ACCENTS.length];
+                  const label = LABELS[originalIndex % LABELS.length];
+                  const unit = computeUnit(item.price, item.quantity);
+                  const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
+                  const hasWinner = valid.length > 1 && minU !== maxU;
+                  const isDimmed = hasWinner && !isBest;
+                  const myPriceOp = pendingOp?.id===item.id && pendingOp?.field==="price" ? pendingOp : null;
+                  const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
+                  const unitDisplay = fmtDisplay(unit, currency.symbol, decimals);
 
-            return (
-              <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
-                {/* Letter Label */}
-                <View style={{ width: LAYOUT.labelWidth, alignItems:"center", justifyContent:"center", opacity: isDimmed ? 0.3 : 1 }}>
-                  <View style={{
-                    width:26, height:26, borderRadius:7,
-                    backgroundColor: dark ? col.accent+"28" : col.bg,
-                    borderWidth:2, borderColor:col.accent+"55",
-                    alignItems:"center", justifyContent:"center"
-                  }}>
-                    <Text style={{ fontWeight:"800", fontSize:12, color:col.accent }}>{label}</Text>
-                  </View>
-                </View>
+                  return (
+                    <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
+                      {/* Letter Label */}
+                      <View style={{ width: LAYOUT.labelWidth, alignItems:"center", justifyContent:"center", opacity: isDimmed ? 0.3 : 1 }}>
+                        <View style={{
+                          width:26, height:26, borderRadius:7,
+                          backgroundColor: dark ? col.accent+"28" : col.bg,
+                          borderWidth:2, borderColor:col.accent+"55",
+                          alignItems:"center", justifyContent:"center"
+                        }}>
+                          <Text style={{ fontWeight:"800", fontSize:12, color:col.accent }}>{label}</Text>
+                        </View>
+                      </View>
 
-                {/* Price Box */}
-                <EditCell
-                  value={item.price}
-                  active={activeCell?.id===item.id && activeCell.field==="price"}
-                  isBest={isBest}
-                  field="price"
-                  accent={col.accent} T={T} dark={dark}
-                  currencySymbol={currency.symbol}
-                  myOp={myPriceOp}
-                  onTap={() => tapCell(item.id, "price")}
-                />
+                      {/* Price Box */}
+                      <EditCell
+                        value={item.price}
+                        active={activeCell?.id===item.id && activeCell.field==="price"}
+                        isBest={isBest}
+                        field="price"
+                        accent={col.accent} T={T} dark={dark}
+                        currencySymbol={currency.symbol}
+                        myOp={myPriceOp}
+                        onTap={() => tapCell(item.id, "price")}
+                      />
 
-                {/* Quantity Box */}
-                <EditCell
-                  value={item.quantity}
-                  active={activeCell?.id===item.id && activeCell.field==="quantity"}
-                  isBest={isBest}
-                  field="quantity"
-                  accent={col.accent} T={T} dark={dark}
-                  myOp={myQtyOp}
-                  onTap={() => tapCell(item.id, "quantity")}
-                  qtyDecimals={qtyDecimals}
-                />
+                      {/* Quantity Box */}
+                      <EditCell
+                        value={item.quantity}
+                        active={activeCell?.id===item.id && activeCell.field==="quantity"}
+                        isBest={isBest}
+                        field="quantity"
+                        accent={col.accent} T={T} dark={dark}
+                        myOp={myQtyOp}
+                        onTap={() => tapCell(item.id, "quantity")}
+                        qtyDecimals={qtyDecimals}
+                      />
 
-                {/* Per Unit (Background and border when best) */}
-                <TouchableOpacity 
-                  disabled={!isBest}
-                  onPress={() => isBest && copyToClipboard(unitDisplay)}
-                  style={{ 
-                    flex: 1, 
-                    height: LAYOUT.rowHeight, 
-                    alignItems:"center", 
-                    justifyContent:"center",
-                  }}
-                >
-                  <View style={{ 
-                    flexDirection:"row", 
-                    alignItems:"center", 
-                    justifyContent: "center", 
-                    gap: 3,
-                    borderWidth: isBest ? LAYOUT.borderWidth : 0,
-                    borderColor: isBest ? col.accent : 'transparent',
-                    backgroundColor: isBest ? col.accent+"18" : 'transparent',
-                    borderRadius: LAYOUT.borderRadius,
-                    width: '100%',
-                    height: '100%'
-                  }}>
-                    <Text style={{ 
-                      fontSize: LAYOUT.fontSize, 
-                      fontWeight:"600", 
-                      color: unit === null ? T.sub+"55" : T.text 
-                    }}>
-                      {unitDisplay}
-                    </Text>
-                    {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
-                    {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                      <Text style={{ fontSize:11, fontWeight:"700", color:"#E53935" }}>
-                        +{Math.round((unit/minU - 1)*100)}%
-                      </Text>
-                    )}
-                  </View>
-                </TouchableOpacity>
-              </View>
-            );
-          });
-        })()}
-      </View>
+                      {/* Per Unit (Background and border when best) */}
+                      <TouchableOpacity 
+                        disabled={!isBest}
+                        onPress={() => isBest && copyToClipboard(unitDisplay)}
+                        style={{ 
+                          flex: 1, 
+                          height: LAYOUT.rowHeight, 
+                          alignItems:"center", 
+                          justifyContent:"center",
+                        }}
+                      >
+                        <View style={{ 
+                          flexDirection:"row", 
+                          alignItems:"center", 
+                          justifyContent: "flex-end", 
+                          gap: 3,
+                          borderWidth: isBest ? LAYOUT.borderWidth : 0,
+                          borderColor: isBest ? col.accent : 'transparent',
+                          backgroundColor: isBest ? col.accent+"18" : 'transparent',
+                          borderRadius: LAYOUT.borderRadius,
+                          width: '100%',
+                          height: '100%',
+                          paddingHorizontal: 8
+                        }}>
+                          {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
+                          <Text style={{ 
+                            fontSize: LAYOUT.fontSize, 
+                            fontWeight:"600", 
+                            color: unit === null ? T.sub+"55" : T.text,
+                            textAlign: 'right'
+                          }}>
+                            {unitDisplay}
+                          </Text>
+                          {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
+                            <Text style={{ fontSize:11, fontWeight:"700", color:"#E53935" }}>
+                              +{Math.round((unit/minU - 1)*100)}%
+                            </Text>
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                });
+              })()}
+            </View>
 
-        <BestBar unitList={unitList} minU={minU} maxU={maxU} valid={valid} currency={currency} T={T} dark={dark} onSort={sortItems} isSorted={!!originalItems} />
+            <BestBar unitList={unitList} minU={minU} maxU={maxU} valid={valid} currency={currency} T={T} dark={dark} onSort={sortItems} isSorted={!!originalItems} />
+          </View>
+        </TouchableWithoutFeedback>
       </ScrollView>
 
       {/* Fixed Keypad */}
