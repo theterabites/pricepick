@@ -204,9 +204,9 @@ export default function App() {
             const unitDisplay = fmtDisplay(unit, currency.symbol, decimals);
 
             return (
-              <View key={item.id} style={{ flexDirection:"row", gap:5, alignItems:"center", opacity: isDimmed ? 0.5 : 1 }}>
+              <View key={item.id} style={{ flexDirection:"row", gap:5, alignItems:"center" }}>
                 {/* Letter Label */}
-                <View style={{ width:30, alignItems:"center", justifyContent:"center" }}>
+                <View style={{ width:30, alignItems:"center", justifyContent:"center", opacity: isDimmed ? 0.3 : 1 }}>
                   <View style={{
                     width:26, height:26, borderRadius:7,
                     backgroundColor: dark ? col.accent+"28" : col.bg,
