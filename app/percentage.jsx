@@ -8,8 +8,8 @@ export default function PercentageScreen() {
   const router = useRouter();
 
   const options = [
-    { label: "Show", value: true, icon: "✅" },
-    { label: "Hide", value: false, icon: "❌" },
+    { label: "On", value: true, icon: "📊" },
+    { label: "Off", value: false, icon: "🚫" },
   ];
 
   return (
