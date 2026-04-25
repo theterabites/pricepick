@@ -219,14 +219,10 @@ export default function App() {
                   onTap={() => tapCell(item.id, "quantity")}
                 />
 
-                {/* Per Unit Box */}
+                {/* Per Unit (Plain Text, No Box) */}
                 <View style={{ 
                   flex: 1, 
                   height:52, 
-                  backgroundColor: isBest ? (dark ? col.accent+"18" : col.bg) : T.surface,
-                  borderWidth: 2,
-                  borderColor: isBest ? col.accent : T.border,
-                  borderRadius: 12,
                   alignItems:"center", 
                   justifyContent:"center",
                   position: 'relative'
@@ -239,7 +235,7 @@ export default function App() {
                   </View>
                   {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
                     <View style={{ position: 'absolute', bottom: 2, right: 6 }}>
-                      <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935" }}>
+                      <Text style={{ fontSize:11, fontWeight:"700", color:"#E53935" }}>
                         +{Math.round((unit/minU - 1)*100)}%
                       </Text>
                     </View>
