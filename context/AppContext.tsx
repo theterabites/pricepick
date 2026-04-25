@@ -85,8 +85,8 @@ export function AppProvider({ children }) {
   const [currency, setCurrency] = useState(CURRENCIES[1]);
   const [showPercentage, setShowPercentage] = useState(true);
   const [items, setItems] = useState([
-    { id: 1, quantity: "", price: "" },
-    { id: 2, quantity: "", price: "" },
+    { id: 1, colorIndex: 0, quantity: "", price: "" },
+    { id: 2, colorIndex: 1, quantity: "", price: "" },
   ]);
   const [originalItems, setOriginalItems] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
