@@ -201,18 +201,13 @@ export default function App() {
 
       {/* Fixed Header */}
       <View style={{ flexDirection:"row", alignItems:"center", justifyContent:"space-between", paddingHorizontal:14, paddingTop:14, paddingBottom:6 }}>
-        <View style={{ width: 130, flexDirection: 'row', gap: 6 }}>
+        <View style={{ width: 100 }}>
           <TouchableOpacity onPress={reset} style={{
             backgroundColor:'#E53935', 
             borderRadius:11, paddingHorizontal: 10, height:36, alignItems:"center", justifyContent:"center",
+            alignSelf: 'flex-start'
           }}>
             <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>RESET</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={sortItems} style={{
-            backgroundColor:'#00C896', 
-            borderRadius:11, paddingHorizontal: 10, height:36, alignItems:"center", justifyContent:"center",
-          }}>
-            <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>SORT</Text>
           </TouchableOpacity>
         </View>
 
@@ -250,10 +245,11 @@ export default function App() {
           const allUnits = items.map(item => computeUnit(item.price, item.quantity));
           const decimals = resolveDecimals(allUnits);
 
-          return items.map((item, idx) => {
-            const col = ACCENTS[idx % ACCENTS.length];
-            const label = LABELS[idx];
-            const unit = allUnits[idx];
+          return items.map((item) => {
+            const originalIndex = item.id - 1; // Assuming initial IDs are 1, 2, 3...
+            const col = ACCENTS[originalIndex % ACCENTS.length];
+            const label = LABELS[originalIndex % LABELS.length];
+            const unit = computeUnit(item.price, item.quantity);
             const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
             const hasWinner = valid.length > 1 && minU !== maxU;
             const isDimmed = hasWinner && !isBest;
@@ -336,7 +332,7 @@ export default function App() {
         })()}
       </View>
 
-        <BestBar unitList={unitList} minU={minU} maxU={maxU} valid={valid} currency={currency} T={T} dark={dark} />
+        <BestBar unitList={unitList} minU={minU} maxU={maxU} valid={valid} currency={currency} T={T} dark={dark} onSort={sortItems} isSorted={!!originalItems} />
       </ScrollView>
 
       {/* Fixed Keypad */}
@@ -433,7 +429,7 @@ function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myO
   );
 }
 
-function BestBar({ unitList, minU, maxU, valid, currency, T, dark }) {
+function BestBar({ unitList, minU, maxU, valid, currency, T, dark, onSort, isSorted }) {
   if (valid.length < 2 || minU === maxU) {
     return (
       <View style={{ height:44, justifyContent:"center", paddingHorizontal:14 }}>
@@ -443,7 +439,26 @@ function BestBar({ unitList, minU, maxU, valid, currency, T, dark }) {
       </View>
     );
   }
-  return <View style={{ height: 20 }} />;
+  
+  return (
+    <View style={{ height: 44, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 }}>
+      <View style={{ flex: 2 }} />
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        <TouchableOpacity onPress={onSort} style={{
+          backgroundColor: isSorted ? '#007AFF' : '#00C896',
+          borderRadius: 8,
+          paddingVertical: 6,
+          paddingHorizontal: 12,
+          minWidth: 80,
+          alignItems: 'center'
+        }}>
+          <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>
+            {isSorted ? 'UNSORT' : 'SORT'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
 function CtrlBtn({ T, children, onClick, disabled, flex=1, color }) {
