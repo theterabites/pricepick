@@ -434,11 +434,11 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
           <Text style={{ fontSize:8, fontWeight:"800", color:accent }}>{myOp.value} {myOp.op}</Text>
         </View>
       )}
-      <View style={{ flexDirection:"row", alignItems:"center", justifyContent: "center", width: "100%" }}>
+      <View style={{ flexDirection:"row", alignItems:"center", justifyContent: "flex-end", width: "100%", paddingHorizontal: 10 }}>
         {currencySymbol && (
           <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text }}>{currencySymbol}</Text>
         )}
-        <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "center" }}>
+        <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "right" }}>
           {empty ? (active ? "" : "0.00") : displayValue}
         </Text>
         {active && (
