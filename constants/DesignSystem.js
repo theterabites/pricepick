@@ -26,14 +26,15 @@ export const LAYOUT = {
     return {
       height: LAYOUT.rowHeight,
       flex: 1,
+      minWidth: 0,
       borderRadius: LAYOUT.borderRadius,
       alignItems: "center",
       justifyContent: "flex-end", // Uniform right alignment for all
       flexDirection: 'row',
       paddingHorizontal: 8, // Standard padding for all boxes
-      borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : (isUnit ? 0 : 0.5)),
-      borderColor: active ? accent : (isBest ? accent : (isUnit ? 'transparent' : T.border)),
-      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : (isUnit ? 'transparent' : T.surface)),
+      borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : 0.5),
+      borderColor: active ? accent : (isBest ? accent : T.border), // Always show border
+      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : (isUnit ? T.surface2 : T.surface)), // Light gray for unit debug
     };
   }
 };
