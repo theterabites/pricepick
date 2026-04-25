@@ -1,92 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions, TouchableWithoutFeedback } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
 
-// ─── Accents ───────────────────────────────────────────────────────────────────
-const ACCENTS = [
-  { accent:"#C62828", bg:"#FFEBEE" }, // Dark Red (not 'wrong' red)
-  { accent:"#FFB300", bg:"#FFF8E1" }, // Golden Yellow (balanced)
-  { accent:"#FF007F", bg:"#FFF0F5" }, // Bright Hot Pink
-  { accent:"#4CAF50", bg:"#E8F5E9" }, // Green
-  { accent:"#FF9800", bg:"#FFF3E0" }, // Orange
-  { accent:"#2196F3", bg:"#E3F2FD" }, // Blue
-  { accent:"#9C27B0", bg:"#F3E5F5" }, // Purple
-];
-const LABELS = ["A","B","C","D","E","F","G"];
-
-// ─── Design System ────────────────────────────────────────────────────────────
-const LAYOUT = {
-  rowHeight: 44,
-  borderRadius: 12,
-  borderWidth: 1.5,
-  gap: 5,
-  labelWidth: 30,
-  fontSize: 18,
-  headerFontSize: 10,
-  
-  // Shared Box Style
-  getBoxStyle: (active, isBest, accent, T, activeField, dark) => {
-    return {
-      height: LAYOUT.rowHeight,
-      flex: 1,
-      borderRadius: LAYOUT.borderRadius,
-      alignItems: "center",
-      justifyContent: "flex-end", // Right aligned
-      flexDirection: 'row',
-      paddingHorizontal: 10,
-      borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : 0.5),
-      borderColor: active ? accent : (isBest ? accent : T.border),
-      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : T.surface),
-    };
-  }
-};
-
-// ─── Logic & Formatting ───────────────────────────────────────────────────────
-const FORMAT = {
-  computeUnit: (price, quantity) => {
-    const p = parseFloat(price), q = parseFloat(quantity);
-    return (p > 0 && q > 0) ? p / q : null;
-  },
-
-  applyOp: (a, op, b) =>
-    op==="+" ? a+b : op==="-" ? a-b : op==="×" ? a*b : b!==0 ? a/b : 0,
-
-  fmtNum: v => {
-    const n = parseFloat(v);
-    if (isNaN(n)) return "";
-    return n % 1 === 0 ? String(n) : parseFloat(n.toFixed(6)).toString();
-  },
-
-  resolveDecimals: (unitValues) => {
-    const validVals = unitValues.filter(v => v !== null);
-    if (validVals.length < 2) return 2;
-    const rounded2 = validVals.map(v => v.toFixed(2));
-    const hasTie = validVals.some((v1, i) => 
-      validVals.some((v2, j) => i !== j && v1 !== v2 && v1.toFixed(2) === v2.toFixed(2))
-    );
-    return hasTie ? 4 : 2;
-  },
-
-  resolveQtyDecimals: (items) => {
-    let maxD = 0;
-    items.forEach(item => {
-      if (item.quantity && item.quantity.includes('.')) {
-        const decimals = item.quantity.split('.')[1].length;
-        if (decimals > maxD) maxD = decimals;
-      }
-    });
-    return Math.min(4, maxD);
-  },
-
-  fmtDisplay: (unit, sym, decimals) => {
-    if (unit === null) return `${sym}—`;
-    const formatted = unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return `${sym}${formatted}`;
-  }
-};
+// Refactored Modules
+import { ACCENTS, LABELS, LAYOUT } from "../constants/DesignSystem";
+import { FORMAT } from "../utils/logic";
 
 export default function App() {
   const { T, dark, currency, items, setItems, nextId, showPercentage, originalItems, setOriginalItems } = useApp();
@@ -94,7 +15,7 @@ export default function App() {
   const insets = useSafeAreaInsets();
   const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-  // Dynamic Item Limit Calculation
+  // Dynamic Item Limit
   const reservedHeight = 60 + 40 + 260 + insets.top + insets.bottom;
   const availableHeight = SCREEN_HEIGHT - reservedHeight;
   const maxItemsPossible = Math.floor(availableHeight / (LAYOUT.rowHeight + LAYOUT.gap));
@@ -201,14 +122,7 @@ export default function App() {
       setOriginalItems(null);
     } else {
       setOriginalItems([...items]);
-      const sorted = [...items].sort((a, b) => {
-        const unitA = FORMAT.computeUnit(a.price, a.quantity);
-        const unitB = FORMAT.computeUnit(b.price, b.quantity);
-        if (unitA === null) return 1;
-        if (unitB === null) return -1;
-        return unitA - unitB;
-      });
-      setItems(sorted);
+      setItems(FORMAT.sortItems(items));
     }
   };
 
@@ -339,48 +253,48 @@ export default function App() {
                         qtyDecimals={qtyDecimals}
                       />
 
-                {/* Per Unit Box */}
-                <TouchableOpacity 
-                  disabled={!isBest}
-                  onPress={() => isBest && copyToClipboard(unitDisplay)}
-                  style={{ 
-                    flex: 1, 
-                    height: LAYOUT.rowHeight, 
-                    alignItems:"center", 
-                    justifyContent:"center",
-                  }}
-                >
-                  <View style={{
-                    ...LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark),
-                    borderWidth: isBest ? LAYOUT.borderWidth : 0,
-                    borderColor: isBest ? col.accent : 'transparent',
-                    backgroundColor: isBest ? col.accent+"18" : 'transparent',
-                    paddingHorizontal: 8,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    gap: 4
-                  }}>
-                    {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
-                    <View style={{ minWidth: 80, alignItems: 'flex-end' }}>
-                      <Text style={{ 
-                        fontSize: LAYOUT.fontSize, 
-                        fontWeight:"600", 
-                        color: unit === null ? T.sub+"55" : T.text,
-                        textAlign: 'right'
-                      }}>
-                        {unitDisplay}
-                      </Text>
-                    </View>
-                    {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                      <View style={{ minWidth: 45, alignItems: 'flex-start' }}>
-                        <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935" }}>
-                          +{Math.round((unit/minU - 1)*100)}%
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-                </TouchableOpacity>
+                      {/* Per Unit Box */}
+                      <TouchableOpacity 
+                        disabled={!isBest}
+                        onPress={() => isBest && copyToClipboard(unitDisplay)}
+                        style={{ 
+                          flex: 1, 
+                          height: LAYOUT.rowHeight, 
+                          alignItems:"center", 
+                          justifyContent:"center",
+                        }}
+                      >
+                        <View style={{
+                          ...LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark),
+                          borderWidth: isBest ? LAYOUT.borderWidth : 0,
+                          borderColor: isBest ? col.accent : 'transparent',
+                          backgroundColor: isBest ? col.accent+"18" : 'transparent',
+                          paddingHorizontal: 8,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'flex-end',
+                          gap: 4
+                        }}>
+                          {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
+                          <View style={{ minWidth: 80, alignItems: 'flex-end' }}>
+                            <Text style={{ 
+                              fontSize: LAYOUT.fontSize, 
+                              fontWeight:"600", 
+                              color: unit === null ? T.sub+"55" : T.text,
+                              textAlign: 'right'
+                            }}>
+                              {unitDisplay}
+                            </Text>
+                          </View>
+                          {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
+                            <View style={{ minWidth: 45, alignItems: 'flex-start' }}>
+                              <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935" }}>
+                                +{Math.round((unit/minU - 1)*100)}%
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+                      </TouchableOpacity>
                     </View>
                   );
                 });
@@ -514,17 +428,6 @@ function BestBar({ unitList, minU, maxU, valid, currency, T, dark, onSort, isSor
         </TouchableOpacity>
       </View>
     </View>
-  );
-}
-
-function CtrlBtn({ T, children, onClick, disabled, flex=1, color }) {
-  return (
-    <TouchableOpacity onPress={onClick} disabled={disabled} style={{
-      flex, height:50, backgroundColor: color || T.ctrlBg,
-      borderRadius:12, alignItems:"center", justifyContent:"center",
-      opacity: disabled ? 0.3 : 1,
-      shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 6, elevation: 2
-    }}>{children}</TouchableOpacity>
   );
 }
 
