@@ -219,6 +219,7 @@ export default function App() {
                 <EditCell
                   value={item.price}
                   active={activeCell?.id===item.id && activeCell.field==="price"}
+                  isBest={isBest}
                   accent={col.accent} T={T}
                   currencySymbol={currency.symbol}
                   myOp={myPriceOp}
@@ -229,32 +230,34 @@ export default function App() {
                 <EditCell
                   value={item.quantity}
                   active={activeCell?.id===item.id && activeCell.field==="quantity"}
+                  isBest={isBest}
                   accent={col.accent} T={T}
                   myOp={myQtyOp}
                   onTap={() => tapCell(item.id, "quantity")}
                 />
 
-                {/* Per Unit (Plain Text, No Box) */}
+                {/* Per Unit (Border only when best) */}
                 <View style={{ 
                   flex: 1, 
                   height:52, 
                   alignItems:"center", 
-                  justifyContent:"center"
+                  justifyContent:"center",
                 }}>
                   <View style={{ 
                     flexDirection:"row", 
                     alignItems:"center", 
                     justifyContent: "center", 
                     gap:4,
-                    backgroundColor: isBest ? col.accent : 'transparent',
-                    paddingHorizontal: 8,
-                    paddingVertical: 4,
-                    borderRadius: 10,
+                    borderWidth: isBest ? 2 : 0,
+                    borderColor: isBest ? col.accent : 'transparent',
+                    borderRadius: 12,
+                    width: '100%',
+                    height: '100%'
                   }}>
                     <Text style={{ 
                       fontSize:18, 
                       fontWeight:"600", 
-                      color: unit === null ? T.sub+"55" : (isBest ? "#fff" : T.text) 
+                      color: unit === null ? T.sub+"55" : (isBest ? col.accent : T.text) 
                     }}>
                       {unitDisplay}
                     </Text>
@@ -302,7 +305,7 @@ function ColHeader({ label, T, muted }) {
   );
 }
 
-function EditCell({ value, active, accent, T, currencySymbol, onTap, myOp }) {
+function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myOp }) {
   const empty = !value;
   const [blink, setBlink] = useState(true);
 
@@ -330,8 +333,11 @@ function EditCell({ value, active, accent, T, currencySymbol, onTap, myOp }) {
 
   return (
     <TouchableOpacity onPress={onTap} style={{
-      height:52, flex:1, backgroundColor: active ? accent+"18" : T.surface,
-      borderWidth:2, borderColor: active ? accent : T.border, borderRadius:12,
+      height:52, flex:1, 
+      backgroundColor: active ? accent+"18" : 'transparent',
+      borderWidth: 2, 
+      borderColor: active ? accent : (isBest ? accent : 'transparent'), 
+      borderRadius:12,
       alignItems:"center", justifyContent:"center"
     }}>
       {myOp && (
