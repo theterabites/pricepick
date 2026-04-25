@@ -197,12 +197,14 @@ export default function App() {
             const label = LABELS[idx];
             const unit = allUnits[idx];
             const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
+            const hasWinner = valid.length > 1 && minU !== maxU;
+            const isDimmed = hasWinner && !isBest;
             const myPriceOp = pendingOp?.id===item.id && pendingOp?.field==="price" ? pendingOp : null;
             const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
             const unitDisplay = fmtDisplay(unit, currency.symbol, decimals);
 
             return (
-              <View key={item.id} style={{ flexDirection:"row", gap:5, alignItems:"center" }}>
+              <View key={item.id} style={{ flexDirection:"row", gap:5, alignItems:"center", opacity: isDimmed ? 0.5 : 1 }}>
                 {/* Letter Label */}
                 <View style={{ width:30, alignItems:"center", justifyContent:"center" }}>
                   <View style={{
