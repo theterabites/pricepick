@@ -153,6 +153,20 @@ export default function App() {
     if (activeCell?.id === last.id)
       setActiveCell({ id:items[items.length-2].id, field:"price" });
   };
+
+  const sortItems = () => {
+    const sorted = [...items].sort((a, b) => {
+      const unitA = computeUnit(a.price, a.quantity);
+      const unitB = computeUnit(b.price, b.quantity);
+      if (unitA === null) return 1;
+      if (unitB === null) return -1;
+      return unitA - unitB;
+    });
+    setItems(sorted);
+    // Keep focus on first item price after sort
+    setActiveCell({ id: sorted[0].id, field: "price" });
+  };
+
   const reset = () => {
     setItems([
       { id:1, quantity:"", price:"" },
@@ -182,17 +196,22 @@ export default function App() {
 
       {/* Fixed Header */}
       <View style={{ flexDirection:"row", alignItems:"center", justifyContent:"space-between", paddingHorizontal:14, paddingTop:14, paddingBottom:6 }}>
-        <View style={{ width: 100 }}>
+        <View style={{ width: 130, flexDirection: 'row', gap: 6 }}>
           <TouchableOpacity onPress={reset} style={{
             backgroundColor:'#E53935', 
             borderRadius:11, paddingHorizontal: 10, height:36, alignItems:"center", justifyContent:"center",
-            alignSelf: 'flex-start'
           }}>
-            <Text style={{ color: '#fff', fontSize: 12, fontWeight: '800' }}>RESET</Text>
+            <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>RESET</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={sortItems} style={{
+            backgroundColor:'#00C896', 
+            borderRadius:11, paddingHorizontal: 10, height:36, alignItems:"center", justifyContent:"center",
+          }}>
+            <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>SORT</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={{ fontSize:24, fontWeight:"800", color:T.text, flex: 1, textAlign: 'center' }}>PricePick</Text>
+        <Text style={{ fontSize:22, fontWeight:"800", color:T.text, flex: 1, textAlign: 'center' }}>PricePick</Text>
 
         <View style={{ width: 100, alignItems: 'flex-end' }}>
           <TouchableOpacity onPress={() => router.push("/settings")} style={{
