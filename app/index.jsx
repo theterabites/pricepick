@@ -6,14 +6,15 @@ import { useApp } from "../context/AppContext";
 
 // ─── Accents ───────────────────────────────────────────────────────────────────
 const ACCENTS = [
-  { accent:"#00C896", bg:"#E6FBF4" },
-  { accent:"#4A90E2", bg:"#EAF2FF" },
-  { accent:"#F5A623", bg:"#FFF5E0" },
-  { accent:"#9B59B6", bg:"#F5EEFF" },
-  { accent:"#E74C3C", bg:"#FFEAEA" },
-  { accent:"#1ABC9C", bg:"#E3FAF5" },
+  { accent:"#FF5252", bg:"#FFEAEA" }, // Cute Red
+  { accent:"#FFD600", bg:"#FFFDE7" }, // Yellow
+  { accent:"#FF4081", bg:"#FCE4EC" }, // Pink
+  { accent:"#4CAF50", bg:"#E8F5E9" }, // Green
+  { accent:"#FF9800", bg:"#FFF3E0" }, // Orange
+  { accent:"#2196F3", bg:"#E3F2FD" }, // Blue
+  { accent:"#9C27B0", bg:"#F3E5F5" }, // Purple
 ];
-const LABELS = ["A","B","C","D","E","F"];
+const LABELS = ["A","B","C","D","E","F","G"];
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 const computeUnit = (price, quantity) => {
@@ -121,7 +122,7 @@ export default function App() {
   };
 
   const addItem = () => {
-    if (items.length >= 5) return;
+    if (items.length >= 7) return;
     setItems(p => [...p, { id:nextId.current++, quantity:"", price:"" }]);
   };
   const removeItem = () => {
@@ -148,12 +149,20 @@ export default function App() {
       {/* Fixed Header */}
       <View style={{ flexDirection:"row", alignItems:"center", justifyContent:"space-between", paddingHorizontal:14, paddingTop:14, paddingBottom:6 }}>
         <Text style={{ fontSize:28, fontWeight:"800", color:T.text }}>PricePick</Text>
-        <TouchableOpacity onPress={() => router.push("/settings")} style={{
-          backgroundColor:T.surface2, borderWidth:1, borderColor:T.border,
-          borderRadius:11, width:36, height:36, alignItems:"center", justifyContent:"center",
-        }}>
-          <Text style={{ fontSize:17 }}>⚙️</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <TouchableOpacity onPress={reset} style={{
+            backgroundColor:T.surface2, borderWidth:1, borderColor:T.border,
+            borderRadius:11, paddingHorizontal: 12, height:36, alignItems:"center", justifyContent:"center",
+          }}>
+            <Text style={{ color: '#E53935', fontSize: 13, fontWeight: '700' }}>Reset</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/settings")} style={{
+            backgroundColor:T.surface2, borderWidth:1, borderColor:T.border,
+            borderRadius:11, width:36, height:36, alignItems:"center", justifyContent:"center",
+          }}>
+            <Text style={{ fontSize:17 }}>⚙️</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Scrollable Content Area */}
@@ -408,8 +417,8 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
 
         <TouchableOpacity 
           onPress={onAdd}
-          disabled={items.length >= 5}
-          style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', opacity: items.length >= 5 ? 0.3 : 1 }}
+          disabled={items.length >= 7}
+          style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', opacity: items.length >= 7 ? 0.3 : 1 }}
         >
           <Text style={{ color: '#00C896', fontSize: 24, fontWeight: '700' }}>+</Text>
         </TouchableOpacity>
@@ -425,23 +434,6 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
             const isAct = !!activeOp && activeOp === opKey;
             return (
               <TouchableOpacity key={k+ki} onPress={() => onKey(opKey)} style={{
-                flex:1, height:48, borderRadius:10, alignItems:"center", justifyContent:"center",
-                backgroundColor: isEq ? activeColor : isAct ? T.keyBgOp+"cc" : isOp || isDel ? T.keyBgOp : T.keyBg,
-                borderWidth: isAct ? 2 : 0, borderColor: activeColor
-              }}>
-                <Text style={{
-                  fontSize: isEq ? 20 : 21, fontWeight: isOp || isEq ? "600" : "400",
-                  color: isEq ? "#fff" : isDel ? "#E53935" : isOp ? T.keyTextOp : T.keyText
-                }}>{k}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      ))}
-    </View>
-  );
-}
-TouchableOpacity key={k+ki} onPress={() => onKey(opKey)} style={{
                 flex:1, height:48, borderRadius:10, alignItems:"center", justifyContent:"center",
                 backgroundColor: isEq ? activeColor : isAct ? T.keyBgOp+"cc" : isOp || isDel ? T.keyBgOp : T.keyBg,
                 borderWidth: isAct ? 2 : 0, borderColor: activeColor
