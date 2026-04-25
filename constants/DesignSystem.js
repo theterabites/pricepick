@@ -1,3 +1,9 @@
+import { Platform } from 'react-native';
+
+export const FONTS = {
+  mono: Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' }),
+};
+
 export const ACCENTS = [
   { accent:"#C62828", bg:"#FFEBEE" }, // Dark Red
   { accent:"#FFB300", bg:"#FFF8E1" }, // Golden Yellow
