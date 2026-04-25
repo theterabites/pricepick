@@ -32,9 +32,9 @@ export const LAYOUT = {
       justifyContent: "flex-end", // Uniform right alignment for all
       flexDirection: 'row',
       paddingHorizontal: 8, // Standard padding for all boxes
-      borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : 0.5),
-      borderColor: active ? accent : (isBest ? accent : T.border), // Always show border
-      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : (isUnit ? T.surface2 : T.surface)), // Light gray for unit debug
+      borderWidth: LAYOUT.borderWidth,
+      borderColor: active ? accent : (isBest ? accent : T.border),
+      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : (isUnit ? T.surface2 : T.surface)),
     };
   }
 };
