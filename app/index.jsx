@@ -7,7 +7,7 @@ import { useApp } from "../context/AppContext";
 // ─── Accents ───────────────────────────────────────────────────────────────────
 const ACCENTS = [
   { accent:"#C62828", bg:"#FFEBEE" }, // Dark Red (not 'wrong' red)
-  { accent:"#FFD600", bg:"#FFFDE7" }, // Yellow
+  { accent:"#FFB300", bg:"#FFF8E1" }, // Golden Yellow (balanced)
   { accent:"#FF007F", bg:"#FFF0F5" }, // Bright Hot Pink
   { accent:"#4CAF50", bg:"#E8F5E9" }, // Green
   { accent:"#FF9800", bg:"#FFF3E0" }, // Orange
