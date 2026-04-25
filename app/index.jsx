@@ -256,36 +256,29 @@ export default function App() {
                       />
 
                       {/* Per Unit Box */}
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         disabled={!isBest}
                         onPress={() => isBest && copyToClipboard(unitDisplay)}
-                        style={{ 
-                          flex: 1, 
-                          height: LAYOUT.rowHeight, 
-                          alignItems:"center", 
-                          justifyContent:"center",
-                        }}
+                        style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}
                       >
-                        <View style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}>
-                          {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
-                          <View style={{ minWidth: 80, alignItems: 'flex-end' }}>
-                            <Text style={{ 
-                              fontSize: LAYOUT.fontSize, 
-                              fontWeight:"600", 
-                              color: unit === null ? T.sub+"55" : T.text,
-                              textAlign: 'right'
-                            }}>
-                              {unitDisplay}
-                            </Text>
-                          </View>
-                          {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                            <View style={{ minWidth: 45, alignItems: 'flex-start' }}>
-                              <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935" }}>
-                                +{Math.round((unit/minU - 1)*100)}%
-                              </Text>
-                            </View>
-                          )}
-                        </View>
+                        {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            flex: 1,
+                            fontSize: LAYOUT.fontSize,
+                            fontWeight:"600",
+                            color: unit === null ? T.sub+"55" : T.text,
+                            textAlign: 'right'
+                          }}
+                        >
+                          {unitDisplay}
+                        </Text>
+                        {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
+                          <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935", marginLeft: 4 }}>
+                            +{Math.round((unit/minU - 1)*100)}%
+                          </Text>
+                        )}
                       </TouchableOpacity>
                     </View>
                   );
