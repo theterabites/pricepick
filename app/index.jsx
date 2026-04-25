@@ -345,7 +345,7 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
 
   const displayValue = (() => {
     if (empty) return null;
-    
+
     if (currencySymbol) {
       // Price Logic
       if (active) {
@@ -369,6 +369,9 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
     }
   })();
 
+  const totalLen = (currencySymbol?.length ?? 0) + (displayValue?.length ?? 0);
+  const fontSize = totalLen > 10 ? 12 : totalLen > 7 ? 15 : LAYOUT.fontSize;
+
   return (
     <TouchableOpacity onPress={onTap} style={LAYOUT.getBoxStyle(active, isBest, accent, T, field, dark)}>
       {myOp && (
@@ -377,18 +380,18 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
         </View>
       )}
       {currencySymbol && (
-        <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, fontFamily: FONTS.mono }}>{currencySymbol}</Text>
+        <Text style={{ fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, fontFamily: FONTS.mono }}>{currencySymbol}</Text>
       )}
-      <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "right", fontFamily: FONTS.mono }}>
+      <Text style={{ fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "right", fontFamily: FONTS.mono }}>
         {empty ? (active ? "" : (noDecimal ? "0" : "0.00")) : displayValue}
       </Text>
       {active && (
-        <View style={{ 
-          width: 2, 
-          height: LAYOUT.fontSize + 2, 
-          backgroundColor: accent, 
-          opacity: blink ? 1 : 0, 
-          marginLeft: 2 
+        <View style={{
+          width: 2,
+          height: fontSize + 2,
+          backgroundColor: accent,
+          opacity: blink ? 1 : 0,
+          marginLeft: 2
         }} />
       )}
     </TouchableOpacity>
