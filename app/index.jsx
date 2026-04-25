@@ -24,6 +24,12 @@ export default function App() {
   const [activeCell, setActiveCell] = useState({ id:1, field:"price" });
   const [pendingOp, setPendingOp] = useState(null);
   const [clipboardStatus, setClipboardStatus] = useState(null);
+  const [copyBlink, setCopyBlink] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => setCopyBlink(v => !v), 800);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (clipboardStatus) {
