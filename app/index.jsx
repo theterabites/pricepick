@@ -148,19 +148,25 @@ export default function App() {
       
       {/* Fixed Header */}
       <View style={{ flexDirection:"row", alignItems:"center", justifyContent:"space-between", paddingHorizontal:14, paddingTop:14, paddingBottom:6 }}>
-        <Text style={{ fontSize:28, fontWeight:"800", color:T.text }}>PricePick</Text>
-        <View style={{ flexDirection: 'row', gap: 10 }}>
+        <View style={{ width: 100 }}>
           <TouchableOpacity onPress={reset} style={{
             backgroundColor:'#E53935', 
-            borderRadius:11, paddingHorizontal: 12, height:36, alignItems:"center", justifyContent:"center",
+            borderRadius:11, paddingHorizontal: 10, height:36, alignItems:"center", justifyContent:"center",
+            alignSelf: 'flex-start'
           }}>
-            <Text style={{ color: '#fff', fontSize: 13, fontWeight: '800' }}>RESET</Text>
+            <Text style={{ color: '#fff', fontSize: 12, fontWeight: '800' }}>RESET</Text>
           </TouchableOpacity>
+        </View>
+
+        <Text style={{ fontSize:24, fontWeight:"800", color:T.text, flex: 1, textAlign: 'center' }}>PricePick</Text>
+
+        <View style={{ width: 100, alignItems: 'flex-end' }}>
           <TouchableOpacity onPress={() => router.push("/settings")} style={{
             backgroundColor:T.surface2, borderWidth:1, borderColor:T.border,
-            borderRadius:11, width:36, height:36, alignItems:"center", justifyContent:"center",
+            borderRadius:11, paddingHorizontal: 10, height:36, flexDirection: 'row', alignItems:"center", justifyContent:"center", gap: 4
           }}>
-            <Text style={{ fontSize:17 }}>⚙️</Text>
+            <Text style={{ fontSize:15 }}>⚙️</Text>
+            <Text style={{ color: T.text, fontSize: 13, fontWeight: '600' }}>Settings</Text>
           </TouchableOpacity>
         </View>
       </View>
