@@ -296,35 +296,44 @@ export default function App() {
                       {/* Per Unit Box */}
                       {(() => {
                         const isCopied = copiedItemId === item.id;
+                        const showPct = !isCopied && !isBest && unit !== null && minU !== null && unit > minU && showPercentage;
                         return (
                           <TouchableOpacity
                             disabled={unit === null}
                             onPress={() => unit !== null && copyToClipboard(unit.toFixed(effectiveDecimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","), item.id)}
-                            style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}
+                            style={{
+                              ...LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark),
+                              flexDirection: 'column',
+                              alignItems: 'stretch',
+                              justifyContent: 'center',
+                              paddingVertical: 4,
+                            }}
                           >
-                            {unit !== null && (isBest || isCopied) && (
-                              <Text style={{ fontSize: 13, opacity: isCopied ? 1 : (copyBlink ? 1 : 0.2), marginRight: 2 }}>
-                                ✅
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              {unit !== null && (
+                                <Text style={{ fontSize: 10, opacity: isCopied ? 1 : (copyBlink ? 1 : 0.25), marginRight: 2 }}>
+                                  {isCopied || isBest ? "✅" : "📋"}
+                                </Text>
+                              )}
+                              <Text
+                                numberOfLines={1}
+                                style={{
+                                  flex: 1,
+                                  fontSize: rowFontSize,
+                                  fontWeight: "600",
+                                  color: unit === null ? T.sub+"55" : T.text,
+                                  textAlign: 'right',
+                                  fontFamily: FONTS.mono
+                                }}
+                              >
+                                {unitDisplay}
                               </Text>
-                            )}
-                            {!isCopied && !isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                              <Text style={{ fontSize: 9, fontWeight: "700", color: "#E53935", marginRight: 2 }}>
+                            </View>
+                            {showPct && (
+                              <Text style={{ fontSize: 8, fontWeight: "700", color: "#E53935", textAlign: 'right' }}>
                                 {pctLabel}
                               </Text>
                             )}
-                            <Text
-                              numberOfLines={1}
-                              style={{
-                                flex: 1,
-                                fontSize: rowFontSize,
-                                fontWeight: "600",
-                                color: unit === null ? T.sub+"55" : T.text,
-                                textAlign: 'right',
-                                fontFamily: FONTS.mono
-                              }}
-                            >
-                              {unitDisplay}
-                            </Text>
                           </TouchableOpacity>
                         );
                       })()}
