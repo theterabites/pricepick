@@ -109,12 +109,15 @@ export default function App() {
     const used = new Set(items.map(i => i.colorIndex));
     let colorIndex = 0;
     while (used.has(colorIndex)) colorIndex++;
-    setItems(p => [...p, { id:nextId.current++, colorIndex, quantity:"", price:"" }]);
+    const newItem = { id:nextId.current++, colorIndex, quantity:"", price:"" };
+    setItems(p => [...p, newItem]);
+    if (originalItems) setOriginalItems(p => [...p, newItem]);
   };
   const removeItem = () => {
     if (items.length <= 2) return;
     const last = items[items.length-1];
     setItems(p => p.slice(0,-1));
+    if (originalItems) setOriginalItems(p => p.filter(i => i.id !== last.id));
     if (activeCell?.id === last.id)
       setActiveCell({ id:items[items.length-2].id, field:"price" });
   };
