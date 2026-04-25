@@ -26,6 +26,23 @@ const LAYOUT = {
   labelWidth: 30,
   fontSize: 18,
   headerFontSize: 10,
+  
+  // Shared Box Style
+  getBoxStyle: (active, isBest, accent, T, activeField, dark) => {
+    const isUnit = activeField === 'unit';
+    return {
+      height: LAYOUT.rowHeight,
+      flex: 1,
+      borderRadius: LAYOUT.borderRadius,
+      alignItems: "center",
+      justifyContent: isUnit ? "flex-end" : "center", // Units are right aligned
+      flexDirection: 'row',
+      paddingHorizontal: 10,
+      borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : (isUnit ? 0 : 0.5)),
+      borderColor: active ? accent : (isBest ? accent : (isUnit ? 'transparent' : T.border)),
+      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : (isUnit ? 'transparent' : T.surface)),
+    };
+  }
 };
 
 // ─── Logic & Formatting ───────────────────────────────────────────────────────
@@ -332,19 +349,7 @@ export default function App() {
                           justifyContent:"center",
                         }}
                       >
-                        <View style={{ 
-                          flexDirection:"row", 
-                          alignItems:"center", 
-                          justifyContent: "flex-end", 
-                          gap: 3,
-                          borderWidth: isBest ? LAYOUT.borderWidth : 0,
-                          borderColor: isBest ? col.accent : 'transparent',
-                          backgroundColor: isBest ? col.accent+"18" : 'transparent',
-                          borderRadius: LAYOUT.borderRadius,
-                          width: '100%',
-                          height: '100%',
-                          paddingHorizontal: 8
-                        }}>
+                        <View style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}>
                           {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
                           <Text style={{ 
                             fontSize: LAYOUT.fontSize, 
@@ -360,8 +365,7 @@ export default function App() {
                             </Text>
                           )}
                         </View>
-                      </TouchableOpacity>
-                    </View>
+                      </TouchableOpacity>                    </View>
                   );
                 });
               })()}
@@ -444,36 +448,27 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
   })();
 
   return (
-    <TouchableOpacity onPress={onTap} style={{
-      height: LAYOUT.rowHeight, flex:1, 
-      backgroundColor: active ? accent+"18" : (isBest ? accent+"18" : T.surface),
-      borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : 0.5), 
-      borderColor: active ? accent : (isBest ? accent : T.border), 
-      borderRadius: LAYOUT.borderRadius,
-      alignItems:"center", justifyContent:"center"
-    }}>
+    <TouchableOpacity onPress={onTap} style={LAYOUT.getBoxStyle(active, isBest, accent, T, field, dark)}>
       {myOp && (
         <View style={{ position:"absolute", top:2, left:4, backgroundColor:accent+"22", borderRadius:3, paddingHorizontal:3, paddingVertical:1 }}>
           <Text style={{ fontSize:8, fontWeight:"800", color:accent }}>{myOp.value} {myOp.op}</Text>
         </View>
       )}
-      <View style={{ flexDirection:"row", alignItems:"center", justifyContent: "flex-end", width: "100%", paddingHorizontal: 10 }}>
-        {currencySymbol && (
-          <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text }}>{currencySymbol}</Text>
-        )}
-        <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "right" }}>
-          {empty ? (active ? "" : "0.00") : displayValue}
-        </Text>
-        {active && (
-          <View style={{ 
-            width: 2, 
-            height: LAYOUT.fontSize + 2, 
-            backgroundColor: accent, 
-            opacity: blink ? 1 : 0, 
-            marginLeft: 2 
-          }} />
-        )}
-      </View>
+      {currencySymbol && (
+        <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text }}>{currencySymbol}</Text>
+      )}
+      <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "right" }}>
+        {empty ? (active ? "" : "0.00") : displayValue}
+      </Text>
+      {active && (
+        <View style={{ 
+          width: 2, 
+          height: LAYOUT.fontSize + 2, 
+          backgroundColor: accent, 
+          opacity: blink ? 1 : 0, 
+          marginLeft: 2 
+        }} />
+      )}
     </TouchableOpacity>
   );
 }
