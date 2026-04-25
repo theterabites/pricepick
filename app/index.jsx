@@ -24,8 +24,6 @@ export default function App() {
   const [activeCell, setActiveCell] = useState({ id:1, field:"price" });
   const [pendingOp, setPendingOp] = useState(null);
   const [clipboardStatus, setClipboardStatus] = useState(null);
-  const [copiedItemId, setCopiedItemId] = useState(null);
-
   useEffect(() => {
     if (clipboardStatus) {
       const timer = setTimeout(() => setClipboardStatus(null), 2000);
@@ -33,17 +31,9 @@ export default function App() {
     }
   }, [clipboardStatus]);
 
-  useEffect(() => {
-    if (copiedItemId !== null) {
-      const timer = setTimeout(() => setCopiedItemId(null), 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [copiedItemId]);
-
-  const copyToClipboard = async (value, itemId) => {
+  const copyToClipboard = async (value) => {
     await Clipboard.setStringAsync(String(value));
     setClipboardStatus("Copied!");
-    setCopiedItemId(itemId);
   };
 
   const getF = (id, f) => (items.find(i => i.id===id)||{})[f] ?? "";
@@ -289,19 +279,17 @@ export default function App() {
 
                       {/* Per Unit Box */}
                       {(() => {
-                        const isCopied = copiedItemId === item.id;
-                        const showPct = !isCopied && !isBest && unit !== null && minU !== null && unit > minU && showPercentage;
+                        const showPct = !isBest && unit !== null && minU !== null && unit > minU && showPercentage;
                         return (
                           <TouchableOpacity
                             disabled={unit === null}
-                            onPress={() => unit !== null && copyToClipboard(unit.toFixed(effectiveDecimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","), item.id)}
+                            onPress={() => unit !== null && copyToClipboard(unit.toFixed(effectiveDecimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
                             style={{
-                              ...LAYOUT.getBoxStyle(false, isCopied ? false : isBest, col.accent, T, 'unit', dark),
+                              ...LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark),
                               flexDirection: 'column',
                               alignItems: 'stretch',
                               justifyContent: 'center',
                               paddingVertical: 4,
-                              ...(isCopied && { borderColor: col.accent, backgroundColor: col.accent + '40' }),
                             }}
                           >
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
