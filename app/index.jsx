@@ -147,6 +147,19 @@ export default function App() {
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }} edges={['top', 'left', 'right']}>
       <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
       
+      {/* Ad Placeholder Area (Top) */}
+      <View style={{ 
+        width: '100%', 
+        height: 50, 
+        backgroundColor: dark ? '#2C2C2E' : '#E5E5EA', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        borderBottomWidth: 0.5,
+        borderBottomColor: T.border
+      }}>
+        <Text style={{ color: T.sub, fontSize: 10, fontWeight: '600' }}>ADVERTISEMENT</Text>
+      </View>
+
       {/* Fixed Header */}
       <View style={{ flexDirection:"row", alignItems:"center", justifyContent:"space-between", paddingHorizontal:14, paddingTop:14, paddingBottom:6 }}>
         <View style={{ width: 100 }}>
