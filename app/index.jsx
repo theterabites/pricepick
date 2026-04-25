@@ -296,12 +296,12 @@ export default function App() {
                             disabled={unit === null}
                             onPress={() => unit !== null && copyToClipboard(unit.toFixed(effectiveDecimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","), item.id)}
                             style={{
-                              ...LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark),
+                              ...LAYOUT.getBoxStyle(false, isCopied ? false : isBest, col.accent, T, 'unit', dark),
                               flexDirection: 'column',
                               alignItems: 'stretch',
                               justifyContent: 'center',
                               paddingVertical: 4,
-                              ...(isCopied && { borderColor: col.accent, backgroundColor: col.accent + '30' }),
+                              ...(isCopied && { borderColor: col.accent, backgroundColor: col.accent + '40' }),
                             }}
                           >
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
