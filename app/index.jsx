@@ -267,6 +267,11 @@ export default function App() {
                         style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}
                       >
                         {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
+                        {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
+                          <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935", marginRight: 4 }}>
+                            +{Math.round((unit/minU - 1)*100)}%
+                          </Text>
+                        )}
                         <Text
                           numberOfLines={1}
                           style={{
@@ -280,11 +285,6 @@ export default function App() {
                         >
                           {unitDisplay}
                         </Text>
-                        {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                          <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935", marginLeft: 4 }}>
-                            +{Math.round((unit/minU - 1)*100)}%
-                          </Text>
-                        )}
                       </TouchableOpacity>
                     </View>
                   );
