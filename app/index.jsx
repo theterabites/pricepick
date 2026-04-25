@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, ScrollView, StatusBar } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
 
@@ -144,7 +144,7 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
+    <SafeAreaView style={{ flex:1, backgroundColor:T.bg }} edges={['top', 'left', 'right']}>
       <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
       
       {/* Fixed Header */}
@@ -400,6 +400,7 @@ function CtrlBtn({ T, children, onClick, disabled, flex=1, color }) {
 }
 
 function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove, currency }) {
+  const insets = useSafeAreaInsets();
   const rows = [
     ["7","8","9","÷"],
     ["4","5","6","×"],
@@ -417,7 +418,14 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
     : "Quantity";
 
   return (
-    <View style={{ backgroundColor:T.keypadBg, paddingHorizontal:24, paddingTop:4, paddingBottom:16, marginTop:"auto", gap:4 }}>
+    <View style={{ 
+      backgroundColor:T.keypadBg, 
+      paddingHorizontal:24, 
+      paddingTop:4, 
+      paddingBottom: 16 + insets.bottom, 
+      marginTop:"auto", 
+      gap:4 
+    }}>
       
       {/* Navigation Slider Bar with Add/Remove */}
       <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: T.keyBgOp, borderRadius: 10, marginBottom: 2, height: 44 }}>
