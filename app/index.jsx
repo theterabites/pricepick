@@ -253,15 +253,9 @@ export default function App() {
 
         <BestBar unitList={unitList} minU={minU} maxU={maxU} valid={valid} currency={currency} T={T} dark={dark} />
 
-        <View style={{ flexDirection:"row", gap:7, paddingHorizontal:6, paddingVertical:4 }}>
-          <CtrlBtn T={T} flex={3} disabled={items.length >= 6} onClick={addItem}>
-            <Text style={{ color:"#fff", fontSize:13, fontWeight:"700" }}>Add item (+)</Text>
-          </CtrlBtn>
-          <CtrlBtn T={T} flex={3} disabled={items.length <= 2} onClick={removeItem}>
-            <Text style={{ color:"#fff", fontSize:13, fontWeight:"700" }}>Remove item (−)</Text>
-          </CtrlBtn>
-          <CtrlBtn T={T} flex={1} color="#E53935" onClick={reset}>
-            <Text style={{ color:"#fff", fontSize:13, fontWeight:"700" }}>Reset</Text>
+        <View style={{ paddingHorizontal:6, paddingVertical:4 }}>
+          <CtrlBtn T={T} color="#E53935" onClick={reset}>
+            <Text style={{ color:"#fff", fontSize:13, fontWeight:"700" }}>Reset All</Text>
           </CtrlBtn>
         </View>
       </ScrollView>
@@ -274,6 +268,8 @@ export default function App() {
         onMove={moveCell}
         activeCell={activeCell}
         items={items}
+        onAdd={addItem}
+        onRemove={removeItem}
       />
     </SafeAreaView>
   );
@@ -371,7 +367,7 @@ function CtrlBtn({ T, children, onClick, disabled, flex=1, color }) {
   );
 }
 
-function Keypad({ onKey, T, activeOp, onMove, activeCell, items }) {
+function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove }) {
   const rows = [
     ["7","8","9","÷"],
     ["4","5","6","×"],
@@ -387,13 +383,21 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items }) {
   return (
     <View style={{ backgroundColor:T.keypadBg, paddingHorizontal:24, paddingTop:4, paddingBottom:16, marginTop:"auto", gap:4 }}>
       
-      {/* Navigation Slider Bar */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: T.keyBgOp, borderRadius: 10, marginBottom: 2, height: 40 }}>
+      {/* Navigation Slider Bar with Add/Remove */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: T.keyBgOp, borderRadius: 10, marginBottom: 2, height: 44 }}>
+        <TouchableOpacity 
+          onPress={onRemove}
+          disabled={items.length <= 2}
+          style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', opacity: items.length <= 2 ? 0.3 : 1 }}
+        >
+          <Text style={{ color: '#E53935', fontSize: 24, fontWeight: '700' }}>−</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity 
           onPress={() => onMove(-1)}
-          style={{ width: 44, height: 40, alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text style={{ color: activeColor, fontSize: 22, fontWeight: '700' }}>‹</Text>
+          <Text style={{ color: activeColor, fontSize: 20, fontWeight: '700' }}>‹</Text>
         </TouchableOpacity>
         
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6 }}>
@@ -407,9 +411,17 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items }) {
 
         <TouchableOpacity 
           onPress={() => onMove(1)}
-          style={{ width: 44, height: 40, alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text style={{ color: activeColor, fontSize: 22, fontWeight: '700' }}>›</Text>
+          <Text style={{ color: activeColor, fontSize: 20, fontWeight: '700' }}>›</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          onPress={onAdd}
+          disabled={items.length >= 5}
+          style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', opacity: items.length >= 5 ? 0.3 : 1 }}
+        >
+          <Text style={{ color: '#00C896', fontSize: 24, fontWeight: '700' }}>+</Text>
         </TouchableOpacity>
       </View>
 
