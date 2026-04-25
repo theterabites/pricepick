@@ -24,13 +24,7 @@ export default function App() {
   const [activeCell, setActiveCell] = useState({ id:1, field:"price" });
   const [pendingOp, setPendingOp] = useState(null);
   const [clipboardStatus, setClipboardStatus] = useState(null);
-  const [copyBlink, setCopyBlink] = useState(true);
   const [copiedItemId, setCopiedItemId] = useState(null);
-
-  useEffect(() => {
-    const interval = setInterval(() => setCopyBlink(v => !v), 800);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     if (clipboardStatus) {
@@ -310,10 +304,8 @@ export default function App() {
                             }}
                           >
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                              {unit !== null && (
-                                <Text style={{ fontSize: 10, opacity: isCopied ? 1 : (copyBlink ? 1 : 0.25), marginRight: 2 }}>
-                                  {isCopied || isBest ? "✅" : "📋"}
-                                </Text>
+                              {unit !== null && (isBest || isCopied) && (
+                                <Text style={{ fontSize: 10, marginRight: 2 }}>✅</Text>
                               )}
                               <Text
                                 numberOfLines={1}
