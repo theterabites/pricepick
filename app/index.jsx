@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, ScrollView, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
@@ -64,6 +64,15 @@ const fmtDisplay = (unit, sym, decimals) => {
 export default function App() {
   const { T, dark, currency, items, setItems, nextId, showPercentage } = useApp();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+  // Dynamic Item Limit Calculation
+  // Header (~60) + ColHeader (~40) + Keypad area (~260 with insets) + Padding (~20)
+  const reservedHeight = 60 + 40 + 260 + insets.top + insets.bottom;
+  const availableHeight = SCREEN_HEIGHT - reservedHeight;
+  const maxItemsPossible = Math.floor(availableHeight / (LAYOUT.rowHeight + LAYOUT.gap));
+  const maxItems = Math.min(7, Math.max(2, maxItemsPossible));
 
   const [activeCell, setActiveCell] = useState({ id:1, field:"price" });
   const [pendingOp, setPendingOp] = useState(null);
@@ -134,7 +143,7 @@ export default function App() {
   };
 
   const addItem = () => {
-    if (items.length >= 7) return;
+    if (items.length >= maxItems) return;
     setItems(p => [...p, { id:nextId.current++, quantity:"", price:"" }]);
   };
   const removeItem = () => {
@@ -317,6 +326,7 @@ export default function App() {
         onAdd={addItem}
         onRemove={removeItem}
         currency={currency}
+        maxItems={maxItems}
       />
     </SafeAreaView>
   );
@@ -423,7 +433,7 @@ function CtrlBtn({ T, children, onClick, disabled, flex=1, color }) {
   );
 }
 
-function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove, currency }) {
+function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove, currency, maxItems }) {
   const insets = useSafeAreaInsets();
   const rows = [
     ["7","8","9","÷"],
@@ -486,8 +496,8 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
 
         <TouchableOpacity 
           onPress={onAdd}
-          disabled={items.length >= 7}
-          style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', opacity: items.length >= 7 ? 0.3 : 1 }}
+          disabled={items.length >= maxItems}
+          style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', opacity: items.length >= maxItems ? 0.3 : 1 }}
         >
           <Text style={{ color: '#00C896', fontSize: 24, fontWeight: '700' }}>+</Text>
         </TouchableOpacity>
