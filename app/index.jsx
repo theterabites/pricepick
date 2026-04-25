@@ -277,7 +277,7 @@ export default function App() {
                       {/* Per Unit Box */}
                       <TouchableOpacity
                         disabled={unit === null}
-                        onPress={() => unit !== null && copyToClipboard(unitDisplay)}
+                        onPress={() => unit !== null && copyToClipboard(unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
                         style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}
                       >
                         {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
