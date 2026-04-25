@@ -35,7 +35,7 @@ const LAYOUT = {
       flex: 1,
       borderRadius: LAYOUT.borderRadius,
       alignItems: "center",
-      justifyContent: isUnit ? "flex-end" : "center", // Units are right aligned
+      justifyContent: isUnit ? "flex-end" : "center", 
       flexDirection: 'row',
       paddingHorizontal: 10,
       borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : 0.5),
@@ -135,7 +135,9 @@ export default function App() {
   };
 
   const moveCell = (dir) => {
-    const currentIndex = items.findIndex(i => i.id === activeCell.id);
+    const currentIndex = items.findIndex(i => i.id === activeCell?.id);
+    if (currentIndex === -1) return;
+    
     if (activeCell.field === "price") {
       if (dir === 1) {
         setActiveCell({ id: activeCell.id, field: "quantity" });
@@ -338,7 +340,7 @@ export default function App() {
                         qtyDecimals={qtyDecimals}
                       />
 
-                      {/* Per Unit (Background and border when best) */}
+                      {/* Per Unit Box */}
                       <TouchableOpacity 
                         disabled={!isBest}
                         onPress={() => isBest && copyToClipboard(unitDisplay)}
@@ -365,7 +367,8 @@ export default function App() {
                             </Text>
                           )}
                         </View>
-                      </TouchableOpacity>                    </View>
+                      </TouchableOpacity>
+                    </View>
                   );
                 });
               })()}
@@ -570,7 +573,8 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6 }}>
               {clipboardStatus ? (
                 <Text style={{ color: T.text, fontSize: 13, fontWeight: '700' }}>{clipboardStatus}</Text>
-              ) : (                <>
+              ) : (
+                <>
                   <View style={{ backgroundColor: activeColor, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 5 }}>
                     <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>{currentLabel}</Text>
                   </View>
