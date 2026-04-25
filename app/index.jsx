@@ -381,21 +381,22 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items }) {
 
   const activeIdx = items.findIndex(i => i.id === activeCell.id);
   const currentLabel = LABELS[activeIdx];
+  const activeColor = ACCENTS[activeIdx % ACCENTS.length].accent;
 
   return (
-    <View style={{ backgroundColor:T.keypadBg, paddingHorizontal:8, paddingTop:4, paddingBottom:22, marginTop:"auto", gap:6 }}>
+    <View style={{ backgroundColor:T.keypadBg, paddingHorizontal:24, paddingTop:4, paddingBottom:22, marginTop:"auto", gap:6 }}>
       
       {/* Navigation Slider Bar */}
       <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: T.keyBgOp, borderRadius: 12, marginBottom: 4, height: 44 }}>
         <TouchableOpacity 
           onPress={() => onMove(-1)}
-          style={{ width: 60, height: 44, alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: 50, height: 44, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text style={{ color: '#00C896', fontSize: 24, fontWeight: '700' }}>‹</Text>
+          <Text style={{ color: activeColor, fontSize: 24, fontWeight: '700' }}>‹</Text>
         </TouchableOpacity>
         
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }}>
-          <View style={{ backgroundColor: '#00C896', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 }}>
+          <View style={{ backgroundColor: activeColor, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 }}>
             <Text style={{ color: '#fff', fontSize: 12, fontWeight: '800' }}>{currentLabel}</Text>
           </View>
           <Text style={{ color: T.text, fontSize: 15, fontWeight: '600', textTransform: 'capitalize' }}>
@@ -405,9 +406,9 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items }) {
 
         <TouchableOpacity 
           onPress={() => onMove(1)}
-          style={{ width: 60, height: 44, alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: 50, height: 44, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text style={{ color: '#00C896', fontSize: 24, fontWeight: '700' }}>›</Text>
+          <Text style={{ color: activeColor, fontSize: 24, fontWeight: '700' }}>›</Text>
         </TouchableOpacity>
       </View>
 
@@ -421,9 +422,9 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items }) {
             const isAct = !!activeOp && activeOp === opKey;
             return (
               <TouchableOpacity key={k+ki} onPress={() => onKey(opKey)} style={{
-                flex:1, height:52, borderRadius:11, alignItems:"center", justifyContent:"center",
-                backgroundColor: isEq ? "#00C896" : isAct ? T.keyBgOp+"cc" : isOp || isDel ? T.keyBgOp : T.keyBg,
-                borderWidth: isAct ? 2 : 0, borderColor: "#00C896"
+                flex:1, height:50, borderRadius:11, alignItems:"center", justifyContent:"center",
+                backgroundColor: isEq ? activeColor : isAct ? T.keyBgOp+"cc" : isOp || isDel ? T.keyBgOp : T.keyBg,
+                borderWidth: isAct ? 2 : 0, borderColor: activeColor
               }}>
                 <Text style={{
                   fontSize: isEq ? 20 : 21, fontWeight: isOp || isEq ? "600" : "400",
