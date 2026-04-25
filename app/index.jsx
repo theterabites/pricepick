@@ -358,20 +358,18 @@ export default function App() {
                     paddingHorizontal: 8,
                     flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'flex-end', // All content to the right
-                    gap: 3
+                    justifyContent: 'flex-end', // Strict right alignment
+                    gap: 4
                   }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                      {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
-                      <Text style={{ 
-                        fontSize: LAYOUT.fontSize, 
-                        fontWeight:"600", 
-                        color: unit === null ? T.sub+"55" : T.text,
-                        textAlign: 'right'
-                      }}>
-                        {unitDisplay}
-                      </Text>
-                    </View>
+                    {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
+                    <Text style={{ 
+                      fontSize: LAYOUT.fontSize, 
+                      fontWeight:"600", 
+                      color: unit === null ? T.sub+"55" : T.text,
+                      textAlign: 'right'
+                    }}>
+                      {unitDisplay}
+                    </Text>
                     {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
                       <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935" }}>
                         +{Math.round((unit/minU - 1)*100)}%
