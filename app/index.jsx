@@ -569,9 +569,8 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
             
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6 }}>
               {clipboardStatus ? (
-                <Text style={{ color: '#00C896', fontSize: 13, fontWeight: '700' }}>{clipboardStatus}</Text>
-              ) : (
-                <>
+                <Text style={{ color: T.text, fontSize: 13, fontWeight: '700' }}>{clipboardStatus}</Text>
+              ) : (                <>
                   <View style={{ backgroundColor: activeColor, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 5 }}>
                     <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>{currentLabel}</Text>
                   </View>
