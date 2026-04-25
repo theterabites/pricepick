@@ -233,7 +233,8 @@ export default function App() {
                   const isDimmed = hasWinner && !isBest;
                   const myPriceOp = pendingOp?.id===item.id && pendingOp?.field==="price" ? pendingOp : null;
                   const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
-                  const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, decimals);
+                  const effectiveDecimals = currency.noDecimal ? 0 : decimals;
+                  const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, effectiveDecimals);
 
                   const symLen = currency.symbol.length;
                   const pLen = symLen + (item.price
@@ -244,7 +245,10 @@ export default function App() {
                     : 1;
                   const uLen = unitDisplay.length;
                   const allLen = Math.max(pLen, qLen, uLen);
-                  const rowFontSize = allLen > 12 ? 10 : allLen > 10 ? 12 : allLen > 8 ? 14 : allLen > 6 ? 15 : LAYOUT.fontSize;
+                  const rowFontSize = allLen > 11 ? 10 : allLen > 9 ? 12 : allLen > 7 ? 15 : LAYOUT.fontSize;
+
+                  const pct = (unit !== null && minU !== null && unit > minU) ? Math.round((unit/minU - 1)*100) : 0;
+                  const pctLabel = pct > 999 ? `×${Math.round(unit/minU)}` : `+${pct}%`;
 
                   return (
                     <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
@@ -295,17 +299,17 @@ export default function App() {
                         return (
                           <TouchableOpacity
                             disabled={unit === null}
-                            onPress={() => unit !== null && copyToClipboard(unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","), item.id)}
+                            onPress={() => unit !== null && copyToClipboard(unit.toFixed(effectiveDecimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","), item.id)}
                             style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}
                           >
-                            {unit !== null && (
+                            {unit !== null && (isBest || isCopied) && (
                               <Text style={{ fontSize: 13, opacity: isCopied ? 1 : (copyBlink ? 1 : 0.2), marginRight: 2 }}>
-                                {isCopied || isBest ? "✅" : "📋"}
+                                ✅
                               </Text>
                             )}
                             {!isCopied && !isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                              <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935", marginRight: 4 }}>
-                                +{Math.round((unit/minU - 1)*100)}%
+                              <Text style={{ fontSize: 9, fontWeight: "700", color: "#E53935", marginRight: 2 }}>
+                                {pctLabel}
                               </Text>
                             )}
                             <Text
@@ -313,7 +317,7 @@ export default function App() {
                               style={{
                                 flex: 1,
                                 fontSize: rowFontSize,
-                                fontWeight:"600",
+                                fontWeight: "600",
                                 color: unit === null ? T.sub+"55" : T.text,
                                 textAlign: 'right',
                                 fontFamily: FONTS.mono
