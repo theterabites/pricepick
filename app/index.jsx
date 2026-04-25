@@ -301,10 +301,11 @@ export default function App() {
                               alignItems: 'stretch',
                               justifyContent: 'center',
                               paddingVertical: 4,
+                              ...(isCopied && { borderColor: col.accent, backgroundColor: col.accent + '30' }),
                             }}
                           >
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                              {unit !== null && (isBest || isCopied) && (
+                              {unit !== null && isBest && (
                                 <Text style={{ fontSize: 10, marginRight: 2 }}>✅</Text>
                               )}
                               <Text
