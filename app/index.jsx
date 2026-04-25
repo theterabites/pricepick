@@ -236,7 +236,11 @@ export default function App() {
                   justifyContent:"center"
                 }}>
                   <View style={{ flexDirection:"row", alignItems:"center", justifyContent: "center", gap:4 }}>
-                    <Text style={{ fontSize:18, fontWeight:"600", color: unit === null ? T.sub+"55" : T.text }}>
+                    <Text style={{ 
+                      fontSize:18, 
+                      fontWeight:"600", 
+                      color: unit === null ? T.sub+"55" : (isBest ? col.accent : T.text) 
+                    }}>
                       {unitDisplay}
                     </Text>
                     {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
@@ -301,10 +305,12 @@ function EditCell({ value, active, accent, T, currencySymbol, onTap, myOp }) {
   const displayValue = (() => {
     if (empty) return null;
     if (!currencySymbol) return value;
-    if (value.endsWith(".")) return value;
+    if (value.endsWith(".")) return value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const n = parseFloat(value);
     if (isNaN(n)) return value;
-    return n.toFixed(2);
+    const parts = n.toFixed(2).split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
   })();
 
   return (
