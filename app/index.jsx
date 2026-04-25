@@ -142,29 +142,33 @@ export default function App() {
         contentContainerStyle={{ paddingBottom: 10 }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ flexDirection:"row", gap:5, paddingHorizontal:8, paddingVertical:5, alignItems:"center" }}>
-          <View style={{ width:28 }} />
-          <ColHeader label="price" T={T} />
-          <ColHeader label="quantity" T={T} />
-          <ColHeader label="per unit" T={T} muted />
-        </View>
+      {/* Header Row */}
+      <View style={{ flexDirection:"row", gap:5, paddingHorizontal:6, paddingVertical:5, alignItems:"center" }}>
+        <View style={{ width:30 }} />
+        <ColHeader label="price" T={T} />
+        <ColHeader label="quantity" T={T} />
+        <ColHeader label="per unit" T={T} muted />
+      </View>
 
-        <View style={{ paddingHorizontal:6, gap:5 }}>
-          {(() => {
-            const allUnits = items.map(item => computeUnit(item.price, item.quantity));
-            const decimals = resolveDecimals(allUnits);
+      {/* Item Rows */}
+      <View style={{ paddingHorizontal:6, gap:5 }}>
+        {(() => {
+          const allUnits = items.map(item => computeUnit(item.price, item.quantity));
+          const decimals = resolveDecimals(allUnits);
 
-            return items.map((item, idx) => {
-              const col = ACCENTS[idx % ACCENTS.length];
-              const label = LABELS[idx];
-              const unit = allUnits[idx];
-              const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
-              const myPriceOp = pendingOp?.id===item.id && pendingOp?.field==="price" ? pendingOp : null;
-              const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
-              const unitDisplay = fmtDisplay(unit, currency.symbol, decimals);
+          return items.map((item, idx) => {
+            const col = ACCENTS[idx % ACCENTS.length];
+            const label = LABELS[idx];
+            const unit = allUnits[idx];
+            const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
+            const myPriceOp = pendingOp?.id===item.id && pendingOp?.field==="price" ? pendingOp : null;
+            const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
+            const unitDisplay = fmtDisplay(unit, currency.symbol, decimals);
 
-              return (
-                <View key={item.id} style={{ flexDirection:"row", gap:5, alignItems:"center" }}>
+            return (
+              <View key={item.id} style={{ flexDirection:"row", gap:5, alignItems:"center" }}>
+                {/* Letter Label */}
+                <View style={{ width:30, alignItems:"center", justifyContent:"center" }}>
                   <View style={{
                     width:26, height:26, borderRadius:7,
                     backgroundColor: dark ? col.accent+"28" : col.bg,
@@ -173,40 +177,58 @@ export default function App() {
                   }}>
                     <Text style={{ fontWeight:"800", fontSize:12, color:col.accent }}>{label}</Text>
                   </View>
+                </View>
 
-                  <EditCell
-                    value={item.price}
-                    active={activeCell?.id===item.id && activeCell.field==="price"}
-                    accent={col.accent} T={T}
-                    currencySymbol={currency.symbol}
-                    myOp={myPriceOp}
-                    onTap={() => tapCell(item.id, "price")}
-                  />
+                {/* Price Box */}
+                <EditCell
+                  value={item.price}
+                  active={activeCell?.id===item.id && activeCell.field==="price"}
+                  accent={col.accent} T={T}
+                  currencySymbol={currency.symbol}
+                  myOp={myPriceOp}
+                  onTap={() => tapCell(item.id, "price")}
+                />
 
-                  <EditCell
-                    value={item.quantity}
-                    active={activeCell?.id===item.id && activeCell.field==="quantity"}
-                    accent={col.accent} T={T}
-                    myOp={myQtyOp}
-                    onTap={() => tapCell(item.id, "quantity")}
-                  />
+                {/* Quantity Box */}
+                <EditCell
+                  value={item.quantity}
+                  active={activeCell?.id===item.id && activeCell.field==="quantity"}
+                  accent={col.accent} T={T}
+                  myOp={myQtyOp}
+                  onTap={() => tapCell(item.id, "quantity")}
+                />
 
-                  <View style={{ width: 100, height:52, flexDirection:"row", alignItems:"center", justifyContent:"center", gap:3 }}>
-                    <Text style={{ fontSize:18, fontWeight:"600", color: unit === null ? T.sub+"55" : T.text }}>
+                {/* Per Unit Box */}
+                <View style={{ 
+                  flex: 1, 
+                  height:52, 
+                  backgroundColor: isBest ? (dark ? col.accent+"18" : col.bg) : T.surface,
+                  borderWidth: 2,
+                  borderColor: isBest ? col.accent : T.border,
+                  borderRadius: 12,
+                  alignItems:"center", 
+                  justifyContent:"center",
+                  position: 'relative'
+                }}>
+                  <View style={{ flexDirection:"row", alignItems:"center", justifyContent: "center", gap:3 }}>
+                    <Text style={{ fontSize:18, fontWeight:"600", color: unit === null ? T.sub+"55" : T.text, textAlign: "center" }}>
                       {unitDisplay}
                     </Text>
                     {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
-                    {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                      <Text style={{ fontSize:11, fontWeight:"700", color:"#E53935" }}>
+                  </View>
+                  {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
+                    <View style={{ position: 'absolute', bottom: 2, right: 6 }}>
+                      <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935" }}>
                         +{Math.round((unit/minU - 1)*100)}%
                       </Text>
-                    )}
-                  </View>
+                    </View>
+                  )}
                 </View>
-              );
-            });
-          })()}
-        </View>
+              </View>
+            );
+          });
+        })()}
+      </View>
 
         <BestBar unitList={unitList} minU={minU} maxU={maxU} valid={valid} currency={currency} T={T} dark={dark} />
 
@@ -276,11 +298,11 @@ function EditCell({ value, active, accent, T, currencySymbol, onTap, myOp }) {
           <Text style={{ fontSize:8, fontWeight:"800", color:accent }}>{myOp.value} {myOp.op}</Text>
         </View>
       )}
-      <View style={{ flexDirection:"row", alignItems:"center" }}>
+      <View style={{ flexDirection:"row", alignItems:"center", justifyContent: "center", width: "100%" }}>
         {currencySymbol && (
           <Text style={{ fontSize:18, fontWeight:"600", color: empty ? T.sub+"55" : T.text }}>{currencySymbol}</Text>
         )}
-        <Text style={{ fontSize:18, fontWeight:"600", color: empty ? T.sub+"55" : T.text }}>
+        <Text style={{ fontSize:18, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "center" }}>
           {empty ? (active ? "" : "0.00") : displayValue}
         </Text>
         {active && (
@@ -351,13 +373,6 @@ function Keypad({ onKey, T, activeOp }) {
                 }}>{k}</Text>
               </TouchableOpacity>
             );
-          })}
-        </View>
-      ))}
-    </View>
-  );
-}
-);
           })}
         </View>
       ))}

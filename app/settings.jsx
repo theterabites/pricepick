@@ -35,10 +35,12 @@ export default function SettingsScreen() {
         </Text>
         <View style={{ backgroundColor:T.surface, borderRadius:14, marginHorizontal:12, overflow:"hidden", borderWidth:1, borderColor:T.border }}>
           <Row icon="💱" label="Currency" right={currency.code} onClick={() => router.push("/currency")} />
-          <Row icon="📊" label="Show percentage" right={showPercentage ? "Show" : "Hide"} onClick={() => router.push("/percentage")} />
+          <Row icon="📊" label="Show percentage" right={showPercentage ? "On" : "Off"} onClick={() => router.push("/percentage")} />
           <Row icon="🌓" label="Theme" right={themeMode.charAt(0).toUpperCase() + themeMode.slice(1)} onClick={() => router.push("/theme")} noBorder />
         </View>
 
+        {/* Support section hidden as requested */}
+        {/* 
         <Text style={{ paddingHorizontal:20, paddingTop:14, paddingBottom:6, fontSize:11, fontWeight:"700", color:T.sub, textTransform:"uppercase" }}>
           Support
         </Text>
@@ -46,6 +48,7 @@ export default function SettingsScreen() {
           <Row icon="💬" label="Send Feedback" onClick={() => router.push("/feedback")} />
           <Row icon="☕" label="Buy me a coffee" onClick={() => router.push("/coffee")} noBorder />
         </View>
+        */}
         
         <Text style={{ textAlign:"center", paddingVertical:28, color:T.sub, fontSize:11 }}>
           PricePick v1.0 · No ads, ever.

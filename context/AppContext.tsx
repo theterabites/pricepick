@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useColorScheme } from "react-native";
 import * as Localization from 'expo-localization';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const CURRENCIES = [
   { code:"THB", symbol:"฿",   name:"Thai Baht" },
@@ -56,7 +57,7 @@ function guessInitialCurrency() {
   } catch (e) {
     console.log("Guess currency error", e);
   }
-  return CURRENCIES[1]; // Default USD
+  return CURRENCIES[1];
 }
 
 export const THEMES = {
@@ -81,24 +82,68 @@ const AppContext = createContext(null);
 export function AppProvider({ children }) {
   const colorScheme = useColorScheme();
   const [themeMode, setThemeMode] = useState("system");
-  const dark = themeMode === "dark" ? true : themeMode === "light" ? false : colorScheme === "dark";
-  const T = THEMES[dark ? "dark" : "light"];
-
-  const [currency, setCurrency] = useState(guessInitialCurrency());
+  const [currency, setCurrency] = useState(CURRENCIES[1]);
+  const [showPercentage, setShowPercentage] = useState(true);
   const [items, setItems] = useState([
     { id: 1, quantity: "", price: "" },
     { id: 2, quantity: "", price: "" },
   ]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const nextId = useRef(3);
-  const [showPercentage, setShowPercentage] = useState(true);
+  const dark = themeMode === "dark" ? true : themeMode === "light" ? false : colorScheme === "dark";
+  const T = THEMES[dark ? "dark" : "light"];
+
+  // Load settings on mount
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const storedTheme = await AsyncStorage.getItem('pricepick_theme');
+        const storedCurrencyCode = await AsyncStorage.getItem('pricepick_currency');
+        const storedShowPercentage = await AsyncStorage.getItem('pricepick_percentage');
+
+        if (storedTheme) setThemeMode(storedTheme);
+        if (storedCurrencyCode) {
+          const found = CURRENCIES.find(c => c.code === storedCurrencyCode);
+          if (found) setCurrency(found);
+        } else {
+          setCurrency(guessInitialCurrency());
+        }
+        if (storedShowPercentage !== null) {
+          setShowPercentage(storedShowPercentage === 'true');
+        }
+      } catch (e) {
+        console.error("Failed to load settings", e);
+      } finally {
+        setIsLoaded(true);
+      }
+    }
+    loadSettings();
+  }, []);
+
+  // Save settings when they change
+  useEffect(() => {
+    if (!isLoaded) return;
+    AsyncStorage.setItem('pricepick_theme', themeMode);
+  }, [themeMode, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    AsyncStorage.setItem('pricepick_currency', currency.code);
+  }, [currency, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    AsyncStorage.setItem('pricepick_percentage', String(showPercentage));
+  }, [showPercentage, isLoaded]);
 
   return (
     <AppContext.Provider value={{
       themeMode, setThemeMode, dark, T,
       currency, setCurrency,
       items, setItems, nextId,
-      showPercentage, setShowPercentage
+      showPercentage, setShowPercentage,
+      isLoaded
     }}>
       {children}
     </AppContext.Provider>
