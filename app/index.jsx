@@ -292,6 +292,7 @@ export default function App() {
         items={items}
         onAdd={addItem}
         onRemove={removeItem}
+        currency={currency}
       />
     </SafeAreaView>
   );
@@ -398,7 +399,7 @@ function CtrlBtn({ T, children, onClick, disabled, flex=1, color }) {
   );
 }
 
-function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove }) {
+function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove, currency }) {
   const rows = [
     ["7","8","9","÷"],
     ["4","5","6","×"],
@@ -410,6 +411,10 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
   const activeIdx = items.findIndex(i => i.id === activeCell.id);
   const currentLabel = LABELS[activeIdx];
   const activeColor = ACCENTS[activeIdx % ACCENTS.length].accent;
+
+  const fieldLabel = activeCell.field === "price" 
+    ? `Price (${currency.code})` 
+    : "Quantity";
 
   return (
     <View style={{ backgroundColor:T.keypadBg, paddingHorizontal:24, paddingTop:4, paddingBottom:16, marginTop:"auto", gap:4 }}>
@@ -435,8 +440,8 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
           <View style={{ backgroundColor: activeColor, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 5 }}>
             <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>{currentLabel}</Text>
           </View>
-          <Text style={{ color: T.text, fontSize: 14, fontWeight: '600', textTransform: 'capitalize' }}>
-            {activeCell.field}
+          <Text style={{ color: T.text, fontSize: 14, fontWeight: '600' }}>
+            {fieldLabel}
           </Text>
         </View>
 
