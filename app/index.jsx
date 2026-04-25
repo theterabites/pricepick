@@ -221,6 +221,7 @@ export default function App() {
                 <EditCell
                   value={item.price}
                   active={activeCell?.id===item.id && activeCell.field==="price"}
+                  isBest={isBest}
                   accent={col.accent} T={T}
                   currencySymbol={currency.symbol}
                   myOp={myPriceOp}
@@ -231,12 +232,13 @@ export default function App() {
                 <EditCell
                   value={item.quantity}
                   active={activeCell?.id===item.id && activeCell.field==="quantity"}
+                  isBest={isBest}
                   accent={col.accent} T={T}
                   myOp={myQtyOp}
                   onTap={() => tapCell(item.id, "quantity")}
                 />
 
-                {/* Per Unit (Border only when best) */}
+                {/* Per Unit (Background and border when best) */}
                 <View style={{ 
                   flex: 1, 
                   height:52, 
@@ -250,6 +252,7 @@ export default function App() {
                     gap:4,
                     borderWidth: isBest ? 2 : 0,
                     borderColor: isBest ? col.accent : 'transparent',
+                    backgroundColor: isBest ? col.accent+"18" : 'transparent',
                     borderRadius: 12,
                     width: '100%',
                     height: '100%'
@@ -305,7 +308,7 @@ function ColHeader({ label, T, muted }) {
   );
 }
 
-function EditCell({ value, active, accent, T, currencySymbol, onTap, myOp }) {
+function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myOp }) {
   const empty = !value;
   const [blink, setBlink] = useState(true);
 
@@ -334,9 +337,9 @@ function EditCell({ value, active, accent, T, currencySymbol, onTap, myOp }) {
   return (
     <TouchableOpacity onPress={onTap} style={{
       height:52, flex:1, 
-      backgroundColor: active ? accent+"18" : T.surface,
+      backgroundColor: active ? accent+"18" : (isBest ? accent+"18" : T.surface),
       borderWidth: 2, 
-      borderColor: active ? accent : T.border, 
+      borderColor: active ? accent : (isBest ? accent : T.border), 
       borderRadius:12,
       alignItems:"center", justifyContent:"center"
     }}>
