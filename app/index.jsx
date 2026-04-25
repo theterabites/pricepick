@@ -327,9 +327,16 @@ function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myO
   const displayValue = (() => {
     if (empty) return null;
     if (!currencySymbol) return value;
-    const parts = value.split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
+    
+    if (active) {
+      const parts = value.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
+    } else {
+      const n = parseFloat(value);
+      if (isNaN(n)) return value;
+      return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   })();
 
   return (
