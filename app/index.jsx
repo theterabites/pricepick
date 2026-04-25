@@ -29,18 +29,17 @@ const LAYOUT = {
   
   // Shared Box Style
   getBoxStyle: (active, isBest, accent, T, activeField, dark) => {
-    const isUnit = activeField === 'unit';
     return {
       height: LAYOUT.rowHeight,
       flex: 1,
       borderRadius: LAYOUT.borderRadius,
       alignItems: "center",
-      justifyContent: isUnit ? "flex-end" : "center", 
+      justifyContent: "flex-end", // Right aligned
       flexDirection: 'row',
       paddingHorizontal: 10,
       borderWidth: active ? LAYOUT.borderWidth : (isBest ? LAYOUT.borderWidth : 0.5),
       borderColor: active ? accent : (isBest ? accent : T.border),
-      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : (isUnit ? 'transparent' : T.surface)),
+      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : T.surface),
     };
   }
 };
@@ -340,34 +339,39 @@ export default function App() {
                         qtyDecimals={qtyDecimals}
                       />
 
-                      {/* Per Unit Box */}
-                      <TouchableOpacity 
-                        disabled={!isBest}
-                        onPress={() => isBest && copyToClipboard(unitDisplay)}
-                        style={{ 
-                          flex: 1, 
-                          height: LAYOUT.rowHeight, 
-                          alignItems:"center", 
-                          justifyContent:"center",
-                        }}
-                      >
-                        <View style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}>
-                          {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
-                          <Text style={{ 
-                            fontSize: LAYOUT.fontSize, 
-                            fontWeight:"600", 
-                            color: unit === null ? T.sub+"55" : T.text,
-                            textAlign: 'right'
-                          }}>
-                            {unitDisplay}
-                          </Text>
-                          {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                            <Text style={{ fontSize:11, fontWeight:"700", color:"#E53935" }}>
-                              +{Math.round((unit/minU - 1)*100)}%
-                            </Text>
-                          )}
-                        </View>
-                      </TouchableOpacity>
+                {/* Per Unit Box */}
+                <TouchableOpacity 
+                  disabled={!isBest}
+                  onPress={() => isBest && copyToClipboard(unitDisplay)}
+                  style={{ 
+                    flex: 1, 
+                    height: LAYOUT.rowHeight, 
+                    alignItems:"center", 
+                    justifyContent:"center",
+                  }}
+                >
+                  <View style={{
+                    ...LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark),
+                    borderWidth: isBest ? LAYOUT.borderWidth : 0,
+                    borderColor: isBest ? col.accent : 'transparent',
+                    backgroundColor: isBest ? col.accent+"18" : 'transparent',
+                  }}>
+                    {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
+                    <Text style={{ 
+                      fontSize: LAYOUT.fontSize, 
+                      fontWeight:"600", 
+                      color: unit === null ? T.sub+"55" : T.text,
+                      textAlign: 'right'
+                    }}>
+                      {unitDisplay}
+                    </Text>
+                    {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
+                      <Text style={{ fontSize:11, fontWeight:"700", color:"#E53935" }}>
+                        +{Math.round((unit/minU - 1)*100)}%
+                      </Text>
+                    )}
+                  </View>
+                </TouchableOpacity>
                     </View>
                   );
                 });
