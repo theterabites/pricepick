@@ -28,49 +28,48 @@ const LAYOUT = {
   headerFontSize: 10,
 };
 
-// ─── Helpers ───────────────────────────────────────────────────────────────────
-const computeUnit = (price, quantity) => {
-  const p = parseFloat(price), q = parseFloat(quantity);
-  return (p > 0 && q > 0) ? p / q : null;
-};
+// ─── Logic & Formatting ───────────────────────────────────────────────────────
+const FORMAT = {
+  computeUnit: (price, quantity) => {
+    const p = parseFloat(price), q = parseFloat(quantity);
+    return (p > 0 && q > 0) ? p / q : null;
+  },
 
-const applyOp = (a, op, b) =>
-  op==="+" ? a+b : op==="-" ? a-b : op==="×" ? a*b : b!==0 ? a/b : 0;
+  applyOp: (a, op, b) =>
+    op==="+" ? a+b : op==="-" ? a-b : op==="×" ? a*b : b!==0 ? a/b : 0,
 
-const fmtNum = v => {
-  const n = parseFloat(v);
-  if (isNaN(n)) return "";
-  return n % 1 === 0 ? String(n) : parseFloat(n.toFixed(6)).toString();
-};
+  fmtNum: v => {
+    const n = parseFloat(v);
+    if (isNaN(n)) return "";
+    return n % 1 === 0 ? String(n) : parseFloat(n.toFixed(6)).toString();
+  },
 
-const resolveDecimals = (unitValues) => {
-  const validVals = unitValues.filter(v => v !== null);
-  if (validVals.length < 2) return 2;
+  resolveDecimals: (unitValues) => {
+    const validVals = unitValues.filter(v => v !== null);
+    if (validVals.length < 2) return 2;
+    const rounded2 = validVals.map(v => v.toFixed(2));
+    const hasTie = validVals.some((v1, i) => 
+      validVals.some((v2, j) => i !== j && v1 !== v2 && v1.toFixed(2) === v2.toFixed(2))
+    );
+    return hasTie ? 4 : 2;
+  },
 
-  // Check if any two distinct unit prices round to the same 2-decimal string
-  const rounded2 = validVals.map(v => v.toFixed(2));
-  const hasTie = validVals.some((v1, i) => 
-    validVals.some((v2, j) => i !== j && v1 !== v2 && v1.toFixed(2) === v2.toFixed(2))
-  );
+  resolveQtyDecimals: (items) => {
+    let maxD = 0;
+    items.forEach(item => {
+      if (item.quantity && item.quantity.includes('.')) {
+        const decimals = item.quantity.split('.')[1].length;
+        if (decimals > maxD) maxD = decimals;
+      }
+    });
+    return Math.min(4, maxD);
+  },
 
-  return hasTie ? 4 : 2;
-};
-
-const resolveQtyDecimals = (items) => {
-  let maxD = 0;
-  items.forEach(item => {
-    if (item.quantity && item.quantity.includes('.')) {
-      const decimals = item.quantity.split('.')[1].length;
-      if (decimals > maxD) maxD = decimals;
-    }
-  });
-  return Math.min(4, maxD);
-};
-
-const fmtDisplay = (unit, sym, decimals) => {
-  if (unit === null) return `${sym}—`;
-  const formatted = unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return `${sym}${formatted}`;
+  fmtDisplay: (unit, sym, decimals) => {
+    if (unit === null) return `${sym}—`;
+    const formatted = unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return `${sym}${formatted}`;
+  }
 };
 
 export default function App() {
@@ -108,7 +107,7 @@ export default function App() {
 
   const unitList = items.map(item => ({
     id: item.id,
-    unit: computeUnit(item.price, item.quantity),
+    unit: FORMAT.computeUnit(item.price, item.quantity),
   }));
   const valid = unitList.filter(u => u.unit !== null);
   const minU = valid.length ? Math.min(...valid.map(u => u.unit)) : null;
@@ -157,7 +156,7 @@ export default function App() {
       if (myOp) {
         const n = parseFloat(cur);
         if (!isNaN(n)) {
-          setF(id, field, fmtNum(applyOp(myOp.value, myOp.op, n)));
+          setF(id, field, FORMAT.fmtNum(FORMAT.applyOp(myOp.value, myOp.op, n)));
           setPendingOp(null);
         }
       }
@@ -186,8 +185,8 @@ export default function App() {
     } else {
       setOriginalItems([...items]);
       const sorted = [...items].sort((a, b) => {
-        const unitA = computeUnit(a.price, a.quantity);
-        const unitB = computeUnit(b.price, b.quantity);
+        const unitA = FORMAT.computeUnit(a.price, a.quantity);
+        const unitB = FORMAT.computeUnit(b.price, b.quantity);
         if (unitA === null) return 1;
         if (unitB === null) return -1;
         return unitA - unitB;
@@ -269,22 +268,21 @@ export default function App() {
             {/* Item Rows */}
             <View style={{ paddingHorizontal:8, gap: LAYOUT.gap }}>
               {(() => {
-                const allUnits = items.map(item => computeUnit(item.price, item.quantity));
-                const decimals = resolveDecimals(allUnits);
-                const qtyDecimals = resolveQtyDecimals(items);
+                const allUnits = items.map(item => FORMAT.computeUnit(item.price, item.quantity));
+                const decimals = FORMAT.resolveDecimals(allUnits);
+                const qtyDecimals = FORMAT.resolveQtyDecimals(items);
 
                 return items.map((item) => {
                   const originalIndex = item.id - 1; 
                   const col = ACCENTS[originalIndex % ACCENTS.length];
                   const label = LABELS[originalIndex % LABELS.length];
-                  const unit = computeUnit(item.price, item.quantity);
+                  const unit = FORMAT.computeUnit(item.price, item.quantity);
                   const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
                   const hasWinner = valid.length > 1 && minU !== maxU;
                   const isDimmed = hasWinner && !isBest;
                   const myPriceOp = pendingOp?.id===item.id && pendingOp?.field==="price" ? pendingOp : null;
                   const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
-                  const unitDisplay = fmtDisplay(unit, currency.symbol, decimals);
-
+                  const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, decimals);
                   return (
                     <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
                       {/* Letter Label */}
