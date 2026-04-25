@@ -297,9 +297,11 @@ export default function App() {
                         )}
                         <Text
                           numberOfLines={1}
+                          adjustsFontSizeToFit
+                          minimumFontScale={0.55}
                           style={{
                             flex: 1,
-                            fontSize: rowFontSize,
+                            fontSize: LAYOUT.fontSize,
                             fontWeight:"600",
                             color: unit === null ? T.sub+"55" : T.text,
                             textAlign: 'right',
