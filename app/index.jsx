@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
 
 // Refactored Modules
-import { ACCENTS, LABELS, LAYOUT } from "../constants/DesignSystem";
+import { ACCENTS, LABELS, LAYOUT, FONTS } from "../constants/DesignSystem";
 import { FORMAT } from "../utils/logic";
 
 export default function App() {
@@ -274,7 +274,8 @@ export default function App() {
                             fontSize: LAYOUT.fontSize,
                             fontWeight:"600",
                             color: unit === null ? T.sub+"55" : T.text,
-                            textAlign: 'right'
+                            textAlign: 'right',
+                            fontFamily: FONTS.mono
                           }}
                         >
                           {unitDisplay}
@@ -375,9 +376,9 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
         </View>
       )}
       {currencySymbol && (
-        <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text }}>{currencySymbol}</Text>
+        <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, fontFamily: FONTS.mono }}>{currencySymbol}</Text>
       )}
-      <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "right" }}>
+      <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "right", fontFamily: FONTS.mono }}>
         {empty ? (active ? "" : "0.00") : displayValue}
       </Text>
       {active && (
