@@ -219,7 +219,6 @@ export default function App() {
                 <EditCell
                   value={item.price}
                   active={activeCell?.id===item.id && activeCell.field==="price"}
-                  isBest={isBest}
                   accent={col.accent} T={T}
                   currencySymbol={currency.symbol}
                   myOp={myPriceOp}
@@ -230,7 +229,6 @@ export default function App() {
                 <EditCell
                   value={item.quantity}
                   active={activeCell?.id===item.id && activeCell.field==="quantity"}
-                  isBest={isBest}
                   accent={col.accent} T={T}
                   myOp={myQtyOp}
                   onTap={() => tapCell(item.id, "quantity")}
@@ -305,7 +303,7 @@ function ColHeader({ label, T, muted }) {
   );
 }
 
-function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myOp }) {
+function EditCell({ value, active, accent, T, currencySymbol, onTap, myOp }) {
   const empty = !value;
   const [blink, setBlink] = useState(true);
 
@@ -334,9 +332,9 @@ function EditCell({ value, active, isBest, accent, T, currencySymbol, onTap, myO
   return (
     <TouchableOpacity onPress={onTap} style={{
       height:52, flex:1, 
-      backgroundColor: active ? accent+"18" : 'transparent',
+      backgroundColor: active ? accent+"18" : T.surface,
       borderWidth: 2, 
-      borderColor: active ? accent : (isBest ? accent : 'transparent'), 
+      borderColor: active ? accent : T.border, 
       borderRadius:12,
       alignItems:"center", justifyContent:"center"
     }}>
