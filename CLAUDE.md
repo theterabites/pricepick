@@ -81,11 +81,11 @@ Computed from `SCREEN_HEIGHT` minus reserved space, capped at 7 (matches `ACCENT
 `pendingOp` stores `{ id, field, value, op }` for deferred arithmetic; cleared on cell switch.
 
 **Unit price box layout (two-row column):**
-The per-unit cell uses a column layout (not `getBoxStyle`) to avoid horizontal crowding:
-- Row 1: small emoji icon (📋 or ✅, fontSize 10, blinking) + unit price text (flex: 1, right-aligned)
+The per-unit cell uses a column layout (spreads `getBoxStyle` then overrides `flexDirection/alignItems/justifyContent`) to avoid horizontal crowding:
+- Row 1: ✅ icon (fontSize 10, cheapest only) + unit price text (flex: 1, right-aligned)
 - Row 2: percentage badge (fontSize 8, right-aligned) — only shown when relevant
 
-This separates the three elements so the unit price always gets the full row width.
+This separates the elements so the unit price always gets the full row width.
 
 **Adaptive font size (`rowFontSize`):**
 Computed per item from `allLen = max(pLen, qLen, uLen)` where each length reflects the actual displayed string. All three boxes (price, qty, unit) use the same `rowFontSize` so they scale together:
@@ -100,7 +100,10 @@ These have `noDecimal: true` on the currency object. Apply this at every display
 - `resolveDecimals` is unaware of `noDecimal` — always override at the call site
 
 **Copy to clipboard:**
-Tapping any filled unit cell copies the number (no currency symbol) to clipboard. Uses `copiedItemId` state: on tap → set `copiedItemId = item.id` → cell shows ✅ solid for 1.5s → clears. Nav bar shows "Copied!" toast simultaneously (visible even when no input cell is active).
+Tapping any filled unit cell copies the number (no currency symbol) to clipboard. Feedback: instant `TouchableOpacity` press animation (same feel on all cells). Nav bar shows "Copied!" toast for 2s (visible even when no input cell is active). ✅ is a permanent static label on the cheapest cell only — it does NOT change on tap for other cells. Do not re-introduce a timed flash state (`copiedItemId` was removed — the press animation is sufficient).
+
+**Sort button:**
+The sort button is intentionally disabled (removed from UI). The `sortItems` function and `originalItems` logic remain intact in the code for future use.
 
 **Percentage badge compact notation:**
 `pct > 999` → shows `×N` (e.g. "×726") instead of `+72480%` to prevent overflow for extreme value differences.
