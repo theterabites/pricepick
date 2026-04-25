@@ -72,6 +72,26 @@ export default function App() {
     setActiveCell({ id, field });
   };
 
+  const moveCell = (dir) => {
+    const currentIndex = items.findIndex(i => i.id === activeCell.id);
+    if (activeCell.field === "price") {
+      if (dir === 1) {
+        setActiveCell({ id: activeCell.id, field: "quantity" });
+      } else {
+        const prevIdx = (currentIndex - 1 + items.length) % items.length;
+        setActiveCell({ id: items[prevIdx].id, field: "quantity" });
+      }
+    } else {
+      if (dir === 1) {
+        const nextIdx = (currentIndex + 1) % items.length;
+        setActiveCell({ id: items[nextIdx].id, field: "price" });
+      } else {
+        setActiveCell({ id: activeCell.id, field: "price" });
+      }
+    }
+    setPendingOp(null);
+  };
+
   const handleKey = key => {
     if (!activeCell) return;
     const { id, field } = activeCell;
@@ -246,7 +266,14 @@ export default function App() {
       </ScrollView>
 
       {/* Fixed Keypad */}
-      <Keypad onKey={handleKey} T={T} activeOp={pendingOp?.op ?? null} />
+      <Keypad 
+        onKey={handleKey} 
+        T={T} 
+        activeOp={pendingOp?.op ?? null} 
+        onMove={moveCell}
+        activeCell={activeCell}
+        items={items}
+      />
     </SafeAreaView>
   );
 }
@@ -343,7 +370,7 @@ function CtrlBtn({ T, children, onClick, disabled, flex=1, color }) {
   );
 }
 
-function Keypad({ onKey, T, activeOp }) {
+function Keypad({ onKey, T, activeOp, onMove, activeCell, items }) {
   const rows = [
     ["7","8","9","÷"],
     ["4","5","6","×"],
@@ -351,8 +378,39 @@ function Keypad({ onKey, T, activeOp }) {
     [".","0","⌫","+"],
     ["C","="],
   ];
+
+  const activeIdx = items.findIndex(i => i.id === activeCell.id);
+  const currentLabel = LABELS[activeIdx];
+
   return (
-    <View style={{ backgroundColor:T.keypadBg, paddingHorizontal:8, paddingTop:8, paddingBottom:22, marginTop:"auto", gap:6 }}>
+    <View style={{ backgroundColor:T.keypadBg, paddingHorizontal:8, paddingTop:4, paddingBottom:22, marginTop:"auto", gap:6 }}>
+      
+      {/* Navigation Slider Bar */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: T.keyBgOp, borderRadius: 12, marginBottom: 4, height: 44 }}>
+        <TouchableOpacity 
+          onPress={() => onMove(-1)}
+          style={{ width: 60, height: 44, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Text style={{ color: '#00C896', fontSize: 24, fontWeight: '700' }}>‹</Text>
+        </TouchableOpacity>
+        
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }}>
+          <View style={{ backgroundColor: '#00C896', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 }}>
+            <Text style={{ color: '#fff', fontSize: 12, fontWeight: '800' }}>{currentLabel}</Text>
+          </View>
+          <Text style={{ color: T.text, fontSize: 15, fontWeight: '600', textTransform: 'capitalize' }}>
+            {activeCell.field}
+          </Text>
+        </View>
+
+        <TouchableOpacity 
+          onPress={() => onMove(1)}
+          style={{ width: 60, height: 44, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Text style={{ color: '#00C896', fontSize: 24, fontWeight: '700' }}>›</Text>
+        </TouchableOpacity>
+      </View>
+
       {rows.map((row, ri) => (
         <View key={ri} style={{ flexDirection:"row", gap:6 }}>
           {row.map((k, ki) => {
