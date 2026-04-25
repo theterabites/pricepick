@@ -79,7 +79,6 @@ export default function App() {
   const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
   // Dynamic Item Limit Calculation
-  // Header (~60) + ColHeader (~40) + Keypad area (~260 with insets) + Padding (~20)
   const reservedHeight = 60 + 40 + 260 + insets.top + insets.bottom;
   const availableHeight = SCREEN_HEIGHT - reservedHeight;
   const maxItemsPossible = Math.floor(availableHeight / (LAYOUT.rowHeight + LAYOUT.gap));
@@ -283,6 +282,7 @@ export default function App() {
                   const myPriceOp = pendingOp?.id===item.id && pendingOp?.field==="price" ? pendingOp : null;
                   const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
                   const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, decimals);
+
                   return (
                     <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
                       {/* Letter Label */}
@@ -419,7 +419,7 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
 
   const displayValue = (() => {
     if (empty) return null;
-
+    
     if (currencySymbol) {
       // Price Logic
       if (active) {
@@ -480,26 +480,24 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
 
 function BestBar({ unitList, minU, maxU, valid, currency, T, dark, onSort, isSorted, items }) {
   if (items.length < 2) {
-    return <View style={{ height: 44 }} />;
+    return <View style={{ height: LAYOUT.rowHeight }} />;
   }
   
   return (
-    <View style={{ height: 44, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 }}>
-      <View style={{ flex: 1, paddingHorizontal: 6 }}>
-        {valid.length > 1 && minU === maxU && (
-          <Text style={{ color:T.sub, fontSize:12, fontStyle:"italic" }}>All items equal</Text>
-        )}
-      </View>
-      <View style={{ flex: 1, alignItems: 'center' }}>
+    <View style={{ height: LAYOUT.rowHeight, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, gap: LAYOUT.gap }}>
+      <View style={{ width: LAYOUT.labelWidth }} />
+      <View style={{ flex: 1 }} />
+      <View style={{ flex: 1 }} />
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <TouchableOpacity onPress={onSort} style={{
           backgroundColor: isSorted ? '#007AFF' : '#00C896',
-          borderRadius: 8,
-          paddingVertical: 6,
-          paddingHorizontal: 12,
-          minWidth: 80,
-          alignItems: 'center'
+          borderRadius: 6,
+          height: LAYOUT.rowHeight / 2,
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}>
-          <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>
+          <Text style={{ color: '#fff', fontSize: 10, fontWeight: '800' }}>
             {isSorted ? 'UNSORT' : 'SORT'}
           </Text>
         </TouchableOpacity>
@@ -585,7 +583,7 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
                   <Text style={{ color: T.text, fontSize: 14, fontWeight: '600' }}>
                     {fieldLabel}
                   </Text>
-                </<>
+                </>
               )}
             </View>
 
@@ -622,35 +620,10 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
                 disabled={!activeCell}
                 style={{
                   flex:1, height:48, borderRadius:10, alignItems:"center", justifyContent:"center",
-                  backgroundColor: isEq ? activeColor : isAct ? T.keyBgOp+"cc" : isOp || isDel ? T.keyBgOp : T.keyBg,
+                  backgroundColor: isEq ? (activeCell ? activeColor : T.keyBg) : isAct ? T.keyBgOp+"cc" : isOp || isDel ? T.keyBgOp : T.keyBg,
                   borderWidth: isAct ? 2 : 0, borderColor: activeColor,
                   opacity: activeCell ? 1 : 0.6
                 }}>
-                <Text style={{
-                  fontSize: isEq ? 20 : 21, fontWeight: isOp || isEq ? "600" : "400",
-                  color: isEq ? "#fff" : isDel ? "#E53935" : isOp ? T.keyTextOp : T.keyText
-                }}>{k}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      ))}
-    </View>
-  );
-}
-        <View key={ri} style={{ flexDirection:"row", gap:4 }}>
-          {row.map((k, ki) => {
-            const isOp = ["+","−","×","÷"].includes(k);
-            const isEq = k === "=";
-            const isDel = k === "⌫" || k === "C";
-            const opKey = k === "−" ? "-" : k;
-            const isAct = !!activeOp && activeOp === opKey;
-            return (
-              <TouchableOpacity key={k+ki} onPress={() => onKey(opKey)} style={{
-                flex:1, height:48, borderRadius:10, alignItems:"center", justifyContent:"center",
-                backgroundColor: isEq ? activeColor : isAct ? T.keyBgOp+"cc" : isOp || isDel ? T.keyBgOp : T.keyBg,
-                borderWidth: isAct ? 2 : 0, borderColor: activeColor
-              }}>
                 <Text style={{
                   fontSize: isEq ? 20 : 21, fontWeight: isOp || isEq ? "600" : "400",
                   color: isEq ? "#fff" : isDel ? "#E53935" : isOp ? T.keyTextOp : T.keyText
