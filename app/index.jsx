@@ -248,12 +248,6 @@ export default function App() {
       </View>
 
         <BestBar unitList={unitList} minU={minU} maxU={maxU} valid={valid} currency={currency} T={T} dark={dark} />
-
-        <View style={{ paddingHorizontal:6, paddingVertical:4 }}>
-          <CtrlBtn T={T} color="#E53935" onClick={reset}>
-            <Text style={{ color:"#fff", fontSize:13, fontWeight:"700" }}>Reset All</Text>
-          </CtrlBtn>
-        </View>
       </ScrollView>
 
       {/* Fixed Keypad */}
@@ -431,6 +425,23 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
             const isAct = !!activeOp && activeOp === opKey;
             return (
               <TouchableOpacity key={k+ki} onPress={() => onKey(opKey)} style={{
+                flex:1, height:48, borderRadius:10, alignItems:"center", justifyContent:"center",
+                backgroundColor: isEq ? activeColor : isAct ? T.keyBgOp+"cc" : isOp || isDel ? T.keyBgOp : T.keyBg,
+                borderWidth: isAct ? 2 : 0, borderColor: activeColor
+              }}>
+                <Text style={{
+                  fontSize: isEq ? 20 : 21, fontWeight: isOp || isEq ? "600" : "400",
+                  color: isEq ? "#fff" : isDel ? "#E53935" : isOp ? T.keyTextOp : T.keyText
+                }}>{k}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      ))}
+    </View>
+  );
+}
+TouchableOpacity key={k+ki} onPress={() => onKey(opKey)} style={{
                 flex:1, height:48, borderRadius:10, alignItems:"center", justifyContent:"center",
                 backgroundColor: isEq ? activeColor : isAct ? T.keyBgOp+"cc" : isOp || isDel ? T.keyBgOp : T.keyBg,
                 borderWidth: isAct ? 2 : 0, borderColor: activeColor
