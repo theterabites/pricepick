@@ -255,6 +255,7 @@ export default function App() {
                         field="price"
                         accent={col.accent} T={T} dark={dark}
                         currencySymbol={currency.symbol}
+                        noDecimal={!!currency.noDecimal}
                         myOp={myPriceOp}
                         onTap={() => tapCell(item.id, "price")}
                       />
@@ -339,7 +340,7 @@ function ColHeader({ label, T, muted }) {
   );
 }
 
-function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbol, onTap, myOp, qtyDecimals }) {
+function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbol, noDecimal, onTap, myOp, qtyDecimals }) {
   const empty = !value;
   const [blink, setBlink] = useState(true);
 
@@ -366,7 +367,7 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
       } else {
         const n = parseFloat(value);
         if (isNaN(n)) return value;
-        return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return n.toFixed(noDecimal ? 0 : 2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
     } else {
       // Quantity Logic
@@ -391,7 +392,7 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
         <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, fontFamily: FONTS.mono }}>{currencySymbol}</Text>
       )}
       <Text style={{ fontSize: LAYOUT.fontSize, fontWeight:"600", color: empty ? T.sub+"55" : T.text, textAlign: "right", fontFamily: FONTS.mono }}>
-        {empty ? (active ? "" : "0.00") : displayValue}
+        {empty ? (active ? "" : (noDecimal ? "0" : "0.00")) : displayValue}
       </Text>
       {active && (
         <View style={{ 
