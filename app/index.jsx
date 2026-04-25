@@ -235,11 +235,20 @@ export default function App() {
                   alignItems:"center", 
                   justifyContent:"center"
                 }}>
-                  <View style={{ flexDirection:"row", alignItems:"center", justifyContent: "center", gap:4 }}>
+                  <View style={{ 
+                    flexDirection:"row", 
+                    alignItems:"center", 
+                    justifyContent: "center", 
+                    gap:4,
+                    backgroundColor: isBest ? col.accent : 'transparent',
+                    paddingHorizontal: 8,
+                    paddingVertical: 4,
+                    borderRadius: 10,
+                  }}>
                     <Text style={{ 
                       fontSize:18, 
                       fontWeight:"600", 
-                      color: unit === null ? T.sub+"55" : (isBest ? col.accent : T.text) 
+                      color: unit === null ? T.sub+"55" : (isBest ? "#fff" : T.text) 
                     }}>
                       {unitDisplay}
                     </Text>
@@ -399,7 +408,7 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
           onPress={() => onMove(-1)}
           style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text style={{ color: activeColor, fontSize: 20, fontWeight: '700' }}>‹</Text>
+          <Text style={{ color: '#000', fontSize: 20, fontWeight: '700' }}>‹</Text>
         </TouchableOpacity>
         
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6 }}>
@@ -415,7 +424,7 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
           onPress={() => onMove(1)}
           style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text style={{ color: activeColor, fontSize: 20, fontWeight: '700' }}>›</Text>
+          <Text style={{ color: '#000', fontSize: 20, fontWeight: '700' }}>›</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
