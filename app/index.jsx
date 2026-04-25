@@ -6,7 +6,7 @@ import { useApp } from "../context/AppContext";
 
 // ─── Accents ───────────────────────────────────────────────────────────────────
 const ACCENTS = [
-  { accent:"#FF5252", bg:"#FFEAEA" }, // Cute Red
+  { accent:"#C62828", bg:"#FFEBEE" }, // Dark Red (not 'wrong' red)
   { accent:"#FFD600", bg:"#FFFDE7" }, // Yellow
   { accent:"#FF4081", bg:"#FCE4EC" }, // Pink
   { accent:"#4CAF50", bg:"#E8F5E9" }, // Green
@@ -151,10 +151,10 @@ export default function App() {
         <Text style={{ fontSize:28, fontWeight:"800", color:T.text }}>PricePick</Text>
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <TouchableOpacity onPress={reset} style={{
-            backgroundColor:T.surface2, borderWidth:1, borderColor:T.border,
+            backgroundColor:'#E53935', 
             borderRadius:11, paddingHorizontal: 12, height:36, alignItems:"center", justifyContent:"center",
           }}>
-            <Text style={{ color: '#E53935', fontSize: 13, fontWeight: '700' }}>Reset</Text>
+            <Text style={{ color: '#fff', fontSize: 13, fontWeight: '800' }}>RESET</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push("/settings")} style={{
             backgroundColor:T.surface2, borderWidth:1, borderColor:T.border,
