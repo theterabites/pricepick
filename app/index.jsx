@@ -225,6 +225,8 @@ export default function App() {
                   const myPriceOp = pendingOp?.id===item.id && pendingOp?.field==="price" ? pendingOp : null;
                   const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
                   const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, decimals);
+                  const uLen = unitDisplay.length;
+                  const unitFontSize = uLen > 12 ? 10 : uLen > 10 ? 12 : uLen > 8 ? 14 : uLen > 6 ? 16 : LAYOUT.fontSize;
 
                   const symLen = currency.symbol.length;
                   const pLen = symLen + (item.price
@@ -297,11 +299,9 @@ export default function App() {
                         )}
                         <Text
                           numberOfLines={1}
-                          adjustsFontSizeToFit
-                          minimumFontScale={0.55}
                           style={{
                             flex: 1,
-                            fontSize: LAYOUT.fontSize,
+                            fontSize: unitFontSize,
                             fontWeight:"600",
                             color: unit === null ? T.sub+"55" : T.text,
                             textAlign: 'right',
@@ -476,18 +476,22 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
     }}>
       
       {/* Navigation Slider Bar with Add/Remove */}
-      <View style={{ 
-        flexDirection: 'row', 
-        alignItems: 'center', 
-        backgroundColor: T.keyBgOp, 
-        borderRadius: 10, 
-        marginBottom: 2, 
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: T.keyBgOp,
+        borderRadius: 10,
+        marginBottom: 2,
         height: 44,
-        opacity: activeCell ? 1 : 0 // Hide nav bar but keep space
+        opacity: (activeCell || clipboardStatus) ? 1 : 0
       }}>
-        {activeCell && (
+        {clipboardStatus ? (
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ color: T.text, fontSize: 13, fontWeight: '700' }}>{clipboardStatus}</Text>
+          </View>
+        ) : activeCell ? (
           <>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={onRemove}
               disabled={items.length <= 2}
               style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', opacity: items.length <= 2 ? 0.3 : 1 }}
@@ -495,36 +499,30 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
               <Text style={{ color: '#E53935', fontSize: 24, fontWeight: '700' }}>−</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => onMove(-1)}
               style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}
             >
               <Text style={{ color: T.text, fontSize: 20, fontWeight: '700' }}>‹</Text>
             </TouchableOpacity>
-            
+
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6 }}>
-              {clipboardStatus ? (
-                <Text style={{ color: T.text, fontSize: 13, fontWeight: '700' }}>{clipboardStatus}</Text>
-              ) : (
-                <>
-                  <View style={{ backgroundColor: activeColor, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 5 }}>
-                    <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>{currentLabel}</Text>
-                  </View>
-                  <Text style={{ color: T.text, fontSize: 14, fontWeight: '600' }}>
-                    {fieldLabel}
-                  </Text>
-                </>
-              )}
+              <View style={{ backgroundColor: activeColor, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 5 }}>
+                <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>{currentLabel}</Text>
+              </View>
+              <Text style={{ color: T.text, fontSize: 14, fontWeight: '600' }}>
+                {fieldLabel}
+              </Text>
             </View>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => onMove(1)}
               style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}
             >
               <Text style={{ color: T.text, fontSize: 20, fontWeight: '700' }}>›</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={onAdd}
               disabled={items.length >= maxItems}
               style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', opacity: items.length >= maxItems ? 0.3 : 1 }}
@@ -532,7 +530,7 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
               <Text style={{ color: '#00C896', fontSize: 24, fontWeight: '700' }}>+</Text>
             </TouchableOpacity>
           </>
-        )}
+        ) : null}
       </View>
 
       {rows.map((row, ri) => (
