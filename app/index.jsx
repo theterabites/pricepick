@@ -115,6 +115,14 @@ export default function App() {
     setItems(p => [...p, newItem]);
     if (originalItems) setOriginalItems(p => [...p, newItem]);
   };
+  const removeItemById = (id) => {
+    if (items.length <= 2) return;
+    setItems(p => p.filter(i => i.id !== id));
+    if (originalItems) setOriginalItems(p => p.filter(i => i.id !== id));
+    if (activeCell?.id === id)
+      setActiveCell({ id: items.find(i => i.id !== id)?.id, field: "price" });
+  };
+
   const removeItem = () => {
     if (items.length <= 2) return;
     const last = items[items.length-1];
