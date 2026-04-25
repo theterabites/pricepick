@@ -276,8 +276,8 @@ export default function App() {
 
                       {/* Per Unit Box */}
                       <TouchableOpacity
-                        disabled={!isBest}
-                        onPress={() => isBest && copyToClipboard(unitDisplay)}
+                        disabled={unit === null}
+                        onPress={() => unit !== null && copyToClipboard(unitDisplay)}
                         style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}
                       >
                         {isBest && <Text style={{ fontSize:14 }}>✅</Text>}
