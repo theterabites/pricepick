@@ -220,6 +220,17 @@ export default function App() {
                   const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
                   const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, decimals);
 
+                  const symLen = currency.symbol.length;
+                  const pLen = symLen + (item.price
+                    ? (() => { const n = parseFloat(item.price); return isNaN(n) ? item.price.length : n.toFixed(currency.noDecimal ? 0 : 2).replace(/\B(?=(\d{3})+(?!\d))/g, ",").length; })()
+                    : (currency.noDecimal ? 1 : 4));
+                  const qLen = item.quantity
+                    ? (() => { const n = parseFloat(item.quantity); return isNaN(n) ? item.quantity.length : (qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n)).length; })()
+                    : 1;
+                  const uLen = unitDisplay.length;
+                  const maxLen = Math.max(pLen, qLen, uLen);
+                  const rowFontSize = maxLen > 10 ? 12 : maxLen > 7 ? 15 : LAYOUT.fontSize;
+
                   return (
                     <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
                       {/* Letter Label */}
@@ -245,6 +256,7 @@ export default function App() {
                         accent={col.accent} T={T} dark={dark}
                         currencySymbol={currency.symbol}
                         noDecimal={!!currency.noDecimal}
+                        fontSize={rowFontSize}
                         myOp={myPriceOp}
                         onTap={() => tapCell(item.id, "price")}
                       />
@@ -256,6 +268,7 @@ export default function App() {
                         isBest={isBest}
                         field="quantity"
                         accent={col.accent} T={T} dark={dark}
+                        fontSize={rowFontSize}
                         myOp={myQtyOp}
                         onTap={() => tapCell(item.id, "quantity")}
                         qtyDecimals={qtyDecimals}
@@ -277,7 +290,7 @@ export default function App() {
                           numberOfLines={1}
                           style={{
                             flex: 1,
-                            fontSize: LAYOUT.fontSize,
+                            fontSize: rowFontSize,
                             fontWeight:"600",
                             color: unit === null ? T.sub+"55" : T.text,
                             textAlign: 'right',
@@ -328,7 +341,7 @@ function ColHeader({ label, T, muted }) {
   );
 }
 
-function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbol, noDecimal, onTap, myOp, qtyDecimals }) {
+function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbol, noDecimal, fontSize, onTap, myOp, qtyDecimals }) {
   const empty = !value;
   const [blink, setBlink] = useState(true);
 
@@ -368,9 +381,6 @@ function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbo
       }
     }
   })();
-
-  const totalLen = (currencySymbol?.length ?? 0) + (displayValue?.length ?? 0);
-  const fontSize = totalLen > 10 ? 12 : totalLen > 7 ? 15 : LAYOUT.fontSize;
 
   return (
     <TouchableOpacity onPress={onTap} style={LAYOUT.getBoxStyle(active, isBest, accent, T, field, dark)}>
