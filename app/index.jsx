@@ -25,6 +25,7 @@ export default function App() {
   const [pendingOp, setPendingOp] = useState(null);
   const [clipboardStatus, setClipboardStatus] = useState(null);
   const [copyBlink, setCopyBlink] = useState(true);
+  const [copiedItemId, setCopiedItemId] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => setCopyBlink(v => !v), 800);
@@ -38,9 +39,17 @@ export default function App() {
     }
   }, [clipboardStatus]);
 
-  const copyToClipboard = async (value) => {
+  useEffect(() => {
+    if (copiedItemId !== null) {
+      const timer = setTimeout(() => setCopiedItemId(null), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [copiedItemId]);
+
+  const copyToClipboard = async (value, itemId) => {
     await Clipboard.setStringAsync(String(value));
-    setClipboardStatus("Copied to clipboard!");
+    setClipboardStatus("Copied!");
+    setCopiedItemId(itemId);
   };
 
   const getF = (id, f) => (items.find(i => i.id===id)||{})[f] ?? "";
@@ -225,8 +234,6 @@ export default function App() {
                   const myPriceOp = pendingOp?.id===item.id && pendingOp?.field==="price" ? pendingOp : null;
                   const myQtyOp = pendingOp?.id===item.id && pendingOp?.field==="quantity" ? pendingOp : null;
                   const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, decimals);
-                  const uLen = unitDisplay.length;
-                  const unitFontSize = uLen > 12 ? 10 : uLen > 10 ? 12 : uLen > 8 ? 14 : uLen > 6 ? 16 : LAYOUT.fontSize;
 
                   const symLen = currency.symbol.length;
                   const pLen = symLen + (item.price
@@ -235,8 +242,9 @@ export default function App() {
                   const qLen = item.quantity
                     ? (() => { const n = parseFloat(item.quantity); return isNaN(n) ? item.quantity.length : (qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n)).length; })()
                     : 1;
-                  const pqLen = Math.max(pLen, qLen);
-                  const rowFontSize = pqLen > 10 ? 12 : pqLen > 7 ? 15 : LAYOUT.fontSize;
+                  const uLen = unitDisplay.length;
+                  const allLen = Math.max(pLen, qLen, uLen);
+                  const rowFontSize = allLen > 12 ? 10 : allLen > 10 ? 12 : allLen > 8 ? 14 : allLen > 6 ? 15 : LAYOUT.fontSize;
 
                   return (
                     <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
@@ -282,35 +290,40 @@ export default function App() {
                       />
 
                       {/* Per Unit Box */}
-                      <TouchableOpacity
-                        disabled={unit === null}
-                        onPress={() => unit !== null && copyToClipboard(unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
-                        style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}
-                      >
-                        {unit !== null && (
-                          <Text style={{ fontSize: isBest ? 14 : 11, opacity: copyBlink ? 1 : 0.2, marginRight: 2 }}>
-                            {isBest ? "✅" : "📋"}
-                          </Text>
-                        )}
-                        {!isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
-                          <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935", marginRight: 4 }}>
-                            +{Math.round((unit/minU - 1)*100)}%
-                          </Text>
-                        )}
-                        <Text
-                          numberOfLines={1}
-                          style={{
-                            flex: 1,
-                            fontSize: unitFontSize,
-                            fontWeight:"600",
-                            color: unit === null ? T.sub+"55" : T.text,
-                            textAlign: 'right',
-                            fontFamily: FONTS.mono
-                          }}
-                        >
-                          {unitDisplay}
-                        </Text>
-                      </TouchableOpacity>
+                      {(() => {
+                        const isCopied = copiedItemId === item.id;
+                        return (
+                          <TouchableOpacity
+                            disabled={unit === null}
+                            onPress={() => unit !== null && copyToClipboard(unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","), item.id)}
+                            style={LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark)}
+                          >
+                            {unit !== null && (
+                              <Text style={{ fontSize: 13, opacity: isCopied ? 1 : (copyBlink ? 1 : 0.2), marginRight: 2 }}>
+                                {isCopied || isBest ? "✅" : "📋"}
+                              </Text>
+                            )}
+                            {!isCopied && !isBest && unit !== null && minU !== null && unit > minU && showPercentage && (
+                              <Text style={{ fontSize:10, fontWeight:"700", color:"#E53935", marginRight: 4 }}>
+                                +{Math.round((unit/minU - 1)*100)}%
+                              </Text>
+                            )}
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                flex: 1,
+                                fontSize: rowFontSize,
+                                fontWeight:"600",
+                                color: unit === null ? T.sub+"55" : T.text,
+                                textAlign: 'right',
+                                fontFamily: FONTS.mono
+                              }}
+                            >
+                              {unitDisplay}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })()}
                     </View>
                   );
                 });
