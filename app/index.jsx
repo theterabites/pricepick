@@ -255,7 +255,7 @@ export default function App() {
                     <Text style={{ 
                       fontSize:18, 
                       fontWeight:"600", 
-                      color: unit === null ? T.sub+"55" : (isBest ? col.accent : T.text) 
+                      color: unit === null ? T.sub+"55" : T.text 
                     }}>
                       {unitDisplay}
                     </Text>
