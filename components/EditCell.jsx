@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { LAYOUT, FONTS } from '../constants/DesignSystem';
+import { ACCENTS, LAYOUT, FONTS } from '../constants/DesignSystem';
 
-export function EditCell({ value, active, isBest, field, accent, T, dark, currencySymbol, noDecimal, fontSize, onTap, myOp, qtyDecimals }) {
+export function EditCell({ value, active, isBest, field, colorIndex, T, dark, currencySymbol, noDecimal, fontSize, onTap, myOp, qtyDecimals }) {
+  const accent = ACCENTS[colorIndex % ACCENTS.length].accent;
   const empty = !value;
   const [blink, setBlink] = useState(true);
 

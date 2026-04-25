@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { LAYOUT, FONTS } from '../constants/DesignSystem';
+import { ACCENTS, LAYOUT, FONTS } from '../constants/DesignSystem';
 import { FORMAT } from '../utils/logic';
 
-export function UnitCell({ unit, isBest, col, T, dark, unitDisplay, effectiveDecimals, minU, showPercentage, rowFontSize, onCopy }) {
+export function UnitCell({ unit, isBest, colorIndex, T, dark, unitDisplay, effectiveDecimals, minU, showPercentage, rowFontSize, onCopy }) {
+  const col = ACCENTS[colorIndex % ACCENTS.length];
   const showPct = !isBest && unit !== null && minU !== null && unit > minU && showPercentage;
   const pctLabel = showPct ? FORMAT.pctLabel(unit, minU) : null;
 

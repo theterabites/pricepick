@@ -4,9 +4,10 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
-import { ACCENTS, LABELS, LAYOUT } from "../constants/DesignSystem";
+import { LAYOUT } from "../constants/DesignSystem";
 import { FORMAT } from "../utils/logic";
 import { ColHeader } from "../components/ColHeader";
+import { LabelIcon } from "../components/LabelIcon";
 import { EditCell } from "../components/EditCell";
 import { UnitCell } from "../components/UnitCell";
 import { BestBar } from "../components/BestBar";
@@ -164,52 +165,39 @@ export default function App() {
             {/* Rows */}
             <View style={{ paddingHorizontal: 8, gap: LAYOUT.gap }}>
               {items.map((item) => {
-                const col = ACCENTS[item.colorIndex % ACCENTS.length];
-                const label = LABELS[item.colorIndex % LABELS.length];
                 const unit = FORMAT.computeUnit(item.price, item.quantity);
                 const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
                 const isDimmed = valid.length > 1 && minU !== maxU && !isBest;
                 const effectiveDecimals = currency.noDecimal ? 0 : decimals;
                 const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, effectiveDecimals);
-                const allLen = FORMAT.displayAllLen(item, currency, qtyDecimals, unitDisplay);
-                const rowFontSize = FORMAT.rowFontSize(allLen);
+                const rowFontSize = FORMAT.rowFontSize(FORMAT.displayAllLen(item, currency, qtyDecimals, unitDisplay));
 
                 return (
                   <View key={item.id} style={{ flexDirection: "row", gap: LAYOUT.gap, alignItems: "center" }}>
+                    <LabelIcon colorIndex={item.colorIndex} dark={dark} isDimmed={isDimmed} />
 
-                    {/* Label */}
-                    <View style={{ width: LAYOUT.labelWidth, alignItems: "center", justifyContent: "center", opacity: isDimmed ? 0.3 : 1 }}>
-                      <View style={{ width: LAYOUT.labelIconSize, height: LAYOUT.labelIconSize, borderRadius: LAYOUT.labelBorderRadius, backgroundColor: dark ? col.accent + "28" : col.bg, borderWidth: 2, borderColor: col.accent + "55", alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ fontWeight: "800", fontSize: 12, color: col.accent }}>{label}</Text>
-                      </View>
-                    </View>
-
-                    {/* Price */}
                     <EditCell
                       value={item.price} active={activeCell?.id === item.id && activeCell.field === "price"}
-                      isBest={isBest} field="price" accent={col.accent} T={T} dark={dark}
+                      isBest={isBest} field="price" colorIndex={item.colorIndex} T={T} dark={dark}
                       currencySymbol={currency.symbol} noDecimal={!!currency.noDecimal}
                       fontSize={rowFontSize} myOp={pendingOp?.id === item.id && pendingOp?.field === "price" ? pendingOp : null}
                       onTap={() => tapCell(item.id, "price")}
                     />
 
-                    {/* Quantity */}
                     <EditCell
                       value={item.quantity} active={activeCell?.id === item.id && activeCell.field === "quantity"}
-                      isBest={isBest} field="quantity" accent={col.accent} T={T} dark={dark}
+                      isBest={isBest} field="quantity" colorIndex={item.colorIndex} T={T} dark={dark}
                       fontSize={rowFontSize} qtyDecimals={qtyDecimals}
                       myOp={pendingOp?.id === item.id && pendingOp?.field === "quantity" ? pendingOp : null}
                       onTap={() => tapCell(item.id, "quantity")}
                     />
 
-                    {/* Unit price */}
                     <UnitCell
-                      unit={unit} isBest={isBest} col={col} T={T} dark={dark}
+                      unit={unit} isBest={isBest} colorIndex={item.colorIndex} T={T} dark={dark}
                       unitDisplay={unitDisplay} effectiveDecimals={effectiveDecimals}
                       minU={minU} showPercentage={showPercentage}
                       rowFontSize={rowFontSize} onCopy={copyToClipboard}
                     />
-
                   </View>
                 );
               })}
