@@ -553,3 +553,59 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
     </View>
   );
 }
+
+const SWIPE_OPEN = -72;   // snap open to fully reveal delete icon
+const SWIPE_DELETE = -150; // full swipe triggers auto-delete
+
+function SwipeableRow({ children, onDelete, disabled }) {
+  const translateX = useSharedValue(0);
+
+  const pan = Gesture.Pan()
+    .activeOffsetX([-8, 8])   // only activate after 8px horizontal movement
+    .failOffsetY([-10, 10])   // cancel if user is clearly scrolling vertically
+    .enabled(!disabled)
+    .onUpdate((e) => {
+      translateX.value = Math.min(0, Math.max(e.translationX, -240));
+    })
+    .onEnd(() => {
+      if (translateX.value < SWIPE_DELETE) {
+        translateX.value = withTiming(-500, { duration: 200 }, () => runOnJS(onDelete)());
+      } else if (translateX.value < SWIPE_OPEN / 2) {
+        translateX.value = withSpring(SWIPE_OPEN, { damping: 20, stiffness: 200 });
+      } else {
+        translateX.value = withSpring(0, { damping: 20, stiffness: 200 });
+      }
+    });
+
+  const rowStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+
+  const iconStyle = useAnimatedStyle(() => {
+    const progress = Math.min(1, Math.abs(translateX.value) / Math.abs(SWIPE_OPEN));
+    return {
+      opacity: progress,
+      transform: [{ scale: 0.5 + 0.5 * progress }],
+    };
+  });
+
+  return (
+    <View style={{ overflow: 'hidden', borderRadius: LAYOUT.borderRadius }}>
+      <TouchableOpacity
+        onPress={onDelete}
+        style={{
+          position: 'absolute', right: 0, top: 0, bottom: 0, width: 72,
+          backgroundColor: '#E53935', borderRadius: LAYOUT.borderRadius,
+          alignItems: 'center', justifyContent: 'center',
+        }}
+      >
+        <Animated.Text style={iconStyle}>🗑️</Animated.Text>
+      </TouchableOpacity>
+      <GestureDetector gesture={pan}>
+        <Animated.View style={rowStyle}>
+          {children}
+        </Animated.View>
+      </GestureDetector>
+    </View>
+  );
+}
