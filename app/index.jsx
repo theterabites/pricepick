@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Clipboard from 'expo-clipboard';
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
 
@@ -87,6 +88,19 @@ export default function App() {
 
   const [activeCell, setActiveCell] = useState({ id:1, field:"price" });
   const [pendingOp, setPendingOp] = useState(null);
+  const [clipboardStatus, setClipboardStatus] = useState(null);
+
+  useEffect(() => {
+    if (clipboardStatus) {
+      const timer = setTimeout(() => setClipboardStatus(null), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [clipboardStatus]);
+
+  const copyToClipboard = async (value) => {
+    await Clipboard.setStringAsync(String(value));
+    setClipboardStatus("Copied to clipboard!");
+  };
 
   const getF = (id, f) => (items.find(i => i.id===id)||{})[f] ?? "";
   const setF = (id, f, v) =>
@@ -308,12 +322,16 @@ export default function App() {
                 />
 
                 {/* Per Unit (Background and border when best) */}
-                <View style={{ 
-                  flex: 1, 
-                  height: LAYOUT.rowHeight, 
-                  alignItems:"center", 
-                  justifyContent:"center",
-                }}>
+                <TouchableOpacity 
+                  disabled={!isBest}
+                  onPress={() => isBest && copyToClipboard(unitDisplay)}
+                  style={{ 
+                    flex: 1, 
+                    height: LAYOUT.rowHeight, 
+                    alignItems:"center", 
+                    justifyContent:"center",
+                  }}
+                >
                   <View style={{ 
                     flexDirection:"row", 
                     alignItems:"center", 
@@ -340,7 +358,7 @@ export default function App() {
                       </Text>
                     )}
                   </View>
-                </View>
+                </TouchableOpacity>
               </View>
             );
           });
@@ -362,6 +380,7 @@ export default function App() {
         onRemove={removeItem}
         currency={currency}
         maxItems={maxItems}
+        clipboardStatus={clipboardStatus}
       />
     </SafeAreaView>
   );
@@ -498,7 +517,7 @@ function CtrlBtn({ T, children, onClick, disabled, flex=1, color }) {
   );
 }
 
-function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove, currency, maxItems }) {
+function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove, currency, maxItems, clipboardStatus }) {
   const insets = useSafeAreaInsets();
   const rows = [
     ["7","8","9","÷"],
@@ -544,12 +563,18 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
         </TouchableOpacity>
         
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6 }}>
-          <View style={{ backgroundColor: activeColor, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 5 }}>
-            <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>{currentLabel}</Text>
-          </View>
-          <Text style={{ color: T.text, fontSize: 14, fontWeight: '600' }}>
-            {fieldLabel}
-          </Text>
+          {clipboardStatus ? (
+            <Text style={{ color: '#00C896', fontSize: 13, fontWeight: '700' }}>{clipboardStatus}</Text>
+          ) : (
+            <>
+              <View style={{ backgroundColor: activeColor, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 5 }}>
+                <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>{currentLabel}</Text>
+              </View>
+              <Text style={{ color: T.text, fontSize: 14, fontWeight: '600' }}>
+                {fieldLabel}
+              </Text>
+            </>
+          )}
         </View>
 
         <TouchableOpacity 
