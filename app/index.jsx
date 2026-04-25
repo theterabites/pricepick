@@ -3,8 +3,6 @@ import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions, Toucha
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from "expo-router";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming, runOnJS } from "react-native-reanimated";
 import { useApp } from "../context/AppContext";
 
 // Refactored Modules
@@ -115,14 +113,6 @@ export default function App() {
     setItems(p => [...p, newItem]);
     if (originalItems) setOriginalItems(p => [...p, newItem]);
   };
-  const removeItemById = (id) => {
-    if (items.length <= 2) return;
-    setItems(p => p.filter(i => i.id !== id));
-    if (originalItems) setOriginalItems(p => p.filter(i => i.id !== id));
-    if (activeCell?.id === id)
-      setActiveCell({ id: items.find(i => i.id !== id)?.id, field: "price" });
-  };
-
   const removeItem = () => {
     if (items.length <= 2) return;
     const last = items[items.length-1];
@@ -231,8 +221,7 @@ export default function App() {
                   const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, decimals);
 
                   return (
-                    <SwipeableRow key={item.id} onDelete={() => removeItemById(item.id)} disabled={items.length <= 2}>
-                    <View style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
+                    <View key={item.id} style={{ flexDirection:"row", gap: LAYOUT.gap, alignItems:"center" }}>
                       {/* Letter Label */}
                       <View style={{ width: LAYOUT.labelWidth, alignItems:"center", justifyContent:"center", opacity: isDimmed ? 0.3 : 1 }}>
                         <View style={{
@@ -299,7 +288,6 @@ export default function App() {
                         </Text>
                       </TouchableOpacity>
                     </View>
-                    </SwipeableRow>
                   );
                 });
               })()}
@@ -555,58 +543,3 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, onRemove
   );
 }
 
-const SWIPE_OPEN = -72;   // snap open to fully reveal delete icon
-const SWIPE_DELETE = -150; // full swipe triggers auto-delete
-
-function SwipeableRow({ children, onDelete, disabled }) {
-  const translateX = useSharedValue(0);
-
-  const pan = Gesture.Pan()
-    .activeOffsetX([-8, 8])   // only activate after 8px horizontal movement
-    .failOffsetY([-10, 10])   // cancel if user is clearly scrolling vertically
-    .enabled(!disabled)
-    .onUpdate((e) => {
-      translateX.value = Math.min(0, Math.max(e.translationX, -240));
-    })
-    .onEnd(() => {
-      if (translateX.value < SWIPE_DELETE) {
-        translateX.value = withTiming(-500, { duration: 200 }, () => runOnJS(onDelete)());
-      } else if (translateX.value < SWIPE_OPEN / 2) {
-        translateX.value = withSpring(SWIPE_OPEN, { damping: 20, stiffness: 200 });
-      } else {
-        translateX.value = withSpring(0, { damping: 20, stiffness: 200 });
-      }
-    });
-
-  const rowStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }],
-  }));
-
-  const iconStyle = useAnimatedStyle(() => {
-    const progress = Math.min(1, Math.abs(translateX.value) / Math.abs(SWIPE_OPEN));
-    return {
-      opacity: progress,
-      transform: [{ scale: 0.5 + 0.5 * progress }],
-    };
-  });
-
-  return (
-    <View style={{ overflow: 'hidden', borderRadius: LAYOUT.borderRadius }}>
-      <TouchableOpacity
-        onPress={onDelete}
-        style={{
-          position: 'absolute', right: 0, top: 0, bottom: 0, width: 72,
-          backgroundColor: '#E53935', borderRadius: LAYOUT.borderRadius,
-          alignItems: 'center', justifyContent: 'center',
-        }}
-      >
-        <Animated.Text style={iconStyle}>🗑️</Animated.Text>
-      </TouchableOpacity>
-      <GestureDetector gesture={pan}>
-        <Animated.View style={rowStyle}>
-          {children}
-        </Animated.View>
-      </GestureDetector>
-    </View>
-  );
-}
