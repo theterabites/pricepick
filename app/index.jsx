@@ -121,7 +121,7 @@ export default function App() {
   };
 
   const addItem = () => {
-    if (items.length >= 6) return;
+    if (items.length >= 5) return;
     setItems(p => [...p, { id:nextId.current++, quantity:"", price:"" }]);
   };
   const removeItem = () => {
@@ -161,6 +161,7 @@ export default function App() {
         style={{ flex:1 }} 
         contentContainerStyle={{ paddingBottom: 10 }}
         showsVerticalScrollIndicator={false}
+        scrollEnabled={false}
       >
       {/* Header Row */}
       <View style={{ flexDirection:"row", gap:5, paddingHorizontal:6, paddingVertical:5, alignItems:"center" }}>
@@ -362,7 +363,7 @@ function BestBar({ unitList, minU, maxU, valid, currency, T, dark }) {
 function CtrlBtn({ T, children, onClick, disabled, flex=1, color }) {
   return (
     <TouchableOpacity onPress={onClick} disabled={disabled} style={{
-      flex, height:42, backgroundColor: color || T.ctrlBg,
+      flex, height:50, backgroundColor: color || T.ctrlBg,
       borderRadius:12, alignItems:"center", justifyContent:"center",
       opacity: disabled ? 0.3 : 1,
       shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 6, elevation: 2
@@ -384,15 +385,15 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items }) {
   const activeColor = ACCENTS[activeIdx % ACCENTS.length].accent;
 
   return (
-    <View style={{ backgroundColor:T.keypadBg, paddingHorizontal:32, paddingTop:4, paddingBottom:16, marginTop:"auto", gap:4 }}>
+    <View style={{ backgroundColor:T.keypadBg, paddingHorizontal:24, paddingTop:4, paddingBottom:16, marginTop:"auto", gap:4 }}>
       
       {/* Navigation Slider Bar */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: T.keyBgOp, borderRadius: 10, marginBottom: 2, height: 36 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: T.keyBgOp, borderRadius: 10, marginBottom: 2, height: 40 }}>
         <TouchableOpacity 
           onPress={() => onMove(-1)}
-          style={{ width: 44, height: 36, alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: 44, height: 40, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text style={{ color: activeColor, fontSize: 20, fontWeight: '700' }}>‹</Text>
+          <Text style={{ color: activeColor, fontSize: 22, fontWeight: '700' }}>‹</Text>
         </TouchableOpacity>
         
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6 }}>
@@ -406,9 +407,9 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items }) {
 
         <TouchableOpacity 
           onPress={() => onMove(1)}
-          style={{ width: 44, height: 36, alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: 44, height: 40, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text style={{ color: activeColor, fontSize: 20, fontWeight: '700' }}>›</Text>
+          <Text style={{ color: activeColor, fontSize: 22, fontWeight: '700' }}>›</Text>
         </TouchableOpacity>
       </View>
 
@@ -422,12 +423,12 @@ function Keypad({ onKey, T, activeOp, onMove, activeCell, items }) {
             const isAct = !!activeOp && activeOp === opKey;
             return (
               <TouchableOpacity key={k+ki} onPress={() => onKey(opKey)} style={{
-                flex:1, height:42, borderRadius:10, alignItems:"center", justifyContent:"center",
+                flex:1, height:48, borderRadius:10, alignItems:"center", justifyContent:"center",
                 backgroundColor: isEq ? activeColor : isAct ? T.keyBgOp+"cc" : isOp || isDel ? T.keyBgOp : T.keyBg,
                 borderWidth: isAct ? 2 : 0, borderColor: activeColor
               }}>
                 <Text style={{
-                  fontSize: isEq ? 18 : 19, fontWeight: isOp || isEq ? "600" : "400",
+                  fontSize: isEq ? 20 : 21, fontWeight: isOp || isEq ? "600" : "400",
                   color: isEq ? "#fff" : isDel ? "#E53935" : isOp ? T.keyTextOp : T.keyText
                 }}>{k}</Text>
               </TouchableOpacity>
