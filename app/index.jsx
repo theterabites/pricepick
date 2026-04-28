@@ -98,7 +98,10 @@ export default function App() {
     if (!inDecimal && parts[0].length >= 9) return;
     const maxDec = field === "price" ? 2 : 4;
     if (inDecimal && parts[1].length >= maxDec) return;
-    setF(id, field, cur + key);
+    let next = cur + key;
+    const nextParts = next.split(".");
+    if (nextParts[0].length > 1) nextParts[0] = nextParts[0].replace(/^0+/, "") || "0";
+    setF(id, field, nextParts.join("."));
   };
 
   const addItem = () => {
