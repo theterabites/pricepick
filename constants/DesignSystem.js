@@ -1,5 +1,10 @@
 import { Platform } from 'react-native';
 
+export const colors = {
+  danger: '#E53935',
+  success: '#00C896',
+};
+
 export const fonts = {
   mono: Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' }),
 };
@@ -21,6 +26,7 @@ export const layout = {
   borderRadius: 12,
   borderWidth: 1.5,
   gap: 5,
+  screenPadding: 8,
   labelWidth: 30,
   labelIconSize: 26,
   labelBorderRadius: 7,

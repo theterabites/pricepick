@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, TextInput, StatusBar } from "react-native
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
+import { ScreenHeader } from "../components/ScreenHeader";
 
 export default function CoffeeScreen() {
   const { T, dark } = useApp();
@@ -15,12 +16,7 @@ export default function CoffeeScreen() {
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
       <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
-      <View style={{ flexDirection:"row", alignItems:"center", gap:10, paddingHorizontal:14, paddingVertical:13, borderBottomWidth:1, borderBottomColor:T.border, backgroundColor:T.surface }}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={{ fontSize:26, color:"#00C896", marginTop:-2 }}>‹</Text>
-        </TouchableOpacity>
-        <Text style={{ fontSize:17, fontWeight:"700", color:T.text }}>Buy me a coffee</Text>
-      </View>
+      <ScreenHeader title="Buy me a coffee" T={T} />
       <View style={{ flex:1, alignItems:"center", justifyContent:"center", padding:24, gap:22 }}>
         <Text style={{ fontSize:64 }}>☕</Text>
         <Text style={{ fontSize:24, fontWeight:"800", color:T.text, textAlign:"center" }}>Enjoying PricePick?</Text>

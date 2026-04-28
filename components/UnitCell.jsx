@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { accents, layout, fonts } from '../constants/DesignSystem';
+import { accents, layout, fonts, colors } from '../constants/DesignSystem';
 import { format } from '../utils/logic';
 
 export function UnitCell({ unit, isBest, colorIndex, T, dark, unitDisplay, effectiveDecimals, minU, showPercentage, rowFontSize, onCopy }) {
@@ -39,7 +39,7 @@ export function UnitCell({ unit, isBest, colorIndex, T, dark, unitDisplay, effec
         </Text>
       </View>
       {showPct && (
-        <Text style={{ fontSize: 8, fontWeight: "700", color: "#E53935", textAlign: 'right' }}>
+        <Text style={{ fontSize: 8, fontWeight: "700", color: colors.danger, textAlign: 'right' }}>
           {pctLabel}
         </Text>
       )}

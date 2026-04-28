@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, StatusBar } from "react-nativ
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
+import { ScreenHeader } from "../components/ScreenHeader";
 
 export default function SettingsScreen() {
   const { T, dark, themeMode, currency, showPercentage } = useApp();
@@ -23,12 +24,7 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
       <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
-      <View style={{ flexDirection:"row", alignItems:"center", gap:10, paddingHorizontal:14, paddingVertical:13, borderBottomWidth:1, borderBottomColor:T.border, backgroundColor:T.surface }}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={{ fontSize:26, color:"#00C896", marginTop:-2 }}>‹</Text>
-        </TouchableOpacity>
-        <Text style={{ fontSize:17, fontWeight:"700", color:T.text }}>Settings</Text>
-      </View>
+      <ScreenHeader title="Settings" T={T} />
       <ScrollView style={{ flex:1 }}>
         <Text style={{ paddingHorizontal:20, paddingTop:14, paddingBottom:6, fontSize:11, fontWeight:"700", color:T.sub, textTransform:"uppercase" }}>
           Preferences

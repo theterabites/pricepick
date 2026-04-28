@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, TextInput, StatusBar } from "react-native
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
+import { ScreenHeader } from "../components/ScreenHeader";
+import { colors } from "../constants/DesignSystem";
 
 export default function FeedbackScreen() {
   const { T, dark } = useApp();
@@ -13,12 +15,7 @@ export default function FeedbackScreen() {
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
       <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
-      <View style={{ flexDirection:"row", alignItems:"center", gap:10, paddingHorizontal:14, paddingVertical:13, borderBottomWidth:1, borderBottomColor:T.border, backgroundColor:T.surface }}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={{ fontSize:26, color:"#00C896", marginTop:-2 }}>‹</Text>
-        </TouchableOpacity>
-        <Text style={{ fontSize:17, fontWeight:"700", color:T.text }}>Send Feedback</Text>
-      </View>
+      <ScreenHeader title="Send Feedback" T={T} />
       <View style={{ padding:24, gap:16 }}>
         <Text style={{ color:T.sub, fontSize:14, lineHeight:22 }}>
           Found a bug or have a suggestion? I read every message.
@@ -41,7 +38,7 @@ export default function FeedbackScreen() {
             <TouchableOpacity
               onPress={() => { if (feedbackText.trim()) setFeedbackSent(true); }}
               style={{
-                backgroundColor: feedbackText.trim() ? "#00C896" : T.border,
+                backgroundColor: feedbackText.trim() ? colors.success : T.border,
                 borderRadius:14, paddingVertical:14, alignItems: 'center'
               }}
             >

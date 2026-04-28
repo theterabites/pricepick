@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { accents, labels } from '../constants/DesignSystem';
+import { accents, labels, colors } from '../constants/DesignSystem';
 
 const ROWS = [
   ["7","8","9","÷"],
@@ -36,7 +36,7 @@ export function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, o
           <>
             <TouchableOpacity onPress={onRemove} disabled={items.length <= 2}
               style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', opacity: items.length <= 2 ? 0.3 : 1 }}>
-              <Text style={{ color: '#E53935', fontSize: 24, fontWeight: '700' }}>−</Text>
+              <Text style={{ color: colors.danger, fontSize: 24, fontWeight: '700' }}>−</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => onMove(-1)}
@@ -58,7 +58,7 @@ export function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, o
 
             <TouchableOpacity onPress={onAdd} disabled={items.length >= maxItems}
               style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', opacity: items.length >= maxItems ? 0.3 : 1 }}>
-              <Text style={{ color: '#00C896', fontSize: 24, fontWeight: '700' }}>+</Text>
+              <Text style={{ color: colors.success, fontSize: 24, fontWeight: '700' }}>+</Text>
             </TouchableOpacity>
           </>
         ) : null}
@@ -87,7 +87,7 @@ export function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, o
                 <Text style={{
                   fontSize: isEq ? 20 : 21,
                   fontWeight: isOp || isEq ? "600" : "400",
-                  color: isEq ? "#fff" : isDel ? "#E53935" : isOp ? T.keyTextOp : T.keyText,
+                  color: isEq ? "#fff" : isDel ? colors.danger : isOp ? T.keyTextOp : T.keyText,
                 }}>{k}</Text>
               </TouchableOpacity>
             );

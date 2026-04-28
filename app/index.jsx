@@ -4,7 +4,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
-import { layout } from "../constants/DesignSystem";
+import { layout, colors } from "../constants/DesignSystem";
 import { format } from "../utils/logic";
 import { ColHeader } from "../components/ColHeader";
 import { LabelIcon } from "../components/LabelIcon";
@@ -136,7 +136,7 @@ export default function App() {
       {/* Header */}
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 14, paddingTop: 14, paddingBottom: 6 }}>
         <View style={{ width: 100 }}>
-          <TouchableOpacity onPress={reset} style={{ backgroundColor: '#E53935', borderRadius: 11, paddingHorizontal: 10, height: 36, alignItems: "center", justifyContent: "center", alignSelf: 'flex-start' }}>
+          <TouchableOpacity onPress={reset} style={{ backgroundColor: colors.danger, borderRadius: 11, paddingHorizontal: 10, height: 36, alignItems: "center", justifyContent: "center", alignSelf: 'flex-start' }}>
             <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>RESET</Text>
           </TouchableOpacity>
         </View>
@@ -155,7 +155,7 @@ export default function App() {
           <View style={{ flex: 1 }}>
 
             {/* Column headers */}
-            <View style={{ flexDirection: "row", gap: layout.gap, paddingHorizontal: 8, paddingVertical: 5, alignItems: "center" }}>
+            <View style={{ flexDirection: "row", gap: layout.gap, paddingHorizontal: layout.screenPadding, paddingVertical: 5, alignItems: "center" }}>
               <View style={{ width: layout.labelWidth }} />
               <ColHeader label="price" T={T} />
               <ColHeader label="quantity" T={T} />
@@ -163,7 +163,7 @@ export default function App() {
             </View>
 
             {/* Rows */}
-            <View style={{ paddingHorizontal: 8, gap: layout.gap }}>
+            <View style={{ paddingHorizontal: layout.screenPadding, gap: layout.gap }}>
               {items.map((item) => {
                 const unit = format.computeUnit(item.price, item.quantity);
                 const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
