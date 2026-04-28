@@ -91,7 +91,7 @@ export default function App() {
       }
       return;
     }
-    if (key === ".") { if (!cur.includes(".")) setF(id, field, cur + "."); return; }
+    if (key === ".") { if (!cur.includes(".")) setF(id, field, (cur || "0") + "."); return; }
     // Digit limit: max 9 integer digits, max 2 decimal places for price / 4 for quantity
     const parts = cur.split(".");
     const inDecimal = parts.length > 1;
