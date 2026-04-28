@@ -120,6 +120,9 @@ Items have both `id` (monotonically increasing, used for React keys and state lo
 **Calculator state:**
 `pendingOp` stores `{ id, field, value, op }` for deferred arithmetic; cleared on cell switch.
 
+**Blank area tap — do nothing:**
+There is no `TouchableWithoutFeedback` wrapper on the list. Tapping blank space keeps the active cell selected so the nav bar, arrows, and add/remove buttons stay functional. Do not re-add a dismiss-on-tap behaviour.
+
 **Input rules (mobile banking style):**
 - Max 9 integer digits; max 2 decimal places for price, 4 for quantity
 - Leading zeros are stripped as you type (`005` → `5`, `0.05` preserved)
