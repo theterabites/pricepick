@@ -30,21 +30,21 @@ All shared state lives in `context/AppContext.tsx` via a single `AppProvider` / 
 - `showPercentage` — whether to show the percentage badge on non-best items
 - Settings are persisted to `AsyncStorage` under `pricepick_*` keys and loaded on mount
 
-`THEMES` (light/dark token objects) are defined in `AppContext.tsx`. `constants/theme.ts` is a legacy Expo starter file, not used by the app.
+`themes` (light/dark token objects) are defined in `AppContext.tsx`. `constants/theme.ts` is a legacy Expo starter file, not used by the app.
 
 ### Design system
 
 `constants/DesignSystem.js` is the single source of truth for layout constants:
-- `FONTS.mono` — `Platform.select` picks Menlo (iOS) or monospace (Android); used on all numeric displays
-- `ACCENTS` — 7 accent/background color pairs, indexed by `item.colorIndex % 7`
-- `LABELS` — `["A","B","C","D","E","F","G"]` letter labels, indexed by `item.colorIndex % 7`
-- `LAYOUT` — row height, border radius, gaps, font sizes, label dimensions, and `getBoxStyle()` which computes the full style object for price/quantity cells
+- `fonts.mono` — `Platform.select` picks Menlo (iOS) or monospace (Android); used on all numeric displays
+- `accents` — 7 accent/background color pairs, indexed by `item.colorIndex % 7`
+- `labels` — `["A","B","C","D","E","F","G"]` letter labels, indexed by `item.colorIndex % 7`
+- `layout` — row height, border radius, gaps, font sizes, label dimensions, and `getBoxStyle()` which computes the full style object for price/quantity cells
 
-`getBoxStyle` is **not** used for unit cells — unit boxes use a two-row column layout (see below). Always update `LAYOUT` here rather than hardcoding style values in components.
+`getBoxStyle` is **not** used for unit cells — unit boxes use a two-row column layout (see below). Always update `layout` here rather than hardcoding style values in components.
 
 ### Business logic
 
-`utils/logic.js` exports a `FORMAT` object with pure functions:
+`utils/logic.js` exports a `format` object with pure functions:
 - `computeUnit(price, qty)` — returns price/qty or null
 - `resolveDecimals(unitValues)` — picks 2 or 4 decimal places to break ties in unit price display. **Does not know about `noDecimal` — callers must apply `effectiveDecimals = currency.noDecimal ? 0 : decimals` before using.**
 - `resolveQtyDecimals(items)` — max decimals used across quantity inputs
@@ -69,13 +69,13 @@ All shared state lives in `context/AppContext.tsx` via a single `AppProvider` / 
 ### Key patterns in the main screen (`app/index.jsx`)
 
 **Item identity — `colorIndex` not `id`:**
-Items have both `id` (monotonically increasing, used for React keys and state lookups) and `colorIndex` (lowest unused 0–6, stable across sort/remove). Always use `colorIndex` to look up `ACCENTS` and `LABELS`, never `id` or array position.
+Items have both `id` (monotonically increasing, used for React keys and state lookups) and `colorIndex` (lowest unused 0–6, stable across sort/remove). Always use `colorIndex` to look up `accents` and `labels`, never `id` or array position.
 
 **Sort toggle:**
 `originalItems` in context stores the pre-sort snapshot. `addItem` and `removeItem` both sync `originalItems` when a sort is active, so new/removed rows survive unsort correctly.
 
 **Dynamic item limit:**
-Computed from `SCREEN_HEIGHT` minus reserved space, capped at 7 (matches `ACCENTS`/`LABELS` length).
+Computed from `SCREEN_HEIGHT` minus reserved space, capped at 7 (matches `accents`/`labels` length).
 
 **Calculator state:**
 `pendingOp` stores `{ id, field, value, op }` for deferred arithmetic; cleared on cell switch.

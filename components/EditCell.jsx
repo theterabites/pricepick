@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { ACCENTS, LAYOUT, FONTS } from '../constants/DesignSystem';
+import { accents, layout, fonts } from '../constants/DesignSystem';
 
 export function EditCell({ value, active, isBest, field, colorIndex, T, dark, currencySymbol, noDecimal, fontSize, onTap, myOp, qtyDecimals }) {
-  const accent = ACCENTS[colorIndex % ACCENTS.length].accent;
+  const accent = accents[colorIndex % accents.length].accent;
   const empty = !value;
   const [blink, setBlink] = useState(true);
 
@@ -32,18 +32,18 @@ export function EditCell({ value, active, isBest, field, colorIndex, T, dark, cu
   })();
 
   return (
-    <TouchableOpacity onPress={onTap} style={LAYOUT.getBoxStyle(active, isBest, accent, T, field, dark)}>
+    <TouchableOpacity onPress={onTap} style={layout.getBoxStyle(active, isBest, accent, T, field, dark)}>
       {myOp && (
         <View style={{ position: "absolute", top: 2, left: 4, backgroundColor: accent + "22", borderRadius: 3, paddingHorizontal: 3, paddingVertical: 1 }}>
           <Text style={{ fontSize: 8, fontWeight: "800", color: accent }}>{myOp.value} {myOp.op}</Text>
         </View>
       )}
       {currencySymbol && (
-        <Text style={{ fontSize, fontWeight: "600", color: empty ? T.sub + "55" : T.text, fontFamily: FONTS.mono }}>
+        <Text style={{ fontSize, fontWeight: "600", color: empty ? T.sub + "55" : T.text, fontFamily: fonts.mono }}>
           {currencySymbol}
         </Text>
       )}
-      <Text style={{ fontSize, fontWeight: "600", color: empty ? T.sub + "55" : T.text, textAlign: "right", fontFamily: FONTS.mono }}>
+      <Text style={{ fontSize, fontWeight: "600", color: empty ? T.sub + "55" : T.text, textAlign: "right", fontFamily: fonts.mono }}>
         {empty ? (active ? "" : (noDecimal ? "0" : "0.00")) : displayValue}
       </Text>
       {active && (

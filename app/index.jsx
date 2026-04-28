@@ -4,8 +4,8 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
-import { LAYOUT } from "../constants/DesignSystem";
-import { FORMAT } from "../utils/logic";
+import { layout } from "../constants/DesignSystem";
+import { format } from "../utils/logic";
 import { ColHeader } from "../components/ColHeader";
 import { LabelIcon } from "../components/LabelIcon";
 import { EditCell } from "../components/EditCell";
@@ -20,7 +20,7 @@ export default function App() {
   const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
   const reservedHeight = 60 + 40 + 260 + insets.top + insets.bottom;
-  const maxItems = Math.min(7, Math.max(2, Math.floor((SCREEN_HEIGHT - reservedHeight) / (LAYOUT.rowHeight + LAYOUT.gap))));
+  const maxItems = Math.min(7, Math.max(2, Math.floor((SCREEN_HEIGHT - reservedHeight) / (layout.rowHeight + layout.gap))));
 
   const [activeCell, setActiveCell] = useState({ id: 1, field: "price" });
   const [pendingOp, setPendingOp] = useState(null);
@@ -34,9 +34,9 @@ export default function App() {
   }, [clipboardStatus]);
 
   // ─── Derived unit data ───────────────────────────────────────────────────────
-  const allUnits = items.map(item => FORMAT.computeUnit(item.price, item.quantity));
-  const decimals = FORMAT.resolveDecimals(allUnits);
-  const qtyDecimals = FORMAT.resolveQtyDecimals(items);
+  const allUnits = items.map(item => format.computeUnit(item.price, item.quantity));
+  const decimals = format.resolveDecimals(allUnits);
+  const qtyDecimals = format.resolveQtyDecimals(items);
   const valid = allUnits.filter(u => u !== null);
   const minU = valid.length ? Math.min(...valid) : null;
   const maxU = valid.length ? Math.max(...valid) : null;
@@ -86,7 +86,7 @@ export default function App() {
     if (key === "=") {
       if (myOp) {
         const n = parseFloat(cur);
-        if (!isNaN(n)) { setF(id, field, FORMAT.fmtNum(FORMAT.applyOp(myOp.value, myOp.op, n))); setPendingOp(null); }
+        if (!isNaN(n)) { setF(id, field, format.fmtNum(format.applyOp(myOp.value, myOp.op, n))); setPendingOp(null); }
       }
       return;
     }
@@ -155,25 +155,25 @@ export default function App() {
           <View style={{ flex: 1 }}>
 
             {/* Column headers */}
-            <View style={{ flexDirection: "row", gap: LAYOUT.gap, paddingHorizontal: 8, paddingVertical: 5, alignItems: "center" }}>
-              <View style={{ width: LAYOUT.labelWidth }} />
+            <View style={{ flexDirection: "row", gap: layout.gap, paddingHorizontal: 8, paddingVertical: 5, alignItems: "center" }}>
+              <View style={{ width: layout.labelWidth }} />
               <ColHeader label="price" T={T} />
               <ColHeader label="quantity" T={T} />
               <ColHeader label="per unit" T={T} muted />
             </View>
 
             {/* Rows */}
-            <View style={{ paddingHorizontal: 8, gap: LAYOUT.gap }}>
+            <View style={{ paddingHorizontal: 8, gap: layout.gap }}>
               {items.map((item) => {
-                const unit = FORMAT.computeUnit(item.price, item.quantity);
+                const unit = format.computeUnit(item.price, item.quantity);
                 const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
                 const isDimmed = valid.length > 1 && minU !== maxU && !isBest;
                 const effectiveDecimals = currency.noDecimal ? 0 : decimals;
-                const unitDisplay = FORMAT.fmtDisplay(unit, currency.symbol, effectiveDecimals);
-                const rowFontSize = FORMAT.rowFontSize(FORMAT.displayAllLen(item, currency, qtyDecimals, unitDisplay));
+                const unitDisplay = format.fmtDisplay(unit, currency.symbol, effectiveDecimals);
+                const rowFontSize = format.rowFontSize(format.displayAllLen(item, currency, qtyDecimals, unitDisplay));
 
                 return (
-                  <View key={item.id} style={{ flexDirection: "row", gap: LAYOUT.gap, alignItems: "center" }}>
+                  <View key={item.id} style={{ flexDirection: "row", gap: layout.gap, alignItems: "center" }}>
                     <LabelIcon colorIndex={item.colorIndex} dark={dark} isDimmed={isDimmed} />
 
                     <EditCell

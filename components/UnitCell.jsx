@@ -1,19 +1,19 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { ACCENTS, LAYOUT, FONTS } from '../constants/DesignSystem';
-import { FORMAT } from '../utils/logic';
+import { accents, layout, fonts } from '../constants/DesignSystem';
+import { format } from '../utils/logic';
 
 export function UnitCell({ unit, isBest, colorIndex, T, dark, unitDisplay, effectiveDecimals, minU, showPercentage, rowFontSize, onCopy }) {
-  const col = ACCENTS[colorIndex % ACCENTS.length];
+  const col = accents[colorIndex % accents.length];
   const showPct = !isBest && unit !== null && minU !== null && unit > minU && showPercentage;
-  const pctLabel = showPct ? FORMAT.pctLabel(unit, minU) : null;
+  const pctLabel = showPct ? format.pctLabel(unit, minU) : null;
 
   return (
     <TouchableOpacity
       disabled={unit === null}
       onPress={() => unit !== null && onCopy(unit.toFixed(effectiveDecimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
       style={{
-        ...LAYOUT.getBoxStyle(false, isBest, col.accent, T, 'unit', dark),
+        ...layout.getBoxStyle(false, isBest, col.accent, T, 'unit', dark),
         flexDirection: 'column',
         alignItems: 'stretch',
         justifyContent: 'center',
@@ -32,7 +32,7 @@ export function UnitCell({ unit, isBest, colorIndex, T, dark, unitDisplay, effec
             fontWeight: "600",
             color: unit === null ? T.sub + "55" : T.text,
             textAlign: 'right',
-            fontFamily: FONTS.mono,
+            fontFamily: fonts.mono,
           }}
         >
           {unitDisplay}

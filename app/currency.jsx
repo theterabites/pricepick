@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import { useApp, CURRENCIES } from "../context/AppContext";
+import { useApp, currencies } from "../context/AppContext";
 
 export default function CurrencyScreen() {
   const { T, dark, currency, setCurrency } = useApp();
@@ -18,7 +18,7 @@ export default function CurrencyScreen() {
         <Text style={{ fontSize:17, fontWeight:"700", color:T.text }}>Currency</Text>
       </View>
       <ScrollView>
-        {CURRENCIES.map(c => (
+        {currencies.map(c => (
           <TouchableOpacity key={c.code} onPress={() => { setCurrency(c); router.back(); }} style={{
             flexDirection:"row", alignItems:"center", paddingHorizontal:20, paddingVertical:13,
             borderBottomWidth:1, borderBottomColor:T.border,

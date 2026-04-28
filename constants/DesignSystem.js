@@ -1,10 +1,10 @@
 import { Platform } from 'react-native';
 
-export const FONTS = {
+export const fonts = {
   mono: Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' }),
 };
 
-export const ACCENTS = [
+export const accents = [
   { accent:"#C62828", bg:"#FFEBEE" }, // Dark Red
   { accent:"#FFB300", bg:"#FFF8E1" }, // Golden Yellow
   { accent:"#FF007F", bg:"#FFF0F5" }, // Bright Hot Pink
@@ -14,9 +14,9 @@ export const ACCENTS = [
   { accent:"#9C27B0", bg:"#F3E5F5" }, // Purple
 ];
 
-export const LABELS = ["A","B","C","D","E","F","G"];
+export const labels = ["A","B","C","D","E","F","G"];
 
-export const LAYOUT = {
+export const layout = {
   rowHeight: 44,
   borderRadius: 12,
   borderWidth: 1.5,
@@ -26,19 +26,19 @@ export const LAYOUT = {
   labelBorderRadius: 7,
   fontSize: 18,
   headerFontSize: 10,
-  
+
   getBoxStyle: (active, isBest, accent, T, activeField, dark) => {
     const isUnit = activeField === 'unit';
     return {
-      height: LAYOUT.rowHeight,
+      height: layout.rowHeight,
       flex: 1,
       minWidth: 0,
-      borderRadius: LAYOUT.borderRadius,
+      borderRadius: layout.borderRadius,
       alignItems: "center",
-      justifyContent: "flex-end", // Uniform right alignment for all
+      justifyContent: "flex-end",
       flexDirection: 'row',
-      paddingHorizontal: 8, // Standard padding for all boxes
-      borderWidth: LAYOUT.borderWidth,
+      paddingHorizontal: 8,
+      borderWidth: layout.borderWidth,
       borderColor: active ? accent : (isBest ? accent : T.border),
       backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : (isUnit ? T.surface2 : T.surface)),
     };

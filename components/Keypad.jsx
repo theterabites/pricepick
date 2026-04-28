@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ACCENTS, LABELS } from '../constants/DesignSystem';
+import { accents, labels } from '../constants/DesignSystem';
 
 const ROWS = [
   ["7","8","9","÷"],
@@ -15,8 +15,8 @@ export function Keypad({ onKey, T, activeOp, onMove, activeCell, items, onAdd, o
   const insets = useSafeAreaInsets();
 
   const activeIdx = items.findIndex(i => i.id === activeCell?.id);
-  const currentLabel = activeIdx !== -1 ? LABELS[activeIdx] : "?";
-  const activeColor = activeIdx !== -1 ? ACCENTS[activeIdx % ACCENTS.length]?.accent : T.sub;
+  const currentLabel = activeIdx !== -1 ? labels[activeIdx] : "?";
+  const activeColor = activeIdx !== -1 ? accents[activeIdx % accents.length]?.accent : T.sub;
   const fieldLabel = activeCell?.field === "price" ? `Price (${currency.code})` : "Quantity";
 
   return (

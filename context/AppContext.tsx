@@ -3,7 +3,7 @@ import { useColorScheme } from "react-native";
 import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const CURRENCIES = [
+export const currencies = [
   { code:"THB", symbol:"฿",   name:"Thai Baht" },
   { code:"USD", symbol:"$",   name:"US Dollar" },
   { code:"EUR", symbol:"€",   name:"Euro" },
@@ -36,7 +36,7 @@ export const CURRENCIES = [
   { code:"LAK", symbol:"₭",   name:"Lao Kip" },
 ];
 
-const REGION_CURRENCY = {
+const regionCurrency = {
   TH:"THB",US:"USD",GB:"GBP",DE:"EUR",FR:"EUR",IT:"EUR",ES:"EUR",NL:"EUR",
   JP:"JPY",CN:"CNY",KR:"KRW",SG:"SGD",MY:"MYR",ID:"IDR",VN:"VND",IN:"INR",
   AU:"AUD",CA:"CAD",HK:"HKD",CH:"CHF",SE:"SEK",NO:"NOK",BR:"BRL",MX:"MXN",
@@ -49,18 +49,18 @@ function guessInitialCurrency() {
     const locales = Localization.getLocales();
     if (locales && locales.length > 0) {
       const regionCode = locales[0].regionCode;
-      const currencyCode = REGION_CURRENCY[regionCode];
+      const currencyCode = regionCurrency[regionCode];
       if (currencyCode) {
-        return CURRENCIES.find(c => c.code === currencyCode) || CURRENCIES[1];
+        return currencies.find(c => c.code === currencyCode) || currencies[1];
       }
     }
   } catch (e) {
     console.log("Guess currency error", e);
   }
-  return CURRENCIES[1];
+  return currencies[1];
 }
 
-export const THEMES = {
+export const themes = {
   light: {
     bg:"#F2F2F7", surface:"#FFFFFF", surface2:"#EFEFEF",
     border:"#E5E5EA", text:"#1A1A2E", sub:"#8E8E93",
@@ -82,7 +82,7 @@ const AppContext = createContext(null);
 export function AppProvider({ children }) {
   const colorScheme = useColorScheme();
   const [themeMode, setThemeMode] = useState("system");
-  const [currency, setCurrency] = useState(CURRENCIES[1]);
+  const [currency, setCurrency] = useState(currencies[1]);
   const [showPercentage, setShowPercentage] = useState(true);
   const [items, setItems] = useState([
     { id: 1, colorIndex: 0, quantity: "", price: "" },
@@ -93,7 +93,7 @@ export function AppProvider({ children }) {
 
   const nextId = useRef(3);
   const dark = themeMode === "dark" ? true : themeMode === "light" ? false : colorScheme === "dark";
-  const T = THEMES[dark ? "dark" : "light"];
+  const T = themes[dark ? "dark" : "light"];
 
   // Load settings on mount
   useEffect(() => {
@@ -105,7 +105,7 @@ export function AppProvider({ children }) {
 
         if (storedTheme) setThemeMode(storedTheme);
         if (storedCurrencyCode) {
-          const found = CURRENCIES.find(c => c.code === storedCurrencyCode);
+          const found = currencies.find(c => c.code === storedCurrencyCode);
           if (found) setCurrency(found);
         } else {
           setCurrency(guessInitialCurrency());

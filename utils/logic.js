@@ -1,4 +1,4 @@
-export const FORMAT = {
+export const format = {
   computeUnit: (price, quantity) => {
     const p = parseFloat(price), q = parseFloat(quantity);
     return (p > 0 && q > 0) ? p / q : null;
@@ -42,8 +42,8 @@ export const FORMAT = {
 
   sortItems: (items) => {
     return [...items].sort((a, b) => {
-      const unitA = FORMAT.computeUnit(a.price, a.quantity);
-      const unitB = FORMAT.computeUnit(b.price, b.quantity);
+      const unitA = format.computeUnit(a.price, a.quantity);
+      const unitB = format.computeUnit(b.price, b.quantity);
       if (unitA === null) return 1;
       if (unitB === null) return -1;
       return unitA - unitB;
