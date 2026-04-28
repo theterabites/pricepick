@@ -94,9 +94,10 @@ export default function App() {
     if (key === ".") { if (!cur.includes(".")) setF(id, field, cur + "."); return; }
     // Digit limit: max 9 integer digits, max 2 decimal places for price / 4 for quantity
     const parts = cur.split(".");
-    if (parts[0].length >= 9) return;
+    const inDecimal = parts.length > 1;
+    if (!inDecimal && parts[0].length >= 9) return;
     const maxDec = field === "price" ? 2 : 4;
-    if (parts.length > 1 && parts[1].length >= maxDec) return;
+    if (inDecimal && parts[1].length >= maxDec) return;
     setF(id, field, cur + key);
   };
 
