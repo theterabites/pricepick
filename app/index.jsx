@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from "expo-router";
@@ -158,7 +158,6 @@ export default function App() {
 
       {/* Item list */}
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }} showsVerticalScrollIndicator={false} scrollEnabled={false}>
-        <TouchableWithoutFeedback onPress={() => setActiveCell(null)}>
           <View style={{ flex: 1 }}>
 
             {/* Column headers */}
@@ -214,7 +213,6 @@ export default function App() {
 
             <BestBar items={items} />
           </View>
-        </TouchableWithoutFeedback>
       </ScrollView>
 
       <Keypad
