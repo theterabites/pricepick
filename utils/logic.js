@@ -56,18 +56,19 @@ export const format = {
     return pct > 999 ? `×${Math.round(unit / minU)}` : `+${pct}%`;
   },
 
-  // Returns the max display length across price, quantity, and unit cells for a row
-  displayAllLen: (item, currency, qtyDecimals, unitDisplay) => {
+  priceCellLen: (item, currency) => {
     const symLen = currency.symbol.length;
-    const pLen = symLen + (item.price
+    return symLen + (item.price
       ? (() => { const n = parseFloat(item.price); return isNaN(n) ? item.price.length : n.toFixed(currency.noDecimal ? 0 : 2).replace(/\B(?=(\d{3})+(?!\d))/g, ",").length; })()
       : (currency.noDecimal ? 1 : 4));
-    const qLen = item.quantity
-      ? (() => { const n = parseFloat(item.quantity); return isNaN(n) ? item.quantity.length : (qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n)).length; })()
-      : 1;
-    return Math.max(pLen, qLen, unitDisplay.length);
   },
 
-  // Maps a max display length to a font size; all three boxes in a row use this
-  rowFontSize: (allLen) => allLen > 11 ? 10 : allLen > 9 ? 12 : allLen > 7 ? 15 : 18,
+  qtyCellLen: (item, qtyDecimals) => {
+    return item.quantity
+      ? (() => { const n = parseFloat(item.quantity); return isNaN(n) ? item.quantity.length : (qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n)).length; })()
+      : 1;
+  },
+
+  // Maps a display length to a font size
+  rowFontSize: (len) => len > 11 ? 10 : len > 9 ? 12 : len > 7 ? 15 : 18,
 };

@@ -88,9 +88,9 @@ The per-unit cell uses a column layout (spreads `getBoxStyle` then overrides `fl
 This separates the elements so the unit price always gets the full row width.
 
 **Adaptive font size (`rowFontSize`):**
-Computed per item from `allLen = max(pLen, qLen, uLen)` where each length reflects the actual displayed string. All three boxes (price, qty, unit) use the same `rowFontSize` so they scale together:
+Each cell computes its own font size independently from its own display length — price, quantity, and unit are not linked. `format.priceCellLen`, `format.qtyCellLen`, and `unitDisplay.length` are each passed to `format.rowFontSize` separately:
 ```
-allLen > 11 → 10px | allLen > 9 → 12px | allLen > 7 → 15px | default → 18px
+len > 11 → 10px | len > 9 → 12px | len > 7 → 15px | default → 18px
 ```
 
 **No-decimal currencies (JPY, KRW, IDR, VND):**

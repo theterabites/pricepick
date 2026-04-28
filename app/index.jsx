@@ -92,6 +92,11 @@ export default function App() {
       return;
     }
     if (key === ".") { if (!cur.includes(".")) setF(id, field, cur + "."); return; }
+    // Digit limit: max 9 integer digits, max 2 decimal places for price / 4 for quantity
+    const parts = cur.split(".");
+    if (parts[0].length >= 9) return;
+    const maxDec = field === "price" ? 2 : 4;
+    if (parts.length > 1 && parts[1].length >= maxDec) return;
     setF(id, field, cur + key);
   };
 
@@ -168,7 +173,9 @@ export default function App() {
                 const isDimmed = valid.length > 1 && minU !== maxU && !isBest;
                 const effectiveDecimals = currency.noDecimal ? 0 : decimals;
                 const unitDisplay = format.fmtDisplay(unit, currency.symbol, effectiveDecimals);
-                const rowFontSize = format.rowFontSize(format.displayAllLen(item, currency, qtyDecimals, unitDisplay));
+                const priceFontSize = format.rowFontSize(format.priceCellLen(item, currency));
+                const qtyFontSize = format.rowFontSize(format.qtyCellLen(item, qtyDecimals));
+                const unitFontSize = format.rowFontSize(unitDisplay.length);
 
                 return (
                   <View key={item.id} style={{ flexDirection: "row", gap: layout.gap, alignItems: "center" }}>
@@ -178,14 +185,14 @@ export default function App() {
                       value={item.price} active={activeCell?.id === item.id && activeCell.field === "price"}
                       isBest={isBest} field="price" colorIndex={item.colorIndex} T={T} dark={dark}
                       currencySymbol={currency.symbol} noDecimal={!!currency.noDecimal}
-                      fontSize={rowFontSize} myOp={pendingOp?.id === item.id && pendingOp?.field === "price" ? pendingOp : null}
+                      fontSize={priceFontSize} myOp={pendingOp?.id === item.id && pendingOp?.field === "price" ? pendingOp : null}
                       onTap={() => tapCell(item.id, "price")}
                     />
 
                     <EditCell
                       value={item.quantity} active={activeCell?.id === item.id && activeCell.field === "quantity"}
                       isBest={isBest} field="quantity" colorIndex={item.colorIndex} T={T} dark={dark}
-                      fontSize={rowFontSize} qtyDecimals={qtyDecimals}
+                      fontSize={qtyFontSize} qtyDecimals={qtyDecimals}
                       myOp={pendingOp?.id === item.id && pendingOp?.field === "quantity" ? pendingOp : null}
                       onTap={() => tapCell(item.id, "quantity")}
                     />
@@ -194,7 +201,7 @@ export default function App() {
                       unit={unit} isBest={isBest} colorIndex={item.colorIndex} T={T} dark={dark}
                       unitDisplay={unitDisplay} effectiveDecimals={effectiveDecimals}
                       minU={minU} showPercentage={showPercentage}
-                      rowFontSize={rowFontSize} onCopy={copyToClipboard}
+                      rowFontSize={unitFontSize} onCopy={copyToClipboard}
                     />
                   </View>
                 );
