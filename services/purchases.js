@@ -9,10 +9,12 @@ const API_KEY = Platform.select({
 const ENTITLEMENT_ID = 'remove_ads';
 
 export function initPurchases() {
+  if (!API_KEY) return;
   Purchases.configure({ apiKey: API_KEY });
 }
 
 export async function getIsAdFree() {
+  if (!API_KEY) return false;
   try {
     const info = await Purchases.getCustomerInfo();
     return !!info.entitlements.active[ENTITLEMENT_ID];
