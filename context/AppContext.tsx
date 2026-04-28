@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useRef } from "r
 import { useColorScheme } from "react-native";
 import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { initPurchases, getIsAdFree } from '../services/purchases';
 
 export const currencies = [
   { code:"THB", symbol:"฿",   name:"Thai Baht" },
@@ -90,10 +91,17 @@ export function AppProvider({ children }) {
   ]);
   const [originalItems, setOriginalItems] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isAdFree, setIsAdFree] = useState(false);
 
   const nextId = useRef(3);
   const dark = themeMode === "dark" ? true : themeMode === "light" ? false : colorScheme === "dark";
   const T = themes[dark ? "dark" : "light"];
+
+  // Init purchases and check entitlement on mount
+  useEffect(() => {
+    initPurchases();
+    getIsAdFree().then(setIsAdFree);
+  }, []);
 
   // Load settings on mount
   useEffect(() => {
@@ -145,7 +153,8 @@ export function AppProvider({ children }) {
       items, setItems, nextId,
       showPercentage, setShowPercentage,
       isLoaded,
-      originalItems, setOriginalItems
+      originalItems, setOriginalItems,
+      isAdFree, setIsAdFree,
     }}>
       {children}
     </AppContext.Provider>

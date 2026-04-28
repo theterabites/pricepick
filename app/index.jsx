@@ -12,14 +12,15 @@ import { EditCell } from "../components/EditCell";
 import { UnitCell } from "../components/UnitCell";
 import { BestBar } from "../components/BestBar";
 import { Keypad } from "../components/Keypad";
+import { AdBanner, AD_BAR_HEIGHT } from "../services/ads";
 
 export default function App() {
-  const { T, dark, currency, items, setItems, nextId, showPercentage, originalItems, setOriginalItems } = useApp();
+  const { T, dark, currency, items, setItems, nextId, showPercentage, originalItems, setOriginalItems, isAdFree } = useApp();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-  const reservedHeight = 60 + 40 + 260 + insets.top + insets.bottom;
+  const reservedHeight = (isAdFree ? 0 : AD_BAR_HEIGHT) + 40 + 260 + insets.top + insets.bottom;
   const maxItems = Math.min(7, Math.max(2, Math.floor((SCREEN_HEIGHT - reservedHeight) / (layout.rowHeight + layout.gap))));
 
   const [activeCell, setActiveCell] = useState({ id: 1, field: "price" });
@@ -128,10 +129,7 @@ export default function App() {
     <SafeAreaView style={{ flex: 1, backgroundColor: T.bg }} edges={['top', 'left', 'right']}>
       <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
 
-      {/* Ad placeholder */}
-      <View style={{ width: '100%', height: 50, backgroundColor: dark ? '#2C2C2E' : '#E5E5EA', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 0.5, borderBottomColor: T.border }}>
-        <Text style={{ color: T.sub, fontSize: 10, fontWeight: '600' }}>ADVERTISEMENT</Text>
-      </View>
+      <AdBanner />
 
       {/* Header */}
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 14, paddingTop: 14, paddingBottom: 6 }}>
