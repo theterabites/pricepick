@@ -1,14 +1,12 @@
 import Purchases from 'react-native-purchases';
 import { Platform } from 'react-native';
 
-// ─── Replace these with your real RevenueCat API keys from app.revenuecat.com ─
 const API_KEY = Platform.select({
-  android: 'YOUR_REVENUECAT_ANDROID_KEY',
-  ios:     'YOUR_REVENUECAT_IOS_KEY',
+  android: process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY || '',
+  ios:     process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY     || '',
 });
 
 const ENTITLEMENT_ID = 'remove_ads';
-// ─────────────────────────────────────────────────────────────────────────────
 
 export function initPurchases() {
   Purchases.configure({ apiKey: API_KEY });

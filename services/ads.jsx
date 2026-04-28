@@ -3,14 +3,11 @@ import { View, Platform } from 'react-native';
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 import { useApp } from '../context/AppContext';
 
-// ─── Replace these with your real AdMob unit IDs from admob.google.com ──────
-const UNIT_ID = __DEV__
-  ? TestIds.BANNER
-  : Platform.select({
-      android: 'YOUR_ANDROID_BANNER_UNIT_ID',
-      ios:     'YOUR_IOS_BANNER_UNIT_ID',
-    });
-// ─────────────────────────────────────────────────────────────────────────────
+// Falls back to Google's test ID in dev or if env var is not set
+const UNIT_ID = Platform.select({
+  android: process.env.EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID || TestIds.BANNER,
+  ios:     process.env.EXPO_PUBLIC_ADMOB_IOS_BANNER_ID     || TestIds.BANNER,
+});
 
 export const AD_BAR_HEIGHT = 50;
 
