@@ -6,13 +6,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm install                                          # Install dependencies
-npx expo start                                       # Dev server (Expo Go — no native modules)
-eas build --platform android --profile preview       # Build APK for emulator/device testing
-eas build --platform android --profile production    # Build signed AAB for Play Store
+npx expo run:android                                 # Local debug build — installs directly on emulator/device
+eas build --platform android --profile preview       # Cloud APK build for emulator/device testing
+eas build --platform android --profile production    # Cloud signed AAB for Play Store
 npm run lint                                         # Run ESLint via expo lint
 ```
 
-**Expo Go cannot be used for testing** — `react-native-google-mobile-ads` and `react-native-purchases` are native modules and will crash in Expo Go. Always test with an EAS build installed on a device or emulator.
+**Expo Go cannot be used for testing** — `react-native-google-mobile-ads` and `react-native-purchases` are native modules and will crash in Expo Go. Use `npx expo run:android` (local) or an EAS build.
+
+**Local build requires JAVA_HOME.** `npx expo run:android` calls Gradle which needs Java. On this machine, Android Studio's bundled JDK is the source:
+```bash
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+```
+This is already saved in `~/.zshrc` and `~/.zprofile`, but if a new terminal doesn't pick it up, prepend the export before the build command.
+
+**Signature conflict on reinstall.** Installing a local debug build over an EAS-signed build (or vice versa) fails with `INSTALL_FAILED_UPDATE_INCOMPATIBLE`. Fix: uninstall first.
+```bash
+~/Library/Android/sdk/platform-tools/adb uninstall com.theterabites.pricepick
+```
+
+**Real ads require a physical device.** AdMob always serves test ads on emulators regardless of the ad unit ID. Connect a physical Android device with USB debugging enabled to see real ads.
 
 There is no test suite in this project.
 
@@ -95,7 +108,7 @@ For EAS cloud builds, secrets must be added in the Expo dashboard (`.env` is git
 | File | Route | Purpose |
 |---|---|---|
 | `app/index.jsx` | `/` | Main price comparison screen |
-| `app/settings.jsx` | `/settings` | Settings hub (includes Remove Ads if not ad-free) |
+| `app/settings.jsx` | `/settings` | Settings hub (Remove Ads section hidden for v1 — deferred to v2) |
 | `app/currency.jsx` | `/currency` | Currency picker |
 | `app/theme.jsx` | `/theme` | Theme picker |
 | `app/percentage.jsx` | `/percentage` | Toggle percentage display |
@@ -121,7 +134,7 @@ Items have both `id` (monotonically increasing, used for React keys and state lo
 `pendingOp` stores `{ id, field, value, op }` for deferred arithmetic; cleared on cell switch.
 
 **Blank area tap — do nothing:**
-There is no `TouchableWithoutFeedback` wrapper on the list. Tapping blank space keeps the active cell selected so the nav bar, arrows, and add/remove buttons stay functional. Do not re-add a dismiss-on-tap behaviour.
+The item list is a plain `View` (not ScrollView). On Android, `ScrollView` with `scrollEnabled={false}` still intercepts touch events in empty areas, which cleared `activeCell` and hid the keypad nav bar. Replaced with `View` to let blank-area taps fall through harmlessly. Do not re-wrap in ScrollView or add a dismiss-on-tap handler.
 
 **Input rules (mobile banking style):**
 - Max 9 integer digits; max 2 decimal places for price, 4 for quantity
