@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, ScrollView, StatusBar, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, StatusBar, Dimensions } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from "expo-router";
@@ -157,63 +157,61 @@ export default function App() {
       </View>
 
       {/* Item list */}
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }} showsVerticalScrollIndicator={false} scrollEnabled={false}>
-          <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingBottom: 20 }}>
 
-            {/* Column headers */}
-            <View style={{ flexDirection: "row", gap: layout.gap, paddingHorizontal: layout.screenPadding, paddingVertical: 5, alignItems: "center" }}>
-              <View style={{ width: layout.labelWidth }} />
-              <ColHeader label="price" T={T} />
-              <ColHeader label="quantity" T={T} />
-              <ColHeader label="per unit" T={T} muted />
-            </View>
+        {/* Column headers */}
+        <View style={{ flexDirection: "row", gap: layout.gap, paddingHorizontal: layout.screenPadding, paddingVertical: 5, alignItems: "center" }}>
+          <View style={{ width: layout.labelWidth }} />
+          <ColHeader label="price" T={T} />
+          <ColHeader label="quantity" T={T} />
+          <ColHeader label="per unit" T={T} muted />
+        </View>
 
-            {/* Rows */}
-            <View style={{ paddingHorizontal: layout.screenPadding, gap: layout.gap }}>
-              {items.map((item) => {
-                const unit = format.computeUnit(item.price, item.quantity);
-                const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
-                const isDimmed = valid.length > 1 && minU !== maxU && !isBest;
-                const effectiveDecimals = currency.noDecimal ? 0 : decimals;
-                const unitDisplay = format.fmtDisplay(unit, currency.symbol, effectiveDecimals);
-                const priceFontSize = format.rowFontSize(format.priceCellLen(item, currency));
-                const qtyFontSize = format.rowFontSize(format.qtyCellLen(item, qtyDecimals));
-                const unitFontSize = format.rowFontSize(unitDisplay.length);
+        {/* Rows */}
+        <View style={{ paddingHorizontal: layout.screenPadding, gap: layout.gap }}>
+          {items.map((item) => {
+            const unit = format.computeUnit(item.price, item.quantity);
+            const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
+            const isDimmed = valid.length > 1 && minU !== maxU && !isBest;
+            const effectiveDecimals = currency.noDecimal ? 0 : decimals;
+            const unitDisplay = format.fmtDisplay(unit, currency.symbol, effectiveDecimals);
+            const priceFontSize = format.rowFontSize(format.priceCellLen(item, currency));
+            const qtyFontSize = format.rowFontSize(format.qtyCellLen(item, qtyDecimals));
+            const unitFontSize = format.rowFontSize(unitDisplay.length);
 
-                return (
-                  <View key={item.id} style={{ flexDirection: "row", gap: layout.gap, alignItems: "center" }}>
-                    <LabelIcon colorIndex={item.colorIndex} dark={dark} isDimmed={isDimmed} />
+            return (
+              <View key={item.id} style={{ flexDirection: "row", gap: layout.gap, alignItems: "center" }}>
+                <LabelIcon colorIndex={item.colorIndex} dark={dark} isDimmed={isDimmed} />
 
-                    <EditCell
-                      value={item.price} active={activeCell?.id === item.id && activeCell.field === "price"}
-                      isBest={isBest} field="price" colorIndex={item.colorIndex} T={T} dark={dark}
-                      currencySymbol={currency.symbol} noDecimal={!!currency.noDecimal}
-                      fontSize={priceFontSize} myOp={pendingOp?.id === item.id && pendingOp?.field === "price" ? pendingOp : null}
-                      onTap={() => tapCell(item.id, "price")}
-                    />
+                <EditCell
+                  value={item.price} active={activeCell?.id === item.id && activeCell.field === "price"}
+                  isBest={isBest} field="price" colorIndex={item.colorIndex} T={T} dark={dark}
+                  currencySymbol={currency.symbol} noDecimal={!!currency.noDecimal}
+                  fontSize={priceFontSize} myOp={pendingOp?.id === item.id && pendingOp?.field === "price" ? pendingOp : null}
+                  onTap={() => tapCell(item.id, "price")}
+                />
 
-                    <EditCell
-                      value={item.quantity} active={activeCell?.id === item.id && activeCell.field === "quantity"}
-                      isBest={isBest} field="quantity" colorIndex={item.colorIndex} T={T} dark={dark}
-                      fontSize={qtyFontSize} qtyDecimals={qtyDecimals}
-                      myOp={pendingOp?.id === item.id && pendingOp?.field === "quantity" ? pendingOp : null}
-                      onTap={() => tapCell(item.id, "quantity")}
-                    />
+                <EditCell
+                  value={item.quantity} active={activeCell?.id === item.id && activeCell.field === "quantity"}
+                  isBest={isBest} field="quantity" colorIndex={item.colorIndex} T={T} dark={dark}
+                  fontSize={qtyFontSize} qtyDecimals={qtyDecimals}
+                  myOp={pendingOp?.id === item.id && pendingOp?.field === "quantity" ? pendingOp : null}
+                  onTap={() => tapCell(item.id, "quantity")}
+                />
 
-                    <UnitCell
-                      unit={unit} isBest={isBest} colorIndex={item.colorIndex} T={T} dark={dark}
-                      unitDisplay={unitDisplay} effectiveDecimals={effectiveDecimals}
-                      minU={minU} showPercentage={showPercentage}
-                      rowFontSize={unitFontSize} onCopy={copyToClipboard}
-                    />
-                  </View>
-                );
-              })}
-            </View>
+                <UnitCell
+                  unit={unit} isBest={isBest} colorIndex={item.colorIndex} T={T} dark={dark}
+                  unitDisplay={unitDisplay} effectiveDecimals={effectiveDecimals}
+                  minU={minU} showPercentage={showPercentage}
+                  rowFontSize={unitFontSize} onCopy={copyToClipboard}
+                />
+              </View>
+            );
+          })}
+        </View>
 
-            <BestBar items={items} />
-          </View>
-      </ScrollView>
+        <BestBar items={items} />
+      </View>
 
       <Keypad
         onKey={handleKey} T={T} activeOp={pendingOp?.op ?? null} onMove={moveCell}
