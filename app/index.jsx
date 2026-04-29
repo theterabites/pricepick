@@ -144,7 +144,7 @@ export default function App() {
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 14, paddingTop: 14, paddingBottom: 6 }}>
         <View style={{ width: 100 }}>
           <TouchableOpacity onPress={reset} style={{ backgroundColor: colors.danger, borderRadius: 11, paddingHorizontal: 10, height: 36, alignItems: "center", justifyContent: "center", alignSelf: 'flex-start' }}>
-            <Text style={{ color: '#fff', fontSize: 13 }}>🔄</Text>
+            <Text style={{ color: '#fff', fontSize: 11, fontWeight: '800' }}>🔄 RESET</Text>
           </TouchableOpacity>
         </View>
         <Text style={{ fontSize: 22, fontWeight: "800", color: T.text, flex: 1, textAlign: 'center' }}>PricePick</Text>
