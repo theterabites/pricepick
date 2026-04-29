@@ -20,7 +20,8 @@ export default function App() {
   const insets = useSafeAreaInsets();
   const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-  const reservedHeight = (isAdFree ? 0 : AD_BAR_HEIGHT) + 40 + 260 + insets.top + insets.bottom;
+  // 56 = header row, 326 = keypad (excl. insets.bottom), 22 = col-header row, layout.rowHeight = BestBar
+  const reservedHeight = (isAdFree ? 0 : AD_BAR_HEIGHT) + 56 + 326 + 22 + layout.rowHeight + insets.top + insets.bottom;
   const maxItems = Math.min(7, Math.max(2, Math.floor((SCREEN_HEIGHT - reservedHeight) / (layout.rowHeight + layout.gap))));
 
   const [activeCell, setActiveCell] = useState({ id: 1, field: "price" });
