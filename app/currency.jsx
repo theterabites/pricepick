@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, StatusBar, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useApp, currencies } from "../context/AppContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { colors } from "../constants/DesignSystem";
+import { AdBanner } from "../services/ads";
 
 export default function CurrencyScreen() {
-  const { T, dark, currency, setCurrency } = useApp();
+  const { T, currency, setCurrency } = useApp();
   const router = useRouter();
   const [query, setQuery] = useState("");
 
@@ -20,8 +21,8 @@ export default function CurrencyScreen() {
 
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
-      <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
       <ScreenHeader title="Currency" T={T} />
+      <AdBanner />
       <View style={{ paddingHorizontal:14, paddingVertical:10, borderBottomWidth:1, borderBottomColor:T.border }}>
         <TextInput
           value={query}

@@ -1,13 +1,14 @@
 import React from "react";
-import { View, Text, TouchableOpacity, ScrollView, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { colors } from "../constants/DesignSystem";
+import { AdBanner } from "../services/ads";
 
 export default function ThemeScreen() {
-  const { T, dark, themeMode, setThemeMode } = useApp();
+  const { T, themeMode, setThemeMode } = useApp();
   const router = useRouter();
 
   const options = [
@@ -18,8 +19,8 @@ export default function ThemeScreen() {
 
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
-      <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
       <ScreenHeader title="Theme" T={T} />
+      <AdBanner />
       <ScrollView>
         {options.map(opt => (
           <TouchableOpacity key={opt.value} onPress={() => { setThemeMode(opt.value); router.back(); }} style={{

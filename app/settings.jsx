@@ -1,12 +1,13 @@
 import React from "react";
-import { View, Text, TouchableOpacity, ScrollView, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
 import { ScreenHeader } from "../components/ScreenHeader";
+import { AdBanner } from "../services/ads";
 
 export default function SettingsScreen() {
-  const { T, dark, themeMode, currency, showPercentage } = useApp();
+  const { T, themeMode, currency, showPercentage } = useApp();
   const router = useRouter();
 
   const Row = ({ icon, label, right, onClick, noBorder }) => (
@@ -23,8 +24,8 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
-      <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
       <ScreenHeader title="Settings" T={T} />
+      <AdBanner />
       <ScrollView style={{ flex:1 }}>
         <Text style={{ paddingHorizontal:20, paddingTop:14, paddingBottom:6, fontSize:11, fontWeight:"700", color:T.sub, textTransform:"uppercase" }}>
           Preferences

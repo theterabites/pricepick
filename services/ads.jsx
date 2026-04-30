@@ -12,7 +12,7 @@ const UNIT_ID = Platform.select({
 export const AD_BAR_HEIGHT = 50;
 
 export function AdBanner() {
-  const { isAdFree, T, dark } = useApp();
+  const { isAdFree, T } = useApp();
 
   if (isAdFree) return null;
 
@@ -24,7 +24,7 @@ export function AdBanner() {
       justifyContent: 'center',
       borderBottomWidth: 0.5,
       borderBottomColor: T.border,
-      backgroundColor: dark ? '#2C2C2E' : '#E5E5EA',
+      backgroundColor: T.surface2,
     }}>
       <BannerAd
         unitId={UNIT_ID}
