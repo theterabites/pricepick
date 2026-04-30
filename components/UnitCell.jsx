@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { accents, layout, fonts, colors } from '../constants/DesignSystem';
 import { format } from '../utils/logic';
 
-export function UnitCell({ unit, isBest, colorIndex, T, dark, unitDisplay, effectiveDecimals, minU, showPercentage, rowFontSize, onCopy }) {
+
+export function UnitCell({ unit, isBest, colorIndex, T, dark, unitDisplay, effectiveDecimals, minU, showPercentage, rowFontSize, onCopy, indianComma }) {
   const col = accents[colorIndex % accents.length];
   const showPct = !isBest && unit !== null && minU !== null && unit > minU && showPercentage;
   const pctLabel = showPct ? format.pctLabel(unit, minU) : null;
@@ -11,7 +12,7 @@ export function UnitCell({ unit, isBest, colorIndex, T, dark, unitDisplay, effec
   return (
     <TouchableOpacity
       disabled={unit === null}
-      onPress={() => unit !== null && onCopy(unit.toFixed(effectiveDecimals).replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
+      onPress={() => unit !== null && onCopy(format.fmtComma(unit.toFixed(effectiveDecimals), indianComma))}
       style={{
         ...layout.getBoxStyle(false, isBest, col.accent, T, 'unit', dark),
         flexDirection: 'column',

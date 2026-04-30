@@ -175,7 +175,7 @@ export default function App() {
             const isBest = unit !== null && unit === minU && valid.length > 1 && minU !== maxU;
             const isDimmed = valid.length > 1 && minU !== maxU && !isBest;
             const effectiveDecimals = currency.noDecimal ? 0 : decimals;
-            const unitDisplay = format.fmtDisplay(unit, currency.symbol, effectiveDecimals);
+            const unitDisplay = format.fmtDisplay(unit, currency.symbol, effectiveDecimals, !!currency.indianComma);
             const priceFontSize = format.rowFontSize(format.priceCellLen(item, currency));
             const qtyFontSize = format.rowFontSize(format.qtyCellLen(item, qtyDecimals));
             const unitFontSize = format.rowFontSize(unitDisplay.length);
@@ -187,7 +187,7 @@ export default function App() {
                 <EditCell
                   value={item.price} active={activeCell?.id === item.id && activeCell.field === "price"}
                   isBest={isBest} field="price" colorIndex={item.colorIndex} T={T} dark={dark}
-                  currencySymbol={currency.symbol} noDecimal={!!currency.noDecimal}
+                  currencySymbol={currency.symbol} noDecimal={!!currency.noDecimal} indianComma={!!currency.indianComma}
                   fontSize={priceFontSize} myOp={pendingOp?.id === item.id && pendingOp?.field === "price" ? pendingOp : null}
                   onTap={() => tapCell(item.id, "price")}
                 />
@@ -204,7 +204,7 @@ export default function App() {
                   unit={unit} isBest={isBest} colorIndex={item.colorIndex} T={T} dark={dark}
                   unitDisplay={unitDisplay} effectiveDecimals={effectiveDecimals}
                   minU={minU} showPercentage={showPercentage}
-                  rowFontSize={unitFontSize} onCopy={copyToClipboard}
+                  rowFontSize={unitFontSize} onCopy={copyToClipboard} indianComma={!!currency.indianComma}
                 />
               </View>
             );

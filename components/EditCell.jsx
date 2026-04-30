@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { accents, layout, fonts } from '../constants/DesignSystem';
+import { format } from '../utils/logic';
 
-export function EditCell({ value, active, isBest, field, colorIndex, T, dark, currencySymbol, noDecimal, fontSize, onTap, myOp, qtyDecimals }) {
+export function EditCell({ value, active, isBest, field, colorIndex, T, dark, currencySymbol, noDecimal, indianComma, fontSize, onTap, myOp, qtyDecimals }) {
   const accent = accents[colorIndex % accents.length].accent;
   const empty = !value;
   const [blink, setBlink] = useState(true);
@@ -18,12 +19,12 @@ export function EditCell({ value, active, isBest, field, colorIndex, T, dark, cu
     if (currencySymbol) {
       if (active) {
         const parts = value.split(".");
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        parts[0] = indianComma ? format.fmtIndian(parts[0]) : parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         return parts.join(".");
       }
       const n = parseFloat(value);
       if (isNaN(n)) return value;
-      return n.toFixed(noDecimal ? 0 : 2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return format.fmtComma(n.toFixed(noDecimal ? 0 : 2), indianComma);
     }
     if (active) return value;
     const n = parseFloat(value);

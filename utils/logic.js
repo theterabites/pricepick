@@ -34,10 +34,25 @@ export const format = {
     return Math.min(4, maxD);
   },
 
-  fmtDisplay: (unit, sym, decimals) => {
+  // Indian lakh/crore: last 3 digits, then groups of 2 from the right
+  fmtIndian: (intStr) => {
+    if (intStr.length <= 3) return intStr;
+    const lastThree = intStr.slice(-3);
+    const remaining = intStr.slice(0, -3);
+    return remaining.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree;
+  },
+
+  fmtComma: (fixed, indianComma) => {
+    const [intPart, decPart] = fixed.split('.');
+    const formatted = indianComma
+      ? format.fmtIndian(intPart)
+      : intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return decPart !== undefined ? formatted + '.' + decPart : formatted;
+  },
+
+  fmtDisplay: (unit, sym, decimals, indianComma) => {
     if (unit === null) return `${sym}—`;
-    const formatted = unit.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return `${sym}${formatted}`;
+    return `${sym}${format.fmtComma(unit.toFixed(decimals), indianComma)}`;
   },
 
   sortItems: (items) => {
@@ -59,7 +74,7 @@ export const format = {
   priceCellLen: (item, currency) => {
     const symLen = currency.symbol.length;
     return symLen + (item.price
-      ? (() => { const n = parseFloat(item.price); return isNaN(n) ? item.price.length : n.toFixed(currency.noDecimal ? 0 : 2).replace(/\B(?=(\d{3})+(?!\d))/g, ",").length; })()
+      ? (() => { const n = parseFloat(item.price); return isNaN(n) ? item.price.length : format.fmtComma(n.toFixed(currency.noDecimal ? 0 : 2), !!currency.indianComma).length; })()
       : (currency.noDecimal ? 1 : 4));
   },
 
