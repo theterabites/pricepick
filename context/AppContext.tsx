@@ -2,8 +2,8 @@ import React, { createContext, useContext, useState, useEffect, useRef } from "r
 import { useColorScheme } from "react-native";
 import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import mobileAds from 'react-native-google-mobile-ads';
 import { initPurchases, getIsAdFree } from '../services/purchases';
-import { initAds } from '../services/ads';
 
 export const currencies = [
   { code:"THB", symbol:"฿",   name:"Thai Baht" },
@@ -100,7 +100,7 @@ export function AppProvider({ children }) {
 
   // Init ads and purchases on mount
   useEffect(() => {
-    initAds();
+    mobileAds().initialize().catch(() => {});
     initPurchases();
     getIsAdFree().then(setIsAdFree);
   }, []);
