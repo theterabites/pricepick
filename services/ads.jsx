@@ -30,8 +30,8 @@ export function AdBanner() {
         unitId={UNIT_ID}
         size={BannerAdSize.BANNER}
         requestOptions={{ requestNonPersonalizedAdsOnly: false }}
-        onAdLoaded={() => console.log('[AdMob] Banner loaded')}
-        onAdFailedToLoad={(error) => console.error('[AdMob] Banner failed:', error)}
+        onAdLoaded={__DEV__ ? () => console.log('[AdMob] Banner loaded') : undefined}
+        onAdFailedToLoad={__DEV__ ? (e) => console.error('[AdMob] Banner failed:', e) : undefined}
       />
     </View>
   );

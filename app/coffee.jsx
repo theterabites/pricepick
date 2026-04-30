@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, TextInput, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 
 export default function CoffeeScreen() {
-  const { T, dark } = useApp();
+  const { T } = useApp();
   const router = useRouter();
   const [coffeeAmt, setCoffeeAmt] = useState(1);
   const [coffeeDone, setCoffeeDone] = useState(false);
@@ -15,7 +15,6 @@ export default function CoffeeScreen() {
 
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
-      <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
       <ScreenHeader title="Buy me a coffee" T={T} />
       <View style={{ flex:1, alignItems:"center", justifyContent:"center", padding:24, gap:22 }}>
         <Text style={{ fontSize:64 }}>☕</Text>

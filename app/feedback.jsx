@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, TextInput, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useApp } from "../context/AppContext";
@@ -7,14 +7,13 @@ import { ScreenHeader } from "../components/ScreenHeader";
 import { colors } from "../constants/DesignSystem";
 
 export default function FeedbackScreen() {
-  const { T, dark } = useApp();
+  const { T } = useApp();
   const router = useRouter();
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackSent, setFeedbackSent] = useState(false);
 
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
-      <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
       <ScreenHeader title="Send Feedback" T={T} />
       <View style={{ padding:24, gap:16 }}>
         <Text style={{ color:T.sub, fontSize:14, lineHeight:22 }}>
