@@ -20,7 +20,6 @@ export default function ThemeScreen() {
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
       <ScreenHeader title="Theme" T={T} />
-      <AdBanner />
       <ScrollView>
         {options.map(opt => (
           <TouchableOpacity key={opt.value} onPress={() => { setThemeMode(opt.value); router.back(); }} style={{
@@ -33,6 +32,7 @@ export default function ThemeScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <AdBanner />
     </SafeAreaView>
   );
 }

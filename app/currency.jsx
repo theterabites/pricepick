@@ -22,7 +22,6 @@ export default function CurrencyScreen() {
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
       <ScreenHeader title="Currency" T={T} />
-      <AdBanner />
       <View style={{ paddingHorizontal:14, paddingVertical:10, borderBottomWidth:1, borderBottomColor:T.border }}>
         <TextInput
           value={query}
@@ -51,6 +50,7 @@ export default function CurrencyScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <AdBanner />
     </SafeAreaView>
   );
 }

@@ -19,7 +19,6 @@ export default function PercentageScreen() {
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
       <ScreenHeader title="Show Percentage" T={T} />
-      <AdBanner />
       <ScrollView>
         {options.map(opt => (
           <TouchableOpacity key={String(opt.value)} onPress={() => { setShowPercentage(opt.value); router.back(); }} style={{
@@ -32,6 +31,7 @@ export default function PercentageScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <AdBanner />
     </SafeAreaView>
   );
 }
