@@ -25,7 +25,6 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:T.bg }}>
       <ScreenHeader title="Settings" T={T} />
-      <AdBanner />
       <ScrollView style={{ flex:1 }}>
         <Text style={{ paddingHorizontal:20, paddingTop:14, paddingBottom:6, fontSize:11, fontWeight:"700", color:T.sub, textTransform:"uppercase" }}>
           Preferences
@@ -42,6 +41,7 @@ export default function SettingsScreen() {
           PricePick v1.0
         </Text>
       </ScrollView>
+      <AdBanner />
     </SafeAreaView>
   );
 }
