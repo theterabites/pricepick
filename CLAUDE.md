@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Collaboration rules
+
+**Always explain bugs with root cause + fix.** When the user reports a bug, state what was causing it and what was changed to fix it — before or alongside the edit. 2–4 sentences is enough. Never just silently apply a fix.
+
 ## Commands
 
 ```bash
