@@ -3,6 +3,7 @@ import { useColorScheme } from "react-native";
 import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initPurchases, getIsAdFree } from '../services/purchases';
+import { initAds } from '../services/ads';
 
 export const currencies = [
   { code:"THB", symbol:"฿",   name:"Thai Baht" },
@@ -97,8 +98,9 @@ export function AppProvider({ children }) {
   const dark = themeMode === "dark" ? true : themeMode === "light" ? false : colorScheme === "dark";
   const T = themes[dark ? "dark" : "light"];
 
-  // Init purchases and check entitlement on mount
+  // Init ads and purchases on mount
   useEffect(() => {
+    initAds();
     initPurchases();
     getIsAdFree().then(setIsAdFree);
   }, []);

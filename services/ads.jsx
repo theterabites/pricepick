@@ -1,7 +1,11 @@
 import React from 'react';
 import { View, Platform } from 'react-native';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import mobileAds, { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 import { useApp } from '../context/AppContext';
+
+export function initAds() {
+  mobileAds().initialize().catch(() => {});
+}
 
 // Falls back to Google's test ID in dev or if env var is not set
 const UNIT_ID = Platform.select({
