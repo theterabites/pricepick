@@ -29,7 +29,9 @@ This is already saved in `~/.zshrc` and `~/.zprofile`, but if a new terminal doe
 ~/Library/Android/sdk/platform-tools/adb uninstall com.theterabites.pricepick
 ```
 
-**Real ads require a physical device.** AdMob always serves test ads on emulators regardless of the ad unit ID. Connect a physical Android device with USB debugging enabled to see real ads.
+**Ads on emulator always show blank / no inventory.** Even with `TestIds.BANNER`, if `EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID` is set in `.env`, the real unit ID is used and AdMob returns no inventory for emulators. The code guards against this with `__DEV__`: in any local debug build `TestIds.BANNER` is always used regardless of `.env`. Real ad creatives only appear on a physical device with a production build.
+
+**Do not add `services/ads.jsx` as an importer of `context/AppContext.tsx` indirectly from AppContext.** This creates a require cycle (AppContext → ads → AppContext). `mobileAds().initialize()` is called directly in AppContext; ads.jsx is a one-way consumer of context only.
 
 There is no test suite in this project.
 
@@ -82,7 +84,7 @@ All SDK integrations are isolated in `services/` — never import AdMob or Reven
 
 | File | Purpose |
 |---|---|
-| `services/ads.jsx` | `AdBanner` component + `AD_BAR_HEIGHT` constant. Reads unit ID from `EXPO_PUBLIC_ADMOB_*` env vars, falls back to Google test ID. Returns `null` when `isAdFree` is true. |
+| `services/ads.jsx` | `AdBanner` component + `AD_BAR_HEIGHT` constant. Uses `TestIds.BANNER` in `__DEV__` builds; uses `EXPO_PUBLIC_ADMOB_*` env vars in production. Returns `null` when `isAdFree` is true. Ad load errors are logged only in `__DEV__`. |
 | `services/purchases.js` | RevenueCat wrapper: `initPurchases`, `getIsAdFree`, `purchaseRemoveAds`, `restorePurchases`. Reads API key from `EXPO_PUBLIC_REVENUECAT_*` env vars. Guards against empty key — never crashes if key is missing. |
 
 ### Environment variables
@@ -98,7 +100,9 @@ Sensitive IDs live in `.env` (gitignored — never committed). Copy `.env.exampl
 | `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` | `services/purchases.js` (runtime) | RevenueCat Android SDK key |
 | `EXPO_PUBLIC_REVENUECAT_IOS_KEY` | `services/purchases.js` (runtime) | RevenueCat iOS SDK key |
 
-For EAS cloud builds, secrets must be added in the Expo dashboard (`.env` is gitignored and not available to the build server).
+For EAS cloud builds, secrets must be added in the Expo dashboard (`.env` is gitignored and not available to the build server). All 6 vars must be present as EAS Secrets before a production build — missing vars cause AdMob to fall back to Google test IDs silently.
+
+**npm security overrides** — `package.json` includes `overrides` for `uuid >= 14.0.0` and `postcss >= 8.5.10` to resolve moderate audit findings in Expo's internal toolchain without downgrading Expo. Keep these until the next Expo SDK upgrade resolves them upstream.
 
 ### Build configuration
 
@@ -175,6 +179,14 @@ Intentionally disabled (removed from UI). `sortItems` and `originalItems` logic 
 **`adjustsFontSizeToFit` is not used** — unreliable with `flex: 1` text. Font size is computed manually.
 
 **`app/old_tabs_backup/`**: ignored leftover from initial Expo tab template — do not restore or reference.
+
+## Pre-production checklist (before `eas build --profile production`)
+
+- [ ] Add all 6 env vars as EAS Secrets on expo.dev (project → Secrets)
+- [ ] Replace RevenueCat test key (`test_...`) with real `goog_...` key in `.env` and EAS Secrets
+- [ ] Verify real AdMob App IDs are set (not the Google test fallback IDs)
+- [ ] Store listing: icon (1024×1024 PNG), feature graphic (1024×500 PNG), 4–8 screenshots
+- [ ] Play Store short description + full description drafted
 
 ## Currencies with no decimal places
 
