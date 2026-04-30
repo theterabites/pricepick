@@ -141,7 +141,7 @@ Items have both `id` (monotonically increasing, used for React keys and state lo
 The item list is a plain `View` (not ScrollView). On Android, `ScrollView` with `scrollEnabled={false}` still intercepts touch events in empty areas, which cleared `activeCell` and hid the keypad nav bar. Replaced with `View` to let blank-area taps fall through harmlessly. Do not re-wrap in ScrollView or add a dismiss-on-tap handler.
 
 **Input rules (mobile banking style):**
-- Max 9 integer digits; max 2 decimal places for price, 4 for quantity
+- Max 7 integer digits (9,999,999); max 2 decimal places for price, 4 for quantity
 - Leading zeros are stripped as you type (`005` → `5`, `0.05` preserved)
 - Pressing `.` on an empty field inserts `0.` automatically
 - Backspace and clear work normally; limits do not apply to operator results
