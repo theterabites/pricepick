@@ -1,6 +1,6 @@
 module.exports = {
   expo: {
-    name: "pricepick",
+    name: "PricePick",
     slug: "pricepick",
     version: "1.0.0",
     orientation: "portrait",
