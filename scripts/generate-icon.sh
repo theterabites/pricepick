@@ -28,18 +28,21 @@ DRAW_MONO=(
 )
 
 echo "Generating icon.png..."
-magick -size 1024x1024 xc:"#3A3A5C" "${DRAW_COLORED[@]}" "$OUT/icon.png"
+magick -size 1024x1024 xc:"#3A3A5C" "${DRAW_COLORED[@]}" -depth 8 "$OUT/icon.png"
 
 echo "Generating android-icon-foreground.png..."
-magick -size 1024x1024 xc:none "${DRAW_COLORED[@]}" "$OUT/android-icon-foreground.png"
+magick -size 1024x1024 xc:none "${DRAW_COLORED[@]}" -depth 8 "$OUT/android-icon-foreground.png"
+
+echo "Generating android-icon-background.png..."
+magick -size 1024x1024 xc:"#3A3A5C" -depth 8 "$OUT/android-icon-background.png"
 
 echo "Generating android-icon-monochrome.png..."
-magick -size 1024x1024 xc:none "${DRAW_MONO[@]}" "$OUT/android-icon-monochrome.png"
+magick -size 1024x1024 xc:none "${DRAW_MONO[@]}" -depth 8 "$OUT/android-icon-monochrome.png"
 
 echo "Generating splash-icon.png..."
 magick -size 1024x1024 xc:none \
   -fill "#3A3A5C" -stroke none -draw "roundrectangle 60,60 964,964 120,120" \
-  "${DRAW_COLORED[@]}" \
+  "${DRAW_COLORED[@]}" -depth 8 \
   "$OUT/splash-icon.png"
 
 echo "Done! Files written to $OUT"
