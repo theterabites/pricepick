@@ -10,7 +10,7 @@ module.exports = {
     newArchEnabled: true,
     ios: {
       bundleIdentifier: "com.theterabites.pricepick",
-      supportsTablet: true,
+      supportsTablet: false,
     },
     android: {
       package: "com.theterabites.pricepick",
