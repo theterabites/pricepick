@@ -138,8 +138,6 @@ export default function App() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: T.bg }} edges={['top', 'left', 'right']}>
 
-      <AdBanner />
-
       {/* Header */}
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 14, paddingTop: 14, paddingBottom: 6 }}>
         <View style={{ width: 100 }}>
@@ -218,6 +216,7 @@ export default function App() {
         activeCell={activeCell} items={items} onAdd={addItem} onRemove={removeItem}
         currency={currency} maxItems={maxItems} clipboardStatus={clipboardStatus}
       />
+      <AdBanner />
     </SafeAreaView>
   );
 }
