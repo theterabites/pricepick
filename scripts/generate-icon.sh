@@ -4,27 +4,30 @@
 
 OUT="$(dirname "$0")/../assets/images"
 
-# Shared draw commands (2 rows: blue circle+rect, orange circle+rect, checkmark on row 1)
+# Layout (all elements kept within radius 380 from center 512,512 for circular mask safety)
+# PAD=280, DOT_R=65, ROW_H=180, GAP=60, RECT_X=450, RECT_W=294
+# Row A cy=392, Row B cy=632
+
 DRAW_COLORED=(
   -fill "#4A9EFF" -stroke none
-  -draw "circle 260,362 260,442"
-  -draw "roundrectangle 490,272 844,452 40,40"
+  -draw "circle 345,392 345,457"
+  -draw "roundrectangle 450,312 744,472 35,35"
   -fill "#FF6B4A"
-  -draw "circle 260,662 260,742"
-  -draw "roundrectangle 490,572 844,752 40,40"
-  -fill none -stroke white -strokewidth 24
-  -draw "polyline 230,362 256,390 294,334"
+  -draw "circle 345,632 345,697"
+  -draw "roundrectangle 450,552 744,712 35,35"
+  -fill none -stroke white -strokewidth 18
+  -draw "polyline 320,392 342,415 372,369"
 )
 
 DRAW_MONO=(
   -fill white -stroke none
-  -draw "circle 260,362 260,442"
-  -draw "roundrectangle 490,272 844,452 40,40"
+  -draw "circle 345,392 345,457"
+  -draw "roundrectangle 450,312 744,472 35,35"
   -fill white
-  -draw "circle 260,662 260,742"
-  -draw "roundrectangle 490,572 844,752 40,40"
-  -fill none -stroke black -strokewidth 24
-  -draw "polyline 230,362 256,390 294,334"
+  -draw "circle 345,632 345,697"
+  -draw "roundrectangle 450,552 744,712 35,35"
+  -fill none -stroke black -strokewidth 18
+  -draw "polyline 320,392 342,415 372,369"
 )
 
 echo "Generating icon.png..."
