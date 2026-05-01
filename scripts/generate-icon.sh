@@ -36,4 +36,10 @@ magick -size 1024x1024 xc:none "${DRAW_COLORED[@]}" "$OUT/android-icon-foregroun
 echo "Generating android-icon-monochrome.png..."
 magick -size 1024x1024 xc:none "${DRAW_MONO[@]}" "$OUT/android-icon-monochrome.png"
 
+echo "Generating splash-icon.png..."
+magick -size 1024x1024 xc:none \
+  -fill "#3A3A5C" -stroke none -draw "roundrectangle 60,60 964,964 120,120" \
+  "${DRAW_COLORED[@]}" \
+  "$OUT/splash-icon.png"
+
 echo "Done! Files written to $OUT"
