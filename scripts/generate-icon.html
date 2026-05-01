@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PricePick Icon Generator</title>
+  <style>
+    body { background: #1a1a1a; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 40px; font-family: sans-serif; color: white; }
+    button { padding: 12px 28px; font-size: 16px; border-radius: 10px; border: none; background: #00C896; color: white; cursor: pointer; font-weight: 700; }
+    .row { display: flex; gap: 30px; align-items: flex-start; }
+    .col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    label { font-size: 13px; color: #aaa; }
+    .checker { background: repeating-conic-gradient(#333 0% 25%, #555 0% 50%) 0 0 / 20px 20px; }
+  </style>
+</head>
+<body>
+  <h2>PricePick Icon Generator</h2>
+  <div class="row">
+    <div class="col">
+      <label>icon.png (with background)</label>
+      <canvas id="c1" width="1024" height="1024" style="width:220px;height:220px;border-radius:40px"></canvas>
+      <button onclick="download('c1','icon.png')">Download icon.png</button>
+    </div>
+    <div class="col">
+      <label>android-icon-foreground.png</label>
+      <canvas id="c2" width="1024" height="1024" class="checker" style="width:220px;height:220px;border-radius:40px"></canvas>
+      <button onclick="download('c2','android-icon-foreground.png')">Download foreground.png</button>
+    </div>
+    <div class="col">
+      <label>android-icon-monochrome.png</label>
+      <canvas id="c3" width="1024" height="1024" class="checker" style="width:220px;height:220px;border-radius:40px"></canvas>
+      <button onclick="download('c3','android-icon-monochrome.png')">Download monochrome.png</button>
+    </div>
+  </div>
+
+  <script>
+    const SIZE = 1024;
+
+    // Layout constants
+    const PAD = 180;          // safe zone padding from edges
+    const INNER = SIZE - PAD * 2;  // 664px inner area
+
+    const ROW_H = 220;        // height of each row
+    const GAP = 80;           // gap between rows
+    const TOTAL_H = ROW_H * 2 + GAP;
+    const START_Y = (SIZE - TOTAL_H) / 2;
+
+    const DOT_R = 80;         // label circle radius
+    const RECT_X = PAD + DOT_R * 2 + 50;  // rectangle starts after circle
+    const RECT_W = SIZE - RECT_X - PAD;
+    const RECT_R = 40;        // rectangle corner radius
+
+    // Row 1 — blue, best value (circle has checkmark, blank rectangle)
+    const ROW_A = {
+      y: START_Y,
+      dotColor: '#4A9EFF',
+      barColor: '#4A9EFF',
+      best: true,
+    };
+
+    // Row 2 — orange, plain circle + blank rectangle
+    const ROW_B = {
+      y: START_Y + ROW_H + GAP,
+      dotColor: '#FF6B4A',
+      barColor: '#FF6B4A',
+      best: false,
+    };
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function drawCheckmark(ctx, cx, cy, size, color) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = size * 0.28;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(-size * 0.38, 0);
+      ctx.lineTo(-size * 0.05, size * 0.35);
+      ctx.lineTo(size * 0.42, -size * 0.35);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawRow(ctx, row, monochrome) {
+      const cy = row.y + ROW_H / 2;
+
+      // Circle
+      ctx.beginPath();
+      ctx.arc(PAD + DOT_R, cy, DOT_R, 0, Math.PI * 2);
+      ctx.fillStyle = monochrome ? '#FFFFFF' : row.dotColor;
+      ctx.fill();
+
+      // Checkmark inside circle (row 1 only)
+      if (row.best) {
+        drawCheckmark(ctx, PAD + DOT_R, cy, DOT_R, monochrome ? '#000000' : '#FFFFFF');
+      }
+
+      // Blank rectangle
+      roundRect(ctx, RECT_X, row.y + 20, RECT_W, ROW_H - 40, RECT_R);
+      ctx.fillStyle = monochrome ? '#FFFFFF' : row.barColor;
+      ctx.fill();
+    }
+
+    function drawIcon(ctx, withBg, monochrome) {
+      ctx.clearRect(0, 0, SIZE, SIZE);
+
+      if (withBg) {
+        ctx.fillStyle = '#3A3A5C';
+        ctx.fillRect(0, 0, SIZE, SIZE);
+      }
+
+      drawRow(ctx, ROW_A, monochrome);
+      drawRow(ctx, ROW_B, monochrome);
+    }
+
+    const c1 = document.getElementById('c1').getContext('2d');
+    drawIcon(c1, true, false);
+
+    const c2 = document.getElementById('c2').getContext('2d');
+    drawIcon(c2, false, false);
+
+    const c3 = document.getElementById('c3').getContext('2d');
+    drawIcon(c3, false, true);
+
+    function download(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = filename;
+      a.click();
+    }
+  </script>
+</body>
+</html>
