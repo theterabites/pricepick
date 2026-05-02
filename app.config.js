@@ -14,6 +14,7 @@ module.exports = {
     },
     android: {
       package: "com.theterabites.pricepick",
+      permissions: ["com.google.android.gms.permission.AD_ID"],
       adaptiveIcon: {
         backgroundColor: "#E6F4FE",
         foregroundImage: "./assets/images/android-icon-foreground.png",
