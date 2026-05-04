@@ -45,8 +45,8 @@ export const layout = {
       flexDirection: 'row',
       paddingHorizontal: 8,
       borderWidth: layout.borderWidth,
-      borderColor: active ? accent : (isBest ? accent : T.border),
-      backgroundColor: active ? accent + "18" : (isBest ? accent + "18" : (isUnit ? T.surface2 : T.surface)),
+      borderColor: active ? accent : T.border,
+      backgroundColor: active ? accent + "18" : (isUnit ? T.surface2 : T.surface),
     };
   }
 };

@@ -180,7 +180,13 @@ export default function App() {
             const unitFontSize = format.rowFontSize(unitDisplay.length);
 
             return (
-              <View key={item.id} style={{ flexDirection: "row", gap: layout.gap, alignItems: "center" }}>
+              <View key={item.id} style={{
+                flexDirection: "row", gap: layout.gap, alignItems: "center",
+                borderWidth: 2,
+                borderColor: isBest ? colors.success : 'transparent',
+                borderRadius: layout.borderRadius + 4,
+                padding: 3,
+              }}>
                 <LabelIcon colorIndex={item.colorIndex} dark={dark} isDimmed={isDimmed} />
 
                 <EditCell
