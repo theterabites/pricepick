@@ -26,10 +26,15 @@ export function EditCell({ value, active, isBest, field, colorIndex, T, dark, cu
       if (isNaN(n)) return value;
       return format.fmtComma(n.toFixed(noDecimal ? 0 : 2), indianComma);
     }
-    if (active) return value;
+    if (active) {
+      const parts = value.split(".");
+      parts[0] = indianComma ? format.fmtIndian(parts[0]) : parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
+    }
     const n = parseFloat(value);
     if (isNaN(n)) return value;
-    return qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n);
+    const fixed = qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n);
+    return format.fmtComma(fixed, !!indianComma);
   })();
 
   return (

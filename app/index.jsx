@@ -176,7 +176,7 @@ export default function App() {
             const effectiveDecimals = currency.noDecimal ? 0 : decimals;
             const unitDisplay = format.fmtDisplay(unit, currency.symbol, effectiveDecimals, !!currency.indianComma);
             const priceFontSize = format.rowFontSize(format.priceCellLen(item, currency));
-            const qtyFontSize = format.rowFontSize(format.qtyCellLen(item, qtyDecimals));
+            const qtyFontSize = format.rowFontSize(format.qtyCellLen(item, qtyDecimals, !!currency.indianComma));
             const unitFontSize = format.rowFontSize(unitDisplay.length);
 
             return (
@@ -200,7 +200,7 @@ export default function App() {
                 <EditCell
                   value={item.quantity} active={activeCell?.id === item.id && activeCell.field === "quantity"}
                   isBest={isBest} field="quantity" colorIndex={item.colorIndex} T={T} dark={dark}
-                  fontSize={qtyFontSize} qtyDecimals={qtyDecimals}
+                  fontSize={qtyFontSize} qtyDecimals={qtyDecimals} indianComma={!!currency.indianComma}
                   myOp={pendingOp?.id === item.id && pendingOp?.field === "quantity" ? pendingOp : null}
                   onTap={() => tapCell(item.id, "quantity")}
                 />

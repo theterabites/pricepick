@@ -78,9 +78,9 @@ export const format = {
       : (currency.noDecimal ? 1 : 4));
   },
 
-  qtyCellLen: (item, qtyDecimals) => {
+  qtyCellLen: (item, qtyDecimals, indianComma) => {
     return item.quantity
-      ? (() => { const n = parseFloat(item.quantity); return isNaN(n) ? item.quantity.length : (qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n)).length; })()
+      ? (() => { const n = parseFloat(item.quantity); if (isNaN(n)) return item.quantity.length; const fixed = qtyDecimals > 0 ? n.toFixed(qtyDecimals) : String(n); return format.fmtComma(fixed, !!indianComma).length; })()
       : 1;
   },
 

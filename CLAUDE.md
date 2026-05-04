@@ -73,7 +73,7 @@ All shared state lives in `context/AppContext.tsx` via a single `AppProvider` / 
 - `resolveQtyDecimals(items)` — max decimals used across quantity inputs
 - `fmtDisplay(unit, sym, decimals)` — formats a unit price string with currency symbol
 - `priceCellLen(item, currency)` — display length of the price cell (used for font sizing)
-- `qtyCellLen(item, qtyDecimals)` — display length of the quantity cell (used for font sizing)
+- `qtyCellLen(item, qtyDecimals, indianComma)` — display length of the quantity cell with comma formatting accounted for (used for font sizing)
 - `rowFontSize(len)` — maps a display length to a font size (18/15/12/10px tiers)
 - `sortItems(items)` — returns a new array sorted by unit price ascending (nulls last)
 - `applyOp` / `fmtNum` — support the in-app calculator
@@ -160,6 +160,12 @@ Each cell computes its own font size independently — a long price does not shr
 ```
 len > 11 → 10px | len > 9 → 12px | len > 7 → 15px | default → 18px
 ```
+
+**Cheapest row highlight:**
+The entire row gets a 2px `colors.success` border (`borderColor: isBest ? colors.success : 'transparent'`), with `borderRadius: layout.borderRadius + 4` and `padding: 3` to give space between the cells and the outline. Individual cells do NOT change color for `isBest` — `getBoxStyle` ignores it. Do not re-introduce per-cell highlighting.
+
+**Quantity comma formatting:**
+When displayed (not while typing), quantity values ≥ 1,000 show comma separators matching the currency's `indianComma` flag — Indian style (lakh/crore) for INR/PKR/BDT, western otherwise. Active (typing) state also shows commas live, same as the price field. `qtyCellLen` receives `indianComma` so font sizing accounts for the longer formatted string. Always pass `indianComma={!!currency.indianComma}` to the quantity `EditCell`.
 
 **No-decimal currencies (JPY, KRW, IDR, VND):**
 These have `noDecimal: true` on the currency object. Apply this at every display site:
